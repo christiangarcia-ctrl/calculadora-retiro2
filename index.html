@@ -294,6 +294,14 @@
   .stats-container{
     padding:32px 48px;
   }
+  .stats-title{
+    font-family:'Playfair Display',serif;
+    font-size:24px;
+    font-weight:700;
+    color:var(--navy);
+    margin-bottom:20px;
+    letter-spacing:-.01em;
+  }
   .stats-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
@@ -572,14 +580,15 @@
   .report-view{display:none}
 
   @media print{
-    @page{ size:A4; margin:12mm; }
+    /* PDF máx 2 hojas: compactamos y ocultamos secciones largas */
+    @page{ size:A4; margin:9mm; }
 
     body{
       background:white !important;
       color:#000 !important;
       -webkit-print-color-adjust:exact;
       print-color-adjust:exact;
-      font-size:11px;
+      font-size:10px;
       overflow:visible;
     }
     html,body{height:auto;overflow:visible}
@@ -606,65 +615,68 @@
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      padding-bottom:20px;
-      margin-bottom:24px;
-      border-bottom:4px solid #111;
+      padding-bottom:14px;
+      margin-bottom:16px;
+      border-bottom:3px solid #111;
     }
     .report-logo-section{
       display:flex;
-      gap:16px;
+      gap:14px;
       align-items:center;
     }
     .report-logo img{
       display:block;
+      max-width:180px;
+      height:auto;
     }
     .report-branding{
       border-left:3px solid #111;
-      padding-left:16px;
+      padding-left:12px;
     }
     .report-main-title{
       font-family:'Playfair Display',serif;
-      font-size:24px;
+      font-size:20px;
       font-weight:900;
       color:#111 !important;
-      margin-bottom:4px;
+      margin-bottom:2px;
       letter-spacing:-.01em;
     }
     .report-subtitle{
-      font-size:12px;
+      font-size:11px;
       color:#555;
     }
     .report-meta{
       text-align:right;
-      font-size:10px;
+      font-size:9px;
       color:#555;
+      line-height:1.35;
     }
 
     .report-section{
-      margin-bottom:20px;
+      margin-bottom:12px;
       page-break-inside:avoid;
       break-inside:avoid;
     }
     .report-section-title{
       font-family:'Playfair Display',serif;
-      font-size:16px;
+      font-size:14px;
       font-weight:700;
       color:#111 !important;
-      margin-bottom:12px;
-      padding-bottom:6px;
+      margin-bottom:8px;
+      padding-bottom:4px;
       border-bottom:2px solid #777;
       break-after:avoid;
     }
     .report-grid{
       display:grid;
       grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-bottom:12px;
+      gap:10px;
+      margin-bottom:8px;
       break-inside:avoid;
     }
     .report-item{
       background:#F5F5F5 !important;
-      padding:12px;
+      padding:10px;
       border-radius:6px;
       border-left:3px solid #555 !important;
     }
@@ -674,48 +686,49 @@
       grid-column:1/-1;
     }
     .report-label{
-      font-size:10px;
+      font-size:9px;
       color:#555;
       font-weight:700;
-      margin-bottom:4px;
+      margin-bottom:3px;
       text-transform:uppercase;
       letter-spacing:.05em;
     }
     .report-value{
       font-family:'DM Mono',monospace;
-      font-size:16px;
+      font-size:14px;
       font-weight:500;
       color:#111 !important;
     }
     .report-item.featured .report-value{
-      font-size:20px;
+      font-size:16px;
       font-weight:700;
     }
     .report-text{
-      font-size:11px;
-      line-height:1.6;
+      font-size:10px;
+      line-height:1.45;
       color:#222;
-      margin:8px 0;
+      margin:6px 0;
     }
 
     .report-table{
       width:100%;
       border-collapse:collapse;
-      margin:12px 0;
-      font-size:10px;
+      margin:8px 0;
+      font-size:9px;
       break-inside:avoid;
     }
     .report-table th{
       background:#111 !important;
       color:white !important;
-      padding:8px 10px;
+      padding:6px 8px;
       text-align:left;
       font-weight:700;
       text-transform:uppercase;
       letter-spacing:.05em;
+      font-size:9px;
     }
     .report-table td{
-      padding:8px 10px;
+      padding:6px 8px;
       border-bottom:1px solid #DDD;
     }
     .report-table tr:nth-child(even){
@@ -725,20 +738,21 @@
     .report-highlight{
       background:#F3F3F3 !important;
       border-left:4px solid #555 !important;
-      padding:14px;
+      padding:10px;
       border-radius:6px;
-      margin:12px 0;
+      margin:8px 0;
       break-inside:avoid;
     }
 
     .report-footer{
-      margin-top:28px;
-      padding-top:16px;
+      margin-top:12px;
+      padding-top:10px;
       border-top:2px solid #DDD;
       display:flex;
       justify-content:space-between;
-      font-size:9px;
+      font-size:8.5px;
       color:#555;
+      line-height:1.35;
     }
     .report-contact{
       font-weight:600;
@@ -751,9 +765,17 @@
     .chart-print{
       max-width:100%;
       height:auto;
-      margin:12px 0;
+      margin:6px 0 0 0;
       page-break-inside:avoid;
       break-inside:avoid;
+      max-height:240px; /* evita que se vaya a 3 páginas */
+      object-fit:contain;
+    }
+
+    /* Ocultamos para garantizar 2 páginas máximo */
+    .report-section.posponer,
+    .report-section.comentario-largo{
+      display:none !important;
     }
   }
 </style>
@@ -769,14 +791,15 @@
 
     <div class="logo-header">
       <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
-        <!-- GitHub Pages: coloca logo-garba.png y logo-allianz.png en la misma carpeta que index.html -->
+        <!-- Coloca logo-garba.png y logo-allianz.png en la misma carpeta que index.html -->
         <img src="./logo-garba.png" alt="Christian GarBa" style="height:44px;width:auto;filter:brightness(0) invert(1)">
         <div style="width:1px;height:40px;background:rgba(255,251,245,.2)"></div>
+        <!-- Allianz: mantenemos ruta correcta. Si no se ve, el problema es el PNG (fondo/padding) -->
         <img src="./logo-allianz.png" alt="Allianz" style="height:36px;width:auto;filter:brightness(0) invert(1)">
       </div>
       <div class="logo-title">Christian GarBa</div>
       <div class="logo-subtitle">Seguros con Estrategia · Allianz</div>
-      <div style="font-size:11px;opacity:.7;margin-top:8px;letter-spacing:.03em">📞 662 307 2573</div>
+      <div style="font-size:11px;opacity:.7;margin-top:8px;letter-spacing:.03em">📞 662 417 6032</div>
     </div>
 
     <!-- Meta de Retiro -->
@@ -833,9 +856,9 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">Aportación inicial</label>
+        <label class="form-label">Aportación (la que sí harás)</label>
         <input class="form-input" id="pmt" type="number" value="2500" min="0" step="0.01">
-        <div class="form-hint">Se ajusta con inflación cada año</div>
+        <div class="form-hint">👉 La sugerida se muestra arriba, pero el cálculo se hace con esta cantidad.</div>
       </div>
 
       <div class="form-group">
@@ -848,7 +871,6 @@
         </select>
       </div>
 
-      <!-- (FIX) Campo requerido por JS -->
       <div class="form-group">
         <label class="form-label">Aportación única inicial</label>
         <input class="form-input" id="lumpSum" type="number" value="0" min="0" step="0.01">
@@ -1070,9 +1092,9 @@
   <div class="report-header">
     <div class="report-logo-section">
       <div class="report-logo" style="display:flex;gap:12px;align-items:center">
-        <img src="./logo-garba.png" alt="GarBa" style="height:48px">
+        <img src="./logo-garba.png" alt="GarBa" style="height:46px">
         <div style="width:2px;height:45px;background:#E2E8F0"></div>
-        <img src="./logo-allianz.png" alt="Allianz" style="height:38px">
+        <img src="./logo-allianz.png" alt="Allianz" style="height:36px">
       </div>
       <div class="report-branding">
         <div class="report-main-title">Plan de Ahorro y Retiro</div>
@@ -1083,7 +1105,7 @@
       <div id="rptFecha"></div>
       <div><strong>Asesor:</strong> Christian GarBa</div>
       <div>Seguros con Estrategia · Allianz</div>
-      <div>Tel. 662 307 2573</div>
+      <div>Tel. 662 417 6032</div>
     </div>
   </div>
 
@@ -1110,6 +1132,10 @@
       <div class="report-item featured">
         <div class="report-label">Aportación inicial sugerida</div>
         <div class="report-value" id="rptAportSug">—</div>
+      </div>
+      <div class="report-item featured">
+        <div class="report-label">Aportación elegida (la que se calcula)</div>
+        <div class="report-value" id="rptAportElegida">—</div>
       </div>
     </div>
     <div class="report-text" id="rptSupuestos1"></div>
@@ -1150,7 +1176,7 @@
       </tbody>
     </table>
     <div class="report-text">
-      La proyección asume que mantienes el plan sin interrupciones y que los rendimientos e inflación se comportan en promedio como se indica.
+      La proyección asume continuidad del plan y promedios de inflación/rendimiento como se indica. No garantiza rendimientos futuros.
     </div>
   </div>
 
@@ -1174,8 +1200,8 @@
     <div class="report-text" id="rptRegla4"></div>
   </div>
 
-  <!-- Sección 4 -->
-  <div class="report-section">
+  <!-- Sección 4 (oculta en impresión para max 2 páginas) -->
+  <div class="report-section posponer">
     <div class="report-section-title">4. Costo de Posponer el Inicio</div>
     <table class="report-table">
       <thead>
@@ -1213,8 +1239,8 @@
     </div>
   </div>
 
-  <!-- Sección 5 -->
-  <div class="report-section">
+  <!-- Sección 5 (oculta para max 2 páginas) -->
+  <div class="report-section comentario-largo">
     <div class="report-section-title">5. Comentario Estratégico</div>
     <div class="report-text" id="rptComentario"></div>
   </div>
@@ -1228,7 +1254,7 @@
   <div class="report-footer">
     <div class="report-contact">
       Christian GarBa · Seguros con Estrategia · Allianz<br>
-      Tel. 662 307 2573 · christian.garcia@sfgarba.com.mx
+      Tel. 662 417 6032 · christian.garcia@sfgarba.com.mx
     </div>
     <div class="report-disclaimer">
       Proyección ilustrativa. No constituye oferta vinculante<br>
@@ -1242,6 +1268,7 @@
   const $ = id => document.getElementById(id);
   const money = v => new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',minimumFractionDigits:0,maximumFractionDigits:0}).format(Number(v)||0);
   const freqMap = {'12':'Mensual','4':'Trimestral','2':'Semestral','1':'Anual'};
+  const WHATSAPP_NUMBER_E164 = '526624176032'; // ✅ nuevo número
 
   const reportState = {
     nombre:'',edad:null,metaHoy:null,planYears:null,pmtSugerido:null,
@@ -1253,6 +1280,11 @@
 
   let myChart = null;
 
+  // Marca si el usuario ya editó la aportación real (para no pisarla con sugerida)
+  function markUserEditedPMT(){
+    $('pmt').dataset.userEdited = '1';
+  }
+
   function linkWhatsApp(){
     const nombre = ($('nombreOpt').value||'').trim();
     const msg = [
@@ -1262,8 +1294,9 @@
       `• Edad: ${$('edad').value} años`,
       `• Años de aportación: ${$('years').value}`,
       `• Aportación ${freqMap[$('frequency').value]}: $${$('pmt').value}`
-    ].filter(Boolean).join('\\n');
-    $('waBtn').href = 'https://wa.me/526623072573?text='+encodeURIComponent(msg);
+    ].filter(Boolean).join('\n');
+
+    $('waBtn').href = 'https://wa.me/' + WHATSAPP_NUMBER_E164 + '?text=' + encodeURIComponent(msg);
   }
 
   function calcularPMTRequerido(edadInicio, planY, metaHoy, infl, rAcc, rRet, yrsRet, freq){
@@ -1317,14 +1350,23 @@
 
     const yrsTexto=gapYears>0?` Tu fondo seguirá creciendo ~${gapYears} año(s) más hasta los 65.`:'';
     $('sugText').innerHTML=
-      `<strong>Para alcanzar tu meta:</strong> un ahorro mensual inicial de <strong>${money(pmt0)}</strong> sería ideal.`+
-      `<br><small style="font-size:10px;opacity:.8">Lo importante es iniciar.${yrsTexto}</small>`;
+      `<strong>Aportación sugerida para alcanzar tu meta:</strong> <strong>${money(pmt0)}</strong>`+
+      `<br><small style="font-size:10px;opacity:.8">Puedes elegir aportar menos o más; la proyección se calcula con la aportación real que pongas abajo.${yrsTexto}</small>`;
 
     $('sugBox').classList.add('visible');
 
+    // ✅ Sí sincronizamos edad/años, pero NO pisamos la aportación real si ya fue editada
     $('edad').value=String(edadTop);
     $('years').value=String(planY);
-    $('pmt').value=String(pmt0.toFixed(2));
+
+    const pmtField = $('pmt');
+    const userEdited = pmtField.dataset.userEdited === '1';
+    const currentPMT = parseFloat(pmtField.value || '0');
+
+    // Si no ha sido editado por usuario y está vacío/0, autocompletamos con sugerida
+    if(!userEdited && (!currentPMT || currentPMT<=0)){
+      pmtField.value = String(pmt0.toFixed(2));
+    }
 
     reportState.metaHoy=metaHoy;
     reportState.planYears=planY;
@@ -1336,12 +1378,13 @@
     reportState.delayScenarios=escenarios;
 
     actualizarSeccionPosponer();
+    actualizarReporteBase();
   }
 
   function calcAccum(){
     const edad=parseFloat($('edad').value);
     const years=parseFloat($('years').value);
-    const pmt0=parseFloat($('pmt').value);
+    const pmt0=parseFloat($('pmt').value); // ✅ APORTACIÓN REAL (elegida)
     const lump=parseFloat($('lumpSum').value);
     const rate=parseFloat($('rate').value)/100;
     const freq=parseFloat($('frequency').value);
@@ -1586,7 +1629,7 @@
 
     const nombre=(reportState.nombre||'').trim()||'Tu plan';
     $('rptMensajePosponer').textContent=
-      `${nombre}: el futuro tiene un "precio". Posponer 1, 3 o 5 años aumenta significativamente el esfuerzo mensual requerido. Empezar antes es más barato.`;
+      `${nombre}: posponer 1, 3 o 5 años aumenta el esfuerzo mensual requerido. Empezar antes suele ser más barato.`;
   }
 
   function actualizarReporteBase(){
@@ -1618,12 +1661,16 @@
       $('rptPlazo').textContent=y?`${y} años`:'—';
     }
 
+    // ✅ Sugerida
     if(reportState.pmtSugerido!=null){
       $('rptAportSug').textContent=money(reportState.pmtSugerido);
     }else{
-      const p=parseFloat($('pmt').value||0);
-      $('rptAportSug').textContent=p?money(p):'—';
+      $('rptAportSug').textContent='—';
     }
+
+    // ✅ Elegida (la que se calcula)
+    const pElegida = parseFloat($('pmt').value||0);
+    $('rptAportElegida').textContent = pElegida ? money(pElegida) : '—';
 
     const infl=reportState.infl!=null?reportState.infl:parseFloat($('inflation').value||0);
     const rAcc=reportState.rAcc!=null?reportState.rAcc:parseFloat($('rate').value||0);
@@ -1665,9 +1712,7 @@
 
     const nombreShow=nombre||'Tu plan';
     $('rptComentario').textContent=
-      `${nombreShow} ahora tiene una guía numérica clara para tomar decisiones. `+
-      `La recomendación es revisar este plan con Christian GarBa para afinar montos, horizonte y cobertura, `+
-      `haciendo el ahorro realista y compatible con tus proyectos de vida.`;
+      `${nombreShow} ahora tiene una guía numérica clara para tomar decisiones. Recomendación: revisarlo con Christian GarBa para afinar montos y horizonte.`;
 
     actualizarSeccionPosponer();
   }
@@ -1675,10 +1720,10 @@
   function exportCSV(){
     const rows=[['Año','Edad','Aportado (MXN)','Beneficio fiscal (MXN)','Saldo (MXN)']];
     document.querySelectorAll('#tbody tr').forEach(tr=>{
-      const t=[...tr.querySelectorAll('td')].map(td=>td.textContent.replace(/[^\\d.,\\-a-zñ ]/gi,''));
+      const t=[...tr.querySelectorAll('td')].map(td=>td.textContent.replace(/[^\d.,\-a-zñ ]/gi,''));
       rows.push(t);
     });
-    const blob=new Blob([rows.map(r=>r.join(',')).join('\\n')],{type:'text/csv;charset=utf-8;'});
+    const blob=new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv;charset=utf-8;'});
     const a=document.createElement('a');
     const name=$('nombreOpt').value||'Proyeccion';
     const f=new Date().toISOString().slice(0,10);
@@ -1688,54 +1733,33 @@
     URL.revokeObjectURL(a.href);
   }
 
-  // (FIX) PDF anti-timeout: espera carga de logos + gráfica (máx 1.2s por asset)
   function prepararPDF(){
-    // 1) Pinta la gráfica a imagen (si existe) sin bloquear si algo falla
-    try{
-      if(myChart && reportState.chartData){
-        const img = $('chartImage');
-        img.src = myChart.toBase64Image('image/png', 0.85);
-        img.style.display = 'block';
-      }
-    }catch(e){
-      const img = $('chartImage');
-      if(img){ img.style.display = 'none'; }
+    if(myChart&&reportState.chartData){
+      const img=$('chartImage');
+      img.src=myChart.toBase64Image();
+      img.style.display='block';
     }
-
-    // 2) Espera assets (logos + chartImage) para evitar “timeout”
-    const assets = [
-      document.querySelector('.report-view img[alt="GarBa"]'),
-      document.querySelector('.report-view img[alt="Allianz"]'),
-      document.getElementById('chartImage')
-    ].filter(Boolean);
-
-    const waitFor = (el) => new Promise(resolve=>{
-      if(!el) return resolve();
-      if(el.complete) return resolve();
-      el.onload = () => resolve();
-      el.onerror = () => resolve();
-      setTimeout(resolve, 1200);
-    });
-
-    Promise.all(assets.map(waitFor)).then(()=>{
-      requestAnimationFrame(()=> requestAnimationFrame(()=> window.print()));
-    });
+    setTimeout(()=>{window.print()},250);
   }
 
   $('planBtn').addEventListener('click',()=>{calcSuggestion();calcAccum()});
+
   $('resetTop').addEventListener('click',()=>{
     $('nombreOpt').value='';
     $('edadTop').value=29;
     $('planTop').value='25';
     $('metaHoy').value=32000;
     $('sugBox').classList.remove('visible');
+    // no tocamos pmt porque puede ser aportación elegida
   });
 
   $('calcBtn').addEventListener('click',calcAccum);
+
   $('resetBtn').addEventListener('click',()=>{
     $('edad').value=29;
     $('years').value=25;
     $('pmt').value=2500;
+    $('pmt').dataset.userEdited = ''; // reset bandera
     $('frequency').value=12;
     $('lumpSum').value=0;
     $('rate').value=10;
@@ -1743,6 +1767,7 @@
     $('regimenFiscal').value='ninguno';
     $('isrPct').value='20';
     $('reinvertISR').checked=true;
+    calcSuggestion();
     calcAccum();
   });
 
@@ -1761,6 +1786,9 @@
     this.classList.toggle('open');
   });
 
+  // Marca que el usuario ya eligió su aportación real
+  $('pmt').addEventListener('input', markUserEditedPMT);
+
   ['edadTop','planTop','metaHoy','rate','inflation','rateRet','yrsRetSel'].forEach(id=>{
     $(id).addEventListener('change',()=>{calcSuggestion()});
   });
@@ -1769,6 +1797,7 @@
   });
 
   window.addEventListener('load',()=>{
+    // Si el usuario va a editar aportación, que el sistema respete
     calcSuggestion();
     calcAccum();
     linkWhatsApp();
