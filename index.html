@@ -360,6 +360,8 @@
     .report-contact{font-weight:700;}
     .report-disclaimer{text-align:right;font-style:italic;}
   }
+
+  .dup-hide{display:none;}
 </style>
 </head>
 
@@ -1232,12 +1234,6 @@
       // importante: llamada directa en respuesta a click (sin await externo)
       window.print();
     });
-  }
-    if(barChart){
-      const bimg=$('barImage');
-      bimg.src=barChart.toBase64Image();
-      bimg.style.display='block';
-    }
     setTimeout(()=>{window.print()},250);
   }
 
