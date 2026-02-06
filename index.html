@@ -824,9 +824,9 @@
   }
 
   function calcSuggestion(){
-    const edadTop=parseFloat($('edadTop').value);
-    const planY=parseInt($('planTop').value,10);
-    const metaHoy=parseFloat($('metaHoy').value||0);
+    const edadTop=parseFloat($('edad').value);
+    const planY=parseInt($('years').value,10);
+    const metaHoy=parseFloat($('targetIncome').value||0);
     const infl=parseFloat($('inflation').value);
     const rAcc=parseFloat($('rate').value);
     const rRet=7;
@@ -1113,10 +1113,10 @@
     $('rptNombre').textContent=nombre||'—';
 
     if(reportState.edad!=null){$('rptEdad').textContent=`${reportState.edad} años`;}
-    else{const eTop=parseFloat($('edadTop').value||0);$('rptEdad').textContent=eTop?`${eTop} años`:'—';}
+    else{const eTop=parseFloat($('edad').value||0);$('rptEdad').textContent=eTop?`${eTop} años`:'—';}
 
     if(reportState.metaHoy!=null){$('rptMetaHoy').textContent=money(reportState.metaHoy);}
-    else{const mH=parseFloat($('metaHoy').value||0);$('rptMetaHoy').textContent=mH?money(mH):'—';}
+    else{const mH=parseFloat($('targetIncome').value||0);$('rptMetaHoy').textContent=mH?money(mH):'—';}
 
     if(reportState.planYears!=null){$('rptPlazo').textContent=`${reportState.planYears} años`;}
     else{const y=parseFloat($('years').value||0);$('rptPlazo').textContent=y?`${y} años`:'—';}
@@ -1242,9 +1242,9 @@
   $('planBtn').addEventListener('click',()=>{calcSuggestion();calcAccum();});
   on('resetTop','click',()=>{
     $('nombreOpt').value='';
-    $('edadTop').value=29;
-    $('planTop').value='25';
-    $('metaHoy').value=32000;
+    $('edad').value=29;
+    $('years').value='25';
+    $('targetIncome').value=32000;
     $('sugBox').classList.remove('visible');
   });
 
@@ -1282,7 +1282,7 @@
   $('keepMyPmtBtn').addEventListener('click',()=>{calcAccum();});
 
   ['edadTop','planTop','metaHoy','rate','inflation','yrsRetSel'].forEach(id=>{$(id).addEventListener('change',()=>{calcSuggestion();});});
-  ['edad','years','frequency','lumpSum','rate','inflation','regimenFiscal','isrPct','reinvertISR'].forEach(id=>{$(id).addEventListener('change',()=>{calcAccum();});});
+  ['edad','years','frequency','pmt','lumpSum','rate','inflation','regimenFiscal','isrPct','reinvertISR'].forEach(id=>{const el=$(id); if(el) el.addEventListener('change',()=>{calcAccum();});});
 
   document.addEventListener('DOMContentLoaded',()=>{ try{ calcSuggestion(); calcAccum(); linkWhatsApp(); actualizarReporteBase(); } catch(e){ console.error(e); alert('Error en la calculadora. Abre la consola (F12) para ver detalles.'); } });
 </script>
