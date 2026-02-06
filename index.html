@@ -1179,11 +1179,25 @@
   }
 
   function prepararPDF(){
-    if(myChart){
-      const img=$('chartImage');
-      img.src=myChart.toBase64Image();
-      img.style.display='block';
+    // Nota: algunos navegadores bloquean window.print() si se llama dentro de setTimeout.
+    // Por eso lo hacemos directo (mantiene el "user gesture").
+    try{
+      if(myChart && reportState.chartData){
+        const img = $('chartImage');
+        if(img){
+          img.src = myChart.toBase64Image();
+          img.style.display = 'block';
+        }
+      }
+    }catch(err){
+      console.error('Error preparando la imagen de la gráfica para PDF:', err);
     }
+    try{
+      window.print();
+    }catch(err){
+      alert('Si no se abre el PDF, usa Ctrl+P (Windows) o Cmd+P (Mac) para imprimir/guardar como PDF.');
+    }
+  }
     if(barChart){
       const bimg=$('barImage');
       bimg.src=barChart.toBase64Image();
