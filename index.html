@@ -764,6 +764,9 @@
 
 <script>
   const $ = id => document.getElementById(id);
+  const on = (id, evt, fn) => { const el = $(id); if (el) el.addEventListener(evt, fn); };
+  const safeVal = (id, fallback='') => { const el = $(id); return el ? el.value : fallback; };
+
   const money = v => new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',minimumFractionDigits:0,maximumFractionDigits:0}).format(Number(v)||0);
   const freqMap = {'12':'Mensual','4':'Trimestral','2':'Semestral','1':'Anual'};
   const PHONE_WA = '526624176032';
@@ -825,7 +828,7 @@
     const infl=parseFloat($('inflation').value);
     const rAcc=parseFloat($('rate').value);
     const rRet=7;
-    const yrsRet=parseInt($('yrsRetSel').value||20,10);
+    const yrsRet=parseInt(safeVal('yrsRetSel',20),10);
     const freq=12;
 
     if(!(edadTop>0&&planY>0&&metaHoy>0)){
@@ -1179,25 +1182,11 @@
   }
 
   function prepararPDF(){
-    // Nota: algunos navegadores bloquean window.print() si se llama dentro de setTimeout.
-    // Por eso lo hacemos directo (mantiene el "user gesture").
-    try{
-      if(myChart && reportState.chartData){
-        const img = $('chartImage');
-        if(img){
-          img.src = myChart.toBase64Image();
-          img.style.display = 'block';
-        }
-      }
-    }catch(err){
-      console.error('Error preparando la imagen de la gráfica para PDF:', err);
+    if(myChart){
+      const img=$('chartImage');
+      img.src=myChart.toBase64Image();
+      img.style.display='block';
     }
-    try{
-      window.print();
-    }catch(err){
-      alert('Si no se abre el PDF, usa Ctrl+P (Windows) o Cmd+P (Mac) para imprimir/guardar como PDF.');
-    }
-  }
     if(barChart){
       const bimg=$('barImage');
       bimg.src=barChart.toBase64Image();
@@ -1207,7 +1196,7 @@
   }
 
   $('planBtn').addEventListener('click',()=>{calcSuggestion();calcAccum();});
-  $('resetTop').addEventListener('click',()=>{
+  on('resetTop','click',()=>{
     $('nombreOpt').value='';
     $('edadTop').value=29;
     $('planTop').value='25';
@@ -1215,8 +1204,8 @@
     $('sugBox').classList.remove('visible');
   });
 
-  $('calcBtn').addEventListener('click',calcAccum);
-  $('resetBtn').addEventListener('click',()=>{
+  on('calcBtn','click',calcAccum);
+  on('resetBtn','click',()=>{
     $('edad').value=29;
     $('years').value=25;
     $('pmt').value=2500;
@@ -1231,12 +1220,12 @@
     calcSuggestion();calcAccum();
   });
 
-  $('calcRet').addEventListener('click',calcRet);
-  $('csvBtn').addEventListener('click',exportCSV);
-  $('printBtn').addEventListener('click',prepararPDF);
+  on('calcRet','click',calcRet);
+  on('csvBtn','click',exportCSV);
+  on('printBtn','click',prepararPDF);
 
-  $('toggleTable').addEventListener('click',function(){const d=$('details');d.classList.toggle('visible');this.classList.toggle('open');});
-  $('toggleTableRet').addEventListener('click',function(){const d=$('detailsRet');d.classList.toggle('visible');this.classList.toggle('open');});
+  on('toggleTable','click',function(){const d=$('details');d.classList.toggle('visible');this.classList.toggle('open');});
+  on('toggleTableRet','click',function(){const d=$('detailsRet');d.classList.toggle('visible');this.classList.toggle('open');});
 
   $('pmt').addEventListener('input',()=>{userEditedPMT=true;});
   $('useSuggestedBtn').addEventListener('click',()=>{
@@ -1251,7 +1240,7 @@
   ['edadTop','planTop','metaHoy','rate','inflation','yrsRetSel'].forEach(id=>{$(id).addEventListener('change',()=>{calcSuggestion();});});
   ['edad','years','frequency','lumpSum','rate','inflation','regimenFiscal','isrPct','reinvertISR'].forEach(id=>{$(id).addEventListener('change',()=>{calcAccum();});});
 
-  window.addEventListener('load',()=>{calcSuggestion();calcAccum();linkWhatsApp();actualizarReporteBase();});
+  document.addEventListener('DOMContentLoaded',()=>{ try{ calcSuggestion(); calcAccum(); linkWhatsApp(); actualizarReporteBase(); } catch(e){ console.error(e); alert('Error en la calculadora. Abre la consola (F12) para ver detalles.'); } });
 </script>
 </body>
 </html>
