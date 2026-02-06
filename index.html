@@ -422,12 +422,12 @@
 
       <div class="error-alert" id="errorMsg"></div>
 
-      <div class="form-group">
+      <div class="form-group dup-hide">
         <label class="form-label">Edad actual</label>
         <input class="form-input" id="edad" type="number" value="29" min="18" max="100">
       </div>
 
-      <div class="form-group">
+      <div class="form-group dup-hide">
         <label class="form-label">Años aportando</label>
         <input class="form-input" id="years" type="number" value="25" min="1" max="70">
       </div>
@@ -1182,11 +1182,57 @@
   }
 
   function prepararPDF(){
-    if(myChart){
-      const img=$('chartImage');
-      img.src=myChart.toBase64Image();
-      img.style.display='block';
+    // 1) Renderiza gráficas a imagen (si existen) sin romper el flujo
+    try{
+      if(myChart){
+        const img = $('chartImage');
+        if(img){
+          img.src = myChart.toBase64Image('image/png', 0.9);
+          img.style.display = 'block';
+        }
+      }
+    }catch(e){
+      const img = $('chartImage');
+      if(img) img.style.display='none';
     }
+
+    try{
+      if(typeof barChart !== 'undefined' && barChart){
+        const bimg = $('barImage');
+        if(bimg){
+          bimg.src = barChart.toBase64Image('image/png', 0.9);
+          bimg.style.display = 'block';
+        }
+      }
+    }catch(e){
+      const bimg = $('barImage');
+      if(bimg) bimg.style.display='none';
+    }
+
+    // 2) Espera a que los assets del PDF estén listos (logos + imágenes)
+    const assets = [
+      document.querySelector('.report-view img[alt="GarBa"]'),
+      document.querySelector('.report-view img[alt="Allianz"]'),
+      document.getElementById('chartImage'),
+      document.getElementById('barImage')
+    ].filter(Boolean);
+
+    const waitImage = (img) => new Promise(resolve=>{
+      // Si no hay src visible, no bloquea
+      if(!img || img.style.display==='none' || !img.getAttribute('src')) return resolve();
+      if(img.complete && img.naturalWidth>0) return resolve();
+      const done=()=>resolve();
+      img.addEventListener('load', done, {once:true});
+      img.addEventListener('error', done, {once:true});
+      // timeout de seguridad
+      setTimeout(done, 1200);
+    });
+
+    Promise.all(assets.map(waitImage)).then(()=>{
+      // importante: llamada directa en respuesta a click (sin await externo)
+      window.print();
+    });
+  }
     if(barChart){
       const bimg=$('barImage');
       bimg.src=barChart.toBase64Image();
