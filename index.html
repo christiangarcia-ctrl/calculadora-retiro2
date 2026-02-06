@@ -991,6 +991,8 @@
     reportState.isrPct=isrPct*100;
 
     actualizarGrafica(labels,fondo,aport);
+    // Actualiza la gráfica de barras (Aportaciones / Rendimiento / Beneficio fiscal)
+    actualizarBarra(totalAportado, rendimiento, benefFiscal);
     actualizarMilestones(labels,fondo);
     actualizarReporteBase();
     linkWhatsApp();
