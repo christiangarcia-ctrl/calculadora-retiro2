@@ -538,7 +538,7 @@
       color:#000 !important;
       -webkit-print-color-adjust:exact;
       print-color-adjust:exact;
-      font-size:11px;
+      font-size:10px;
       overflow:visible;
     }
     html,body{height:auto;overflow:visible}
@@ -548,16 +548,16 @@
       display:block !important;
       max-width:800px;
       margin:0 auto;
-      padding:15mm;
+      padding:10mm;
     }
 
     .report-header{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      padding-bottom:20px;
-      margin-bottom:24px;
-      border-bottom:4px solid var(--navy);
+      padding-bottom:12px;
+      margin-bottom:16px;
+      border-bottom:3px solid var(--navy);
     }
     .report-logo-section{
       display:flex;
@@ -566,6 +566,8 @@
     }
     .report-logo{display:flex;gap:12px;align-items:center;}
     .report-logo img{display:block;}
+    .report-logo img:first-child{filter:none !important;}
+    .report-logo img:last-child{filter:none !important;}
     .report-branding{
       border-left:3px solid var(--gold);
       padding-left:16px;
@@ -591,27 +593,27 @@
     .report-hero{
       background:linear-gradient(135deg, #EFF6FF, #DBEAFE);
       border:3px solid var(--electric);
-      border-radius:12px;
-      padding:24px;
-      margin-bottom:24px;
+      border-radius:10px;
+      padding:16px;
+      margin-bottom:14px;
     }
     .report-hero-title{
       font-family:'Playfair Display',serif;
-      font-size:18px;
+      font-size:16px;
       font-weight:700;
       color:var(--navy);
-      margin-bottom:16px;
+      margin-bottom:12px;
       text-align:center;
     }
     .report-hero-grid{
       display:grid;
       grid-template-columns:repeat(2,1fr);
-      gap:16px;
+      gap:10px;
     }
     .report-hero-item{
       background:white;
-      padding:16px;
-      border-radius:8px;
+      padding:12px;
+      border-radius:6px;
       border-left:4px solid var(--gold);
     }
     .report-hero-item.featured{
@@ -642,25 +644,25 @@
     }
 
     .report-comparison{
-      margin-bottom:24px;
+      margin-bottom:14px;
       page-break-inside:avoid;
     }
     .report-comparison-title{
       font-family:'Playfair Display',serif;
-      font-size:16px;
+      font-size:14px;
       font-weight:700;
       color:var(--navy);
-      margin-bottom:12px;
+      margin-bottom:8px;
       text-align:center;
     }
     .report-comparison-grid{
       display:grid;
       grid-template-columns:repeat(4,1fr);
-      gap:12px;
+      gap:8px;
     }
     .report-comp-box{
-      padding:16px;
-      border-radius:8px;
+      padding:12px;
+      border-radius:6px;
       text-align:center;
       border:2px solid;
     }
@@ -711,16 +713,16 @@
     }
 
     .report-section{
-      margin-bottom:20px;
+      margin-bottom:14px;
       page-break-inside:avoid;
     }
     .report-section-title{
       font-family:'Playfair Display',serif;
-      font-size:16px;
+      font-size:14px;
       font-weight:700;
       color:var(--navy);
-      margin-bottom:12px;
-      padding-bottom:6px;
+      margin-bottom:8px;
+      padding-bottom:4px;
       border-bottom:2px solid var(--gold);
     }
     .report-grid{
@@ -828,23 +830,23 @@
     .report-timeline{
       background:linear-gradient(135deg,#F0FDF4,#DCFCE7);
       border:2px solid var(--success);
-      border-radius:12px;
-      padding:20px;
-      margin-bottom:20px;
+      border-radius:8px;
+      padding:12px;
+      margin-bottom:12px;
     }
     .report-timeline-title{
       font-family:'Playfair Display',serif;
-      font-size:16px;
+      font-size:14px;
       font-weight:700;
       color:#065F46;
-      margin-bottom:16px;
+      margin-bottom:10px;
       text-align:center;
     }
     .timeline-visual{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      margin:16px 0;
+      margin:10px 0;
     }
     .timeline-point{
       text-align:center;
@@ -852,13 +854,13 @@
     }
     .timeline-age{
       font-family:'DM Mono',monospace;
-      font-size:18px;
+      font-size:16px;
       font-weight:700;
       color:#065F46;
-      margin-bottom:4px;
+      margin-bottom:3px;
     }
     .timeline-label{
-      font-size:9px;
+      font-size:8px;
       color:#059669;
       text-transform:uppercase;
       letter-spacing:.06em;
@@ -866,15 +868,15 @@
     }
     .timeline-amount{
       font-family:'DM Mono',monospace;
-      font-size:14px;
+      font-size:12px;
       font-weight:700;
       color:#065F46;
-      margin-top:4px;
+      margin-top:3px;
     }
     .timeline-arrow{
-      font-size:20px;
+      font-size:18px;
       color:#10B981;
-      margin:0 8px;
+      margin:0 6px;
     }
   }
 </style>
@@ -1289,9 +1291,9 @@
         <div class="report-hero-label">💰 Fondo a los 65 años</div>
         <div class="report-hero-value" id="rptFondo65">—</div>
       </div>
-      <div class="report-hero-item featured">
-        <div class="report-hero-label">📊 Ingreso mensual en retiro</div>
-        <div class="report-hero-value" id="rptIngresoMensual">—</div>
+      <div class="report-hero-item featured" style="background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border-left-color:#1A4BFF">
+        <div class="report-hero-label" style="color:#1E40AF">📊 Ingreso mensual en retiro (20 años)</div>
+        <div class="report-hero-value" id="rptIngresoMensual" style="color:#1E40AF">—</div>
       </div>
     </div>
   </div>
@@ -1352,11 +1354,11 @@
         <div class="report-value" id="rptEdad">—</div>
       </div>
       <div class="report-item">
-        <div class="report-label">Meta mensual deseada</div>
-        <div class="report-value" id="rptMetaHoy">—</div>
+        <div class="report-label">Plazo de aportaciones</div>
+        <div class="report-value" id="rptPlazoDetalle">—</div>
       </div>
       <div class="report-item">
-        <div class="report-label">Aportación mensual elegida</div>
+        <div class="report-label">Aportación mensual</div>
         <div class="report-value" id="rptAportReal">—</div>
       </div>
     </div>
@@ -1792,11 +1794,9 @@
     $('rptEdad').textContent=edad?`${edad} años`:'—';
     $('rptEdadHoy').textContent=edad||'—';
 
-    const metaHoy=reportState.metaHoy!=null?reportState.metaHoy:parseFloat($('metaHoy').value||0);
-    $('rptMetaHoy').textContent=metaHoy?money(metaHoy):'—';
-
     const years=reportState.planYears!=null?reportState.planYears:parseFloat($('years').value||0);
     $('rptPlazo').textContent=years?`${years} años`:'—';
+    if($('rptPlazoDetalle')) $('rptPlazoDetalle').textContent=years?`${years} años`:'—';
 
     const pmtReal=parseFloat($('pmt').value||0);
     $('rptAportReal').textContent=pmtReal?money(pmtReal):'—';
