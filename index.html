@@ -1970,9 +1970,26 @@
 
   ['edad','years','metaHoy','rate','inflation','yrsRetSel'].forEach(id=>{
     $(id).addEventListener('change',()=>{
-      if(!userEditedPMT)updateSuggestion();
+      updateSuggestion();
     });
   });
 
   ['frequency','lumpSum','regimenFiscal','isrPct','reinvertISR'].forEach(id=>{
-    $(id).addEventListener('change',
+    $(id).addEventListener('change',()=>{
+      if(reportState.planYears){
+        calcAccum();
+      }
+    });
+  });
+
+  window.addEventListener('load',()=>{
+    // Inicializar estado fiscal
+    $('regimenFiscal').dispatchEvent(new Event('change'));
+    // Calcular automáticamente al cargar
+    updateSuggestion();
+    calcAccum();
+    linkWhatsApp();
+  });
+</script>
+</body>
+</html>
