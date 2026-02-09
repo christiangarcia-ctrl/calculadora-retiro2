@@ -925,6 +925,11 @@
     object-fit:contain !important;
   }
 
+
+    /* ===== Nota técnica fina en PDF ===== */
+    .report-footer{font-size:11px !important; color:#64748B !important;}
+    .report-disclaimer{font-style:normal !important; max-width:520px !important; line-height:1.35 !important;}
+
 </style>
 </head>
 <body>
@@ -1456,11 +1461,7 @@
       <strong>Christian GarBa</strong> · Seguros con Estrategia · Allianz<br>
       Tel. 662 417 6032 · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="adcec5dfc4ded9c4ccc383caccdfcec4cceddecbcaccdfcfcc83cec2c083c0d5">[email&#160;protected]</a>
     </div>
-    <div class="report-disclaimer">
-      <strong>Disclaimer:</strong> Este documento es una proyección ilustrativa con fines informativos, 
-      basada en rendimientos promedio históricos y supuestos conservadores. Los rendimientos reales 
-      pueden variar. No constituye oferta vinculante ni garantiza resultados futuros.
-    </div>
+    <div class="report-disclaimer"><strong>Nota técnica:</strong> Proyección matemática basada en un supuesto de rendimiento nominal anual del <span id="rptRendimientoNota">10</span>% compuesto y en los parámetros indicados. Los resultados son estimaciones informativas y no constituyen garantía de rendimiento futuro. El escenario AFORE utiliza supuestos conservadores alineados al comportamiento del simulador oficial de CONSAR.</div>
   </div>
 
 </div>
@@ -1694,7 +1695,7 @@
     }
     const bancoReal=saldoBanco/Math.pow(1+infl,years);
     
-    const iAfore=0.09/12;
+    const iAfore=0.0347/12;
     let saldoAfore=0;
     for(let m=0;m<totalMeses;m++){
       saldoAfore*=(1+iAfore);
@@ -1894,7 +1895,7 @@
       }
       const bancoReal=saldoBanco/Math.pow(1+inflDec,years);
       
-      const iAfore=0.09/12;
+      const iAfore=0.0347/12;
       let saldoAfore=0;
       for(let m=0;m<totalMeses;m++){
         saldoAfore*=(1+iAfore);
