@@ -1424,8 +1424,8 @@
       <thead>
         <tr>
           <th>Momento de inicio</th>
-          <th>Aportación mensual necesaria</th>
-          <th>Incremento</th>
+          <th>Aportación mensual para mismo fondo</th>
+          <th>Costo adicional vs hoy</th>
         </tr>
       </thead>
       <tbody>
@@ -1915,11 +1915,56 @@
     }
 
     // Posponer
+    // Usamos el monto que el prospecto ELIGIÓ ahorrar (pmtReal) como base,
+    // y calculamos cuánto tendría que aportar si esperara 1, 3 o 5 años
+    // para acumular ese mismo fondo final (fondo65) partiendo de hoy.
     const esc=reportState.delayScenarios;
-    if(esc && reportState.pmtSugerido!=null){
-      const base=esc[0]||0;
+    if(esc && reportState.fondo65>0){
+      // base: lo que el prospecto eligió
+      const base=pmtReal;
+
+      // Para los escenarios de retraso, calculamos la PMT necesaria para
+      // alcanzar el mismo fondo65, pero empezando 1, 3 o 5 años después.
+      // Usamos los mismos parámetros de rendimiento e inflación.
+      const inflDec=(reportState.infl!=null?reportState.infl:infl)/100;
+      const rAccDec=(reportState.rAcc!=null?reportState.rAcc:parseFloat($('rate').value))/100;
+      const freqVal=parseFloat($('frequency').value);
+      const edadHoy=reportState.edad!=null?reportState.edad:parseFloat($('edad').value);
+      const planYears=reportState.planYears!=null?reportState.planYears:parseFloat($('years').value);
+      const targetFondo65=reportState.fondo65;
+
+      function pmtParaFondo65(delayYears){
+        // Nueva edad de inicio
+        const edadNueva=edadHoy+delayYears;
+        // Años de aportación disponibles (mismo plazo del plan, pero limitado a llegar a 65)
+        const yrsTo65nuevo=Math.max(0,65-edadNueva);
+        const yrsAportNuevo=Math.min(planYears,yrsTo65nuevo);
+        const yrsExtraNuevo=Math.max(0,yrsTo65nuevo-yrsAportNuevo);
+        if(yrsAportNuevo<=0) return null;
+
+        const iAcc=rAccDec/freqVal;
+        const N=yrsAportNuevo*freqVal;
+
+        // FV de los pagos con crecimiento por inflación
+        let FV_pagos=0, pmtYearSim=1;
+        for(let y=0;y<yrsAportNuevo;y++){
+          if(y>0) pmtYearSim*=(1+inflDec);
+          for(let m=0;m<freqVal;m++){
+            const perRest=N-(y*freqVal+m);
+            FV_pagos+=pmtYearSim*Math.pow(1+iAcc,perRest);
+          }
+        }
+        const growTo65=Math.pow(1+iAcc,yrsExtraNuevo*freqVal);
+        const totalFactor=FV_pagos*growTo65;
+        return totalFactor>0?targetFondo65/totalFactor:null;
+      }
+
+      const pmt1=pmtParaFondo65(1);
+      const pmt3=pmtParaFondo65(3);
+      const pmt5=pmtParaFondo65(5);
+
       function deltaTxt(pmtDelay){
-        if(!base||!pmtDelay)return '—';
+        if(!base||pmtDelay==null)return '—';
         const diff=pmtDelay-base;
         if(diff<=0)return 'Igual';
         const pct=diff/base*100;
@@ -1927,17 +1972,17 @@
       }
 
       $('rptHoyMonto').textContent=base?money(base):'—';
-      $('rptHoyDelta').textContent='—';
-      $('rpt1Monto').textContent=esc[1]?money(esc[1]):'—';
-      $('rpt1Delta').textContent=deltaTxt(esc[1]);
-      $('rpt3Monto').textContent=esc[3]?money(esc[3]):'—';
-      $('rpt3Delta').textContent=deltaTxt(esc[3]);
-      $('rpt5Monto').textContent=esc[5]?money(esc[5]):'—';
-      $('rpt5Delta').textContent=deltaTxt(esc[5]);
+      $('rptHoyDelta').textContent='Base';
+      $('rpt1Monto').textContent=pmt1!=null?money(pmt1):'—';
+      $('rpt1Delta').textContent=deltaTxt(pmt1);
+      $('rpt3Monto').textContent=pmt3!=null?money(pmt3):'—';
+      $('rpt3Delta').textContent=deltaTxt(pmt3);
+      $('rpt5Monto').textContent=pmt5!=null?money(pmt5):'—';
+      $('rpt5Delta').textContent=deltaTxt(pmt5);
 
       const nombreShow=nombre||'Tu decisión';
       $('rptMensajePosponer').textContent=
-        `${nombreShow} de hoy define tu esfuerzo mañana. Posponer 1, 3 o 5 años aumenta significativamente la aportación mensual necesaria para alcanzar la misma meta. Empezar antes casi siempre es más barato.`;
+        `${nombreShow} de hoy define tu esfuerzo mañana. Para alcanzar el mismo fondo a los 65 años (${money(targetFondo65)}), posponer 1, 3 o 5 años obliga a aumentar significativamente la aportación mensual. Empezar antes siempre es más económico.`;
     }
   }
 
