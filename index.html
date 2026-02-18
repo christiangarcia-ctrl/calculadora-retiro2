@@ -1294,20 +1294,20 @@
   <!-- Timeline Visual -->
   <div class="report-timeline">
     <div class="report-timeline-title">📈 Tu Línea de Tiempo Financiera</div>
-    <div class="timeline-visual">
+    <div class="timeline-visual" id="timelineVisual">
       <div class="timeline-point">
         <div class="timeline-age" id="rptEdadHoy">29</div>
         <div class="timeline-label">HOY</div>
         <div class="timeline-amount">Comienzas</div>
       </div>
-      <div class="timeline-arrow">→</div>
-      <div class="timeline-point">
+      <div class="timeline-arrow" id="timelineArrow1">→</div>
+      <div class="timeline-point" id="timelineMidPoint">
         <div class="timeline-age" id="rptEdadFinPlan">44</div>
-        <div class="timeline-label">FIN APORTACIONES</div>
+        <div class="timeline-label" id="rptLabelFinPlan">FIN APORTACIONES</div>
         <div class="timeline-amount" id="rptFondoFinPlan">—</div>
       </div>
-      <div class="timeline-arrow">→</div>
-      <div class="timeline-point">
+      <div class="timeline-arrow" id="timelineArrow2">→</div>
+      <div class="timeline-point" id="timelineRetPoint">
         <div class="timeline-age">65</div>
         <div class="timeline-label">RETIRO</div>
         <div class="timeline-amount" id="rptFondo65Timeline">—</div>
@@ -1566,7 +1566,7 @@
     });
 
     reportState.metaHoy=metaHoy;
-    reportState.planYears=planY;
+    // planYears lo establece calcAccum con el valor real limitado a edad 65
     reportState.pmtSugerido=pmt0;
     reportState.infl=infl;
     reportState.rAcc=rAcc;
@@ -1605,7 +1605,8 @@
     }
 
     const yrsTo65=Math.max(0,65-edad);
-    const yrsAport=years;
+    // Si el plan cruza los 65, las aportaciones se detienen en 65
+    const yrsAport=Math.min(years,yrsTo65);
     const yrsExtra=Math.max(0,yrsTo65-yrsAport);
     const i=rate/freq;
 
@@ -1669,6 +1670,7 @@
     $('compTitle').textContent=`¿Dónde está tu dinero en ${yrsAport} años?`;
 
     reportState.edad=edad;
+    reportState.planYears=yrsAport;  // Años reales de aportación (limitado a edad 65)
     reportState.totalAportado=totalAportado;
     reportState.rendimiento=rendimiento;
     reportState.fondoPlan=fondoPlan;
@@ -1871,10 +1873,29 @@
     $('rptIngresoMensual').textContent=reportState.ingresoMensual?money(reportState.ingresoMensual):'—';
 
     // Timeline
-    $('rptEdadFinPlan').textContent=reportState.edadFinPlan||'—';
-    $('rptFondoFinPlan').textContent=reportState.fondoPlan?money(reportState.fondoPlan):'—';
-    $('rptFondo65Timeline').textContent=reportState.fondo65?money(reportState.fondo65):'—';
-    $('rptYearsGrowth').textContent=reportState.yearsGrowth?`${reportState.yearsGrowth} años`:'0 años';
+    const edadFinPlanCalc = reportState.edadFinPlan || 0;
+    const planCruza65 = edadFinPlanCalc >= 65;
+
+    if(planCruza65){
+      // Plan llega o supera 65: fin aportaciones = retiro = 65, ocultar punto derecho
+      $('rptEdadFinPlan').textContent = '65';
+      $('rptLabelFinPlan').textContent = 'RETIRO (65)';
+      $('rptFondoFinPlan').textContent = reportState.fondo65 ? money(reportState.fondo65) : '—';
+      // Ocultar flecha y punto de retiro (son el mismo)
+      $('timelineArrow2').style.display = 'none';
+      $('timelineRetPoint').style.display = 'none';
+      $('rptYearsGrowth').parentElement.style.display = 'none';
+    } else {
+      // Plan normal: fin aportaciones < 65, hay años de crecimiento
+      $('rptEdadFinPlan').textContent = edadFinPlanCalc || '—';
+      $('rptLabelFinPlan').textContent = 'FIN APORTACIONES';
+      $('rptFondoFinPlan').textContent = reportState.fondoPlan ? money(reportState.fondoPlan) : '—';
+      $('timelineArrow2').style.display = '';
+      $('timelineRetPoint').style.display = '';
+      $('rptYearsGrowth').parentElement.style.display = '';
+      $('rptFondo65Timeline').textContent = reportState.fondo65 ? money(reportState.fondo65) : '—';
+      $('rptYearsGrowth').textContent = reportState.yearsGrowth ? `${reportState.yearsGrowth} años` : '0 años';
+    }
 
     // Comparativa PDF
     $('rptCompTitle').textContent=`¿Dónde está tu dinero en ${years} años?`;
