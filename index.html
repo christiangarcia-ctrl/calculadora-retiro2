@@ -384,109 +384,136 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
 ::-webkit-scrollbar-thumb{background:var(--electric);border-radius:3px}
 
 /* ══════════════════════════════════════
-   PRINT / PDF
+   PRINT / PDF — 2 HOJAS
 ══════════════════════════════════════ */
 .report-view{display:none}
 @media print{
-  @page{margin:11mm 13mm;size:A4 portrait;}
+  @page{margin:10mm 12mm;size:A4 portrait;}
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
-  html,body{height:auto;overflow:visible;background:white !important;font-size:9.5px;}
+  html,body{height:auto;overflow:visible;background:white !important;font-size:8.5px;line-height:1.3;}
   #screen-intro,#screen-results,.wa-fab{display:none !important}
-  .report-view{display:block !important;max-width:780px;margin:0 auto;font-family:'DM Sans',sans-serif;color:#111;}
+  .report-view{display:block !important;max-width:760px;margin:0 auto;font-family:'DM Sans',sans-serif;color:#111;}
 
-  /* Portada personalizada */
-  .rpt-cover{page-break-after:always;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:260px;background:#F8F8F8;border:2px solid #111;border-radius:8px;padding:32px;text-align:center;margin-bottom:0;}
-  .rpt-cover-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.10em;font-weight:700;color:#555;margin-bottom:10px;}
-  .rpt-cover-name{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;color:#111;margin-bottom:8px;letter-spacing:-.02em;}
-  .rpt-cover-sub{font-size:13px;color:#555;margin-bottom:24px;}
-  .rpt-cover-divider{width:60px;height:3px;background:#111;margin:0 auto 24px;}
-  .rpt-cover-meta{font-size:11px;color:#555;line-height:1.8;}
-  .rpt-cover-meta strong{color:#111;}
+  /* ── ENCABEZADO con nombre integrado ── */
+  .rpt-cover{display:none;} /* sin portada separada */
 
-  .rpt-header{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:9px;margin-bottom:12px;border-bottom:2.5px solid #111;}
-  .rpt-logo-block{display:flex;align-items:center;gap:13px;}
-  .rpt-logo-img{height:34px;width:auto;display:block;filter:none !important;}
-  .rpt-branding{border-left:3px solid #888;padding-left:13px;}
-  .rpt-main-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:#111;margin-bottom:2px;}
-  .rpt-subtitle{font-size:10px;color:#555;}
-  .rpt-meta{text-align:right;font-size:9px;color:#555;line-height:1.6;}
+  .rpt-header{
+    display:grid;grid-template-columns:1fr auto;
+    align-items:center;gap:16px;
+    padding-bottom:8px;margin-bottom:10px;
+    border-bottom:2.5px solid #111;
+  }
+  .rpt-header-left{display:flex;align-items:center;gap:14px;}
+  .rpt-logo-img{height:32px;width:auto;display:block;filter:none !important;}
+  .rpt-branding{border-left:3px solid #888;padding-left:12px;}
+  .rpt-main-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:900;color:#111;margin-bottom:1px;letter-spacing:-.01em;}
+  .rpt-subtitle{font-size:8.5px;color:#555;}
+  /* Nombre del prospecto en header */
+  .rpt-header-name{
+    font-family:'Playfair Display',serif;
+    font-size:22px;font-weight:900;color:#111;
+    letter-spacing:-.02em;text-align:right;
+    border-right:none;
+  }
+  .rpt-header-name-label{font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:#888;font-weight:700;text-align:right;margin-bottom:2px;}
+  .rpt-meta{text-align:right;font-size:8px;color:#666;line-height:1.5;}
   .rpt-meta strong{color:#111;}
 
-  .rpt-timeline{border:1.5px solid #111;border-radius:6px;padding:13px 15px;margin-bottom:11px;background:#F8F8F8;page-break-inside:avoid;}
-  .rpt-timeline-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#111;margin-bottom:11px;text-align:center;}
+  /* ── SECCIÓN TÍTULO compacto ── */
+  .rpt-section-title{
+    font-family:'Playfair Display',serif;font-size:11px;font-weight:700;
+    color:#111;margin-bottom:6px;padding-bottom:3px;border-bottom:1.5px solid #888;
+  }
+
+  /* ── TIMELINE ── */
+  .rpt-timeline{border:1.5px solid #111;border-radius:5px;padding:10px 14px;margin-bottom:9px;background:#F8F8F8;page-break-inside:avoid;}
+  .rpt-timeline-title{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:#111;margin-bottom:9px;text-align:center;}
   .rpt-timeline-track{display:flex;align-items:flex-start;justify-content:center;gap:0;margin:0 auto;max-width:680px;}
-  .rpt-tl-point{text-align:center;flex:0 0 auto;width:110px;}
-  .rpt-tl-circle{width:34px;height:34px;border-radius:50%;border:2px solid #111;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;background:white;}
+  .rpt-tl-point{text-align:center;flex:0 0 auto;width:100px;}
+  .rpt-tl-circle{width:30px;height:30px;border-radius:50%;border:2px solid #111;display:flex;align-items:center;justify-content:center;margin:0 auto 5px;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;background:white;}
   .rpt-tl-circle.filled{background:#111;color:white;}
-  .rpt-tl-label{font-size:8px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:#555;margin-bottom:3px;}
-  .rpt-tl-amount{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;color:#111;}
-  .rpt-tl-connector{flex:1;display:flex;align-items:center;padding-top:17px;}
+  .rpt-tl-label{font-size:7.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:#666;margin-bottom:2px;}
+  .rpt-tl-amount{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:#111;}
+  .rpt-tl-connector{flex:1;display:flex;flex-direction:column;align-items:center;padding-top:15px;min-width:28px;}
   .rpt-tl-line{width:100%;height:2px;background:repeating-linear-gradient(90deg,#111 0,#111 4px,transparent 4px,transparent 8px);}
-  .rpt-tl-years{font-size:8px;color:#555;text-align:center;margin-top:4px;white-space:nowrap;}
+  .rpt-tl-years{font-size:7.5px;color:#888;text-align:center;margin-top:3px;white-space:nowrap;}
 
-  .rpt-hero{border:1.5px solid #111;border-radius:6px;padding:13px;margin-bottom:11px;page-break-inside:avoid;}
-  .rpt-hero-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#111;margin-bottom:9px;text-align:center;}
-  .rpt-hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
-  .rpt-hero-item{padding:9px 11px;border:1px solid #ccc;border-radius:4px;background:#F8F8F8;}
-  .rpt-hero-item.featured{background:#111;color:white;border-color:#111;grid-column:1/-1;}
-  .rpt-hero-item.featured2{background:#444;color:white;border-color:#444;grid-column:1/-1;}
-  .rpt-hero-label{font-size:8px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:#555;margin-bottom:3px;}
-  .rpt-hero-item.featured .rpt-hero-label,.rpt-hero-item.featured2 .rpt-hero-label{color:#ccc;}
-  .rpt-hero-value{font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:#111;}
-  .rpt-hero-item.featured .rpt-hero-value{font-size:21px;color:white;}
-  .rpt-hero-item.featured2 .rpt-hero-value{font-size:17px;color:white;}
+  /* ── NÚMEROS CLAVE: layout horizontal en una fila ── */
+  .rpt-hero{margin-bottom:9px;page-break-inside:avoid;}
+  .rpt-hero-title{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:#111;margin-bottom:7px;text-align:center;}
+  /* 3 items normales + 2 destacados en 5 columnas */
+  .rpt-hero-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr 1.4fr;gap:6px;}
+  .rpt-hero-item{padding:8px 10px;border:1px solid #ccc;border-radius:4px;background:#F8F8F8;}
+  .rpt-hero-item.featured{background:#111;color:white;border-color:#111;grid-column:auto;}
+  .rpt-hero-item.featured2{background:#444;color:white;border-color:#444;grid-column:auto;}
+  .rpt-hero-label{font-size:7.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#666;margin-bottom:3px;}
+  .rpt-hero-item.featured .rpt-hero-label,.rpt-hero-item.featured2 .rpt-hero-label{color:#bbb;}
+  .rpt-hero-value{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#111;}
+  .rpt-hero-item.featured .rpt-hero-value{font-size:15px;color:white;}
+  .rpt-hero-item.featured2 .rpt-hero-value{font-size:14px;color:white;}
 
-  .rpt-compare{margin-bottom:11px;page-break-inside:avoid;}
-  .rpt-compare-title{font-family:'Playfair Display',serif;font-size:12px;font-weight:700;color:#111;margin-bottom:7px;text-align:center;}
-  .rpt-compare-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
-  .rpt-comp-box{padding:9px 7px;border-radius:4px;text-align:center;border:1px solid #ccc;}
+  /* ── COMPARATIVA ── */
+  .rpt-compare{margin-bottom:9px;page-break-inside:avoid;}
+  .rpt-compare-title{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:#111;margin-bottom:6px;text-align:center;}
+  .rpt-compare-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
+  .rpt-comp-box{padding:8px 7px;border-radius:4px;text-align:center;border:1px solid #ccc;}
   .rpt-comp-box.mattress{background:#F0F0F0;}
   .rpt-comp-box.bank{background:#E8E8E8;}
   .rpt-comp-box.afore{background:#D8D8D8;}
   .rpt-comp-box.plan{background:#111;color:white;}
-  .rpt-comp-label{font-size:8px;text-transform:uppercase;letter-spacing:.07em;font-weight:800;margin-bottom:5px;color:#555;}
+  .rpt-comp-label{font-size:7.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:800;margin-bottom:4px;color:#555;}
   .rpt-comp-box.plan .rpt-comp-label{color:#ccc;}
-  .rpt-comp-value{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;margin:4px 0;color:#111;}
+  .rpt-comp-value{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;margin:3px 0;color:#111;}
   .rpt-comp-box.plan .rpt-comp-value{color:white;}
-  .rpt-comp-sub{font-size:8px;color:#666;}
+  .rpt-comp-sub{font-size:7.5px;color:#777;}
   .rpt-comp-box.plan .rpt-comp-sub{color:#ccc;}
-  .rpt-comp-bar{height:4px;border-radius:2px;margin:5px auto;background:#bbb;}
+  .rpt-comp-bar{height:3px;border-radius:2px;margin:4px auto;background:#bbb;}
   .rpt-comp-box.plan .rpt-comp-bar{background:#fff;}
-  .rpt-compare-msg{margin-top:7px;padding:9px 11px;background:#F0F0F0;border-left:3px solid #111;border-radius:0 4px 4px 0;font-size:10px;font-weight:600;color:#111;}
+  .rpt-compare-msg{margin-top:6px;padding:7px 10px;background:#F0F0F0;border-left:3px solid #111;border-radius:0 4px 4px 0;font-size:8.5px;font-weight:600;color:#111;}
 
-  .rpt-hitos{margin-bottom:11px;page-break-inside:avoid;}
-  .rpt-section-title{font-family:'Playfair Display',serif;font-size:12px;font-weight:700;color:#111;margin-bottom:7px;padding-bottom:4px;border-bottom:1.5px solid #888;}
-  .rpt-hitos-table{width:100%;border-collapse:collapse;font-size:9px;}
-  .rpt-hitos-table th{background:#111;color:white;padding:7px 10px;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
-  .rpt-hitos-table td{padding:7px 10px;border-bottom:1px solid #ddd;}
+  /* ── FIN HOJA 1 / INICIO HOJA 2 ── */
+  .rpt-page-break{page-break-before:always;padding-top:2px;}
+
+  /* ── RETIRO ── */
+  .rpt-retiro{margin-bottom:9px;page-break-inside:avoid;}
+  .rpt-retiro-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .rpt-retiro-col{border:1.5px solid #111;border-radius:4px;padding:9px 11px;}
+  .rpt-retiro-col.secondary{border-color:#888;}
+  .rpt-retiro-col-title{font-size:9px;text-transform:uppercase;letter-spacing:.06em;font-weight:800;margin-bottom:7px;color:#111;}
+  .rpt-retiro-col.secondary .rpt-retiro-col-title{color:#666;}
+  .rpt-retiro-item{margin-bottom:6px;}
+  .rpt-retiro-label{font-size:7.5px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;color:#666;margin-bottom:2px;}
+  .rpt-retiro-value{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:#111;}
+  .rpt-retiro-nota{margin-top:6px;padding:6px 9px;background:#F0F0F0;border-left:2px solid #888;font-size:7.5px;color:#666;}
+
+  /* ── HITOS — solo 4 filas clave ── */
+  .rpt-hitos{margin-bottom:9px;page-break-inside:avoid;}
+  .rpt-hitos-table{width:100%;border-collapse:collapse;font-size:8.5px;}
+  .rpt-hitos-table th{background:#111;color:white;padding:6px 9px;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:7.5px;}
+  .rpt-hitos-table td{padding:6px 9px;border-bottom:1px solid #E8E8E8;}
   .rpt-hitos-table tr:nth-child(even) td{background:#F8F8F8;}
   .rpt-hitos-table .highlight-row td{background:#E8E8E8;font-weight:700;}
 
-  .rpt-retiro{margin-bottom:11px;page-break-inside:avoid;}
-  .rpt-retiro-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-  .rpt-retiro-col{border:1.5px solid #111;border-radius:4px;padding:11px;}
-  .rpt-retiro-col.secondary{border-color:#888;}
-  .rpt-retiro-col-title{font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:800;margin-bottom:9px;color:#111;}
-  .rpt-retiro-col.secondary .rpt-retiro-col-title{color:#666;}
-  .rpt-retiro-item{margin-bottom:7px;}
-  .rpt-retiro-label{font-size:8px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#555;margin-bottom:2px;}
-  .rpt-retiro-value{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#111;}
+  /* ── POSPONER — 3 filas + conclusión ── */
+  .rpt-posponer{margin-bottom:9px;page-break-inside:avoid;}
+  .rpt-posponer-table{width:100%;border-collapse:collapse;font-size:8.5px;}
+  .rpt-posponer-table th{background:#111;color:white;padding:6px 9px;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:7.5px;}
+  .rpt-posponer-table td{padding:6px 9px;border-bottom:1px solid #E8E8E8;}
+  .rpt-posponer-table tr:first-child td{font-weight:700;}
+  .rpt-highlight-box{margin-top:6px;padding:7px 10px;background:#F0F0F0;border-left:3px solid #111;border-radius:0 4px 4px 0;font-size:8.5px;}
 
-  .rpt-posponer{margin-bottom:11px;page-break-inside:avoid;}
-  .rpt-posponer-table{width:100%;border-collapse:collapse;font-size:9px;}
-  .rpt-posponer-table th{background:#111;color:white;padding:7px 10px;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
-  .rpt-posponer-table td{padding:7px 10px;border-bottom:1px solid #ddd;}
-  .rpt-highlight-box{margin-top:7px;padding:9px 11px;background:#F0F0F0;border-left:3px solid #111;border-radius:0 4px 4px 0;font-size:10px;}
+  /* ── PARÁMETROS: una sola línea de texto ── */
+  .rpt-params-line{font-size:7.5px;color:#777;margin-bottom:9px;padding:5px 8px;background:#F8F8F8;border-left:2px solid #ccc;}
 
-  .rpt-supuesto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px;}
-  .rpt-supuesto-item{padding:7px 9px;background:#F8F8F8;border:1px solid #ddd;border-radius:4px;}
-  .rpt-supuesto-label{font-size:8px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#555;margin-bottom:2px;}
-  .rpt-supuesto-value{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:#111;}
+  /* ── FOOTER ── */
+  .rpt-footer{margin-top:10px;padding-top:7px;border-top:1.5px solid #333;display:flex;justify-content:space-between;align-items:flex-end;font-size:8px;color:#555;}
+  .rpt-footer-contact strong{color:#111;font-size:9px;}
+  .rpt-footer-cierre{text-align:center;flex:1;font-family:'Playfair Display',serif;font-size:10px;font-weight:700;color:#111;padding:0 16px;font-style:italic;}
+  .rpt-footer-disclaimer{text-align:right;max-width:200px;line-height:1.35;font-size:7.5px;}
 
-  .rpt-footer{margin-top:14px;padding-top:9px;border-top:1.5px solid #333;display:flex;justify-content:space-between;align-items:flex-end;font-size:9px;color:#555;}
-  .rpt-footer-contact strong{color:#111;font-size:10px;}
-  .rpt-footer-cierre{text-align:center;flex:1;font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:#111;padding:0 18px;font-style:italic;}
-  .rpt-footer-disclaimer{text-align:right;max-width:230px;line-height:1.4;}
+  /* ocultar grid de supuestos anterior */
+  .rpt-supuesto-grid{display:none;}
+  .rpt-section-title + .rpt-supuesto-grid{display:none;}
 }
 </style>
 </head>
@@ -829,45 +856,46 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
 
 <a id="waFab" class="wa-fab" target="_blank" rel="noopener" style="display:none"><span>💬</span> WhatsApp</a>
 
-<!-- ════════════════════════════ PDF ════════════════════════════ -->
+<!-- ════════════════════════════ PDF 2 HOJAS ════════════════════════════ -->
 <div class="report-view">
-  <!-- Portada personalizada -->
-  <div class="rpt-cover">
-    <div class="rpt-cover-kicker">Proyección financiera personalizada · Distribuidor Allianz</div>
-    <div class="rpt-cover-name" id="rptCoverName">Tu Plan de Retiro</div>
-    <div class="rpt-cover-sub" id="rptCoverSub">—</div>
-    <div class="rpt-cover-divider"></div>
-    <div class="rpt-cover-meta">
-      <div><strong>Asesor:</strong> Christian GarBa · Seguros con Estrategia</div>
-      <div><strong>Teléfono:</strong> 662 417 6032</div>
-      <div id="rptCoverFecha"></div>
-    </div>
-  </div>
 
+  <!-- ── HOJA 1 ── -->
+
+  <!-- Encabezado con nombre integrado -->
   <div class="rpt-header">
-    <div class="rpt-logo-block">
+    <div class="rpt-header-left">
       <img src="logo-garba.png" alt="GarBa" class="rpt-logo-img"/>
       <div class="rpt-branding">
-        <div class="rpt-main-title" id="rptHeaderTitle">Tu Plan de Retiro</div>
+        <div class="rpt-main-title">Plan de Retiro</div>
         <div class="rpt-subtitle">Proyección financiera personalizada · Distribuidor Allianz</div>
       </div>
     </div>
-    <div class="rpt-meta"><div id="rptFecha"></div><div><strong>Asesor:</strong> Christian GarBa</div><div>Tel. 662 417 6032</div></div>
+    <div>
+      <div class="rpt-header-name-label">Preparado para</div>
+      <div class="rpt-header-name" id="rptHeaderName">—</div>
+      <div class="rpt-meta"><div id="rptFecha"></div><div><strong>Asesor:</strong> Christian GarBa · Tel. 662 417 6032</div></div>
+    </div>
   </div>
 
-  <div class="rpt-timeline"><div class="rpt-timeline-title">Tu línea de tiempo financiera</div><div class="rpt-timeline-track" id="rptTimelineTrack"></div></div>
+  <!-- Línea de tiempo -->
+  <div class="rpt-timeline">
+    <div class="rpt-timeline-title">Tu línea de tiempo financiera</div>
+    <div class="rpt-timeline-track" id="rptTimelineTrack"></div>
+  </div>
 
+  <!-- Números clave — 5 columnas en una fila -->
   <div class="rpt-hero">
     <div class="rpt-hero-title">Tu plan en números</div>
     <div class="rpt-hero-grid">
       <div class="rpt-hero-item"><div class="rpt-hero-label">Aportación mensual</div><div class="rpt-hero-value" id="rptAport">—</div></div>
-      <div class="rpt-hero-item"><div class="rpt-hero-label">Durante</div><div class="rpt-hero-value" id="rptPlazo">—</div></div>
+      <div class="rpt-hero-item"><div class="rpt-hero-label">Plazo de aportación</div><div class="rpt-hero-value" id="rptPlazo">—</div></div>
       <div class="rpt-hero-item"><div class="rpt-hero-label">Total invertido</div><div class="rpt-hero-value" id="rptTotal">—</div></div>
       <div class="rpt-hero-item featured"><div class="rpt-hero-label">Capital estimado a los 65 años</div><div class="rpt-hero-value" id="rptFondo65Pdf">—</div></div>
       <div class="rpt-hero-item featured2"><div class="rpt-hero-label" id="rptIngresoLabel">Ingreso mensual estimado</div><div class="rpt-hero-value" id="rptIngreso">—</div></div>
     </div>
   </div>
 
+  <!-- Comparativa -->
   <div class="rpt-compare">
     <div class="rpt-compare-title" id="rptCompTitle">¿Cómo podría verse tu dinero?</div>
     <div class="rpt-compare-grid">
@@ -879,20 +907,49 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
     <div class="rpt-compare-msg">El mismo hábito puede dar resultados muy distintos según el camino elegido. La inflación erosiona el ahorro pasivo; un plan estructurado busca superarla.</div>
   </div>
 
-  <div class="rpt-hitos"><div class="rpt-section-title">Capital proyectado en momentos clave de tu vida</div><table class="rpt-hitos-table"><thead><tr><th>Edad</th><th>Año del plan</th><th>Total aportado</th><th>Capital estimado</th><th>Estado</th></tr></thead><tbody id="rptHitosTbody"></tbody></table></div>
+  <!-- ── HOJA 2 ── -->
+  <div class="rpt-page-break"></div>
 
-  <div class="rpt-retiro"><div class="rpt-section-title">Escenario de retiro</div><div id="rptRetiroContenido"></div><div style="margin-top:7px;padding:7px 9px;background:#F0F0F0;border-left:2px solid #888;font-size:8.5px;color:#555;">Cálculo con rendimiento de referencia del 7% nominal anual y 4% inflación promedio, a 20 años.</div></div>
-
-  <div class="rpt-posponer"><div class="rpt-section-title">El valor de empezar hoy</div><table class="rpt-posponer-table"><thead><tr><th>Inicio</th><th>Aportación mensual</th><th>Costo adicional</th></tr></thead><tbody><tr><td><strong>Hoy</strong></td><td id="rptPHoy">—</td><td>Base</td></tr><tr><td>+1 año</td><td id="rptP1">—</td><td id="rptD1">—</td></tr><tr><td>+3 años</td><td id="rptP3">—</td><td id="rptD3">—</td></tr><tr><td>+5 años</td><td id="rptP5">—</td><td id="rptD5">—</td></tr></tbody></table><div class="rpt-highlight-box"><strong>Conclusión:</strong> <span id="rptMsgPosponer">—</span></div></div>
-
-  <div class="rpt-section-title">Parámetros del escenario</div>
-  <div class="rpt-supuesto-grid"><div class="rpt-supuesto-item"><div class="rpt-supuesto-label">Rendimiento acumulación</div><div class="rpt-supuesto-value">10% anual</div></div><div class="rpt-supuesto-item"><div class="rpt-supuesto-label">Inflación promedio</div><div class="rpt-supuesto-value">4% anual</div></div><div class="rpt-supuesto-item"><div class="rpt-supuesto-label">Rendimiento retiro (ref.)</div><div class="rpt-supuesto-value">7% anual</div></div><div class="rpt-supuesto-item"><div class="rpt-supuesto-label">Régimen fiscal</div><div class="rpt-supuesto-value" id="rptFiscal">—</div></div><div class="rpt-supuesto-item"><div class="rpt-supuesto-label">Periodo de cobro</div><div class="rpt-supuesto-value">20 años</div></div><div class="rpt-supuesto-item"><div class="rpt-supuesto-label">Frecuencia de aportación</div><div class="rpt-supuesto-value">Mensual</div></div></div>
-
-  <div class="rpt-footer">
-    <div class="rpt-footer-contact"><strong>Christian GarBa</strong> · Seguros con Estrategia<br>Tel. 662 417 6032</div>
-    <div class="rpt-footer-cierre">"Este es tu escenario.<br>La decisión de hoy define el número de mañana."</div>
-    <div class="rpt-footer-disclaimer">Cifras de referencia con rendimiento estimado del 10% anual. Los resultados son proyecciones, no garantías de rendimiento futuro.</div>
+  <!-- Retiro -->
+  <div class="rpt-retiro">
+    <div class="rpt-section-title">Escenario de retiro</div>
+    <div id="rptRetiroContenido"></div>
+    <div class="rpt-retiro-nota">Cálculo con rendimiento de referencia del 7% nominal anual y 4% inflación promedio, a 20 años. Valores independientes de la tasa de acumulación.</div>
   </div>
+
+  <!-- Hitos — solo filas clave -->
+  <div class="rpt-hitos">
+    <div class="rpt-section-title">Capital proyectado en momentos clave de tu vida</div>
+    <table class="rpt-hitos-table">
+      <thead><tr><th>Edad</th><th>Año del plan</th><th>Total aportado</th><th>Capital estimado</th><th>Estado</th></tr></thead>
+      <tbody id="rptHitosTbody"></tbody>
+    </table>
+  </div>
+
+  <!-- El valor de empezar hoy — 3 filas -->
+  <div class="rpt-posponer">
+    <div class="rpt-section-title">El valor de empezar hoy</div>
+    <table class="rpt-posponer-table">
+      <thead><tr><th>Momento de inicio</th><th>Aportación mensual necesaria</th><th>Costo adicional vs hoy</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Empiezas hoy</strong></td><td id="rptPHoy">—</td><td>Base</td></tr>
+        <tr><td>Dentro de 3 años</td><td id="rptP3">—</td><td id="rptD3">—</td></tr>
+        <tr><td>Dentro de 5 años</td><td id="rptP5">—</td><td id="rptD5">—</td></tr>
+      </tbody>
+    </table>
+    <div class="rpt-highlight-box"><strong>Conclusión:</strong> <span id="rptMsgPosponer">—</span></div>
+  </div>
+
+  <!-- Parámetros en una línea -->
+  <div class="rpt-params-line" id="rptParamsLine">—</div>
+
+  <!-- Footer -->
+  <div class="rpt-footer">
+    <div class="rpt-footer-contact"><strong>Christian GarBa</strong> · Seguros con Estrategia<br>Tel. 662 417 6032 · sfgarba.com/Blog</div>
+    <div class="rpt-footer-cierre">"Este es tu escenario.<br>La decisión de hoy define el número de mañana."</div>
+    <div class="rpt-footer-disclaimer">Cifras de referencia. Rendimiento estimado 10% anual. Los resultados son proyecciones, no garantías de rendimiento futuro.</div>
+  </div>
+
 </div>
 
 <script>
@@ -1298,13 +1355,10 @@ function exportCSV(){
 
 function actualizarPDF(){
   const hoy=new Date().toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
-  $('rptFecha').textContent=hoy;$('rptCoverFecha').textContent=hoy;
+  $('rptFecha').textContent=hoy;
 
-  // Portada
   const n=sim.nombre||'Tu plan';
-  $('rptCoverName').textContent=sim.nombre?`El plan de ${sim.nombre}`:'Tu Plan de Retiro';
-  $('rptCoverSub').textContent=`${sim.edad} años · ${sim.yrsAport} años de aportación · ${money(sim.pmt0)}/mes`;
-  $('rptHeaderTitle').textContent=sim.nombre?`Plan de Retiro — ${sim.nombre}`:'Tu Plan de Retiro';
+  $('rptHeaderName').textContent=sim.nombre||'Tu Plan de Retiro';
 
   $('rptAport').textContent=money(sim.pmt0);$('rptPlazo').textContent=`${sim.yrsAport} años`;
   $('rptTotal').textContent=money(sim.totalAportado);$('rptFondo65Pdf').textContent=money(sim.fondo65);
@@ -1337,20 +1391,6 @@ function actualizarPDF(){
     }
   }
 
-  // Hitos PDF
-  const rptH=$('rptHitosTbody');rptH.innerHTML='';
-  const edadesObj={};sim.hitosSim.forEach(h=>{edadesObj[h.edad]=h;});
-  const dec=[];for(let e=Math.ceil((sim.edad+1)/5)*5;e<=65;e+=5)dec.push(e);
-  if(!dec.includes(65))dec.push(65);
-  dec.forEach(e=>{
-    const h=edadesObj[e];if(!h)return;
-    const esR=(e===60&&(modoRetiro==='60'||modoRetiro==='comparar'))||e===65;
-    const tr=document.createElement('tr');if(esR)tr.className='highlight-row';
-    let estado=h.aportando?'Aportando':e<65?'Creciendo':'Retiro posible';
-    tr.innerHTML=`<td><strong>${e} años</strong></td><td>Año ${h.yr}</td><td>${h.aportando?money(h.totalAportado):'Completo'}</td><td>${money(h.saldo)}</td><td>${estado}</td>`;
-    rptH.appendChild(tr);
-  });
-
   // Retiro PDF
   const cont=$('rptRetiroContenido');
   if(modoRetiro==='comparar'&&sim.ing60>0){
@@ -1362,24 +1402,37 @@ function actualizarPDF(){
     cont.innerHTML=`<div class="rpt-retiro-grid"><div class="rpt-retiro-col"><div class="rpt-retiro-col-title">Retiro a los ${eL} años</div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Capital disponible</div><div class="rpt-retiro-value">${money(usarF)}</div></div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Ingreso mensual</div><div class="rpt-retiro-value">${money(usarI)}</div></div></div><div class="rpt-retiro-col secondary"><div class="rpt-retiro-col-title">Periodo de cobro</div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Duración</div><div class="rpt-retiro-value">20 años</div></div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Regla 4% anual</div><div class="rpt-retiro-value">${money(usarF*0.04)}/año</div></div></div></div>`;
   }
 
-  // Posponer PDF
-  function pmtPDF(d){
-    const ed=sim.edad+d,y65=Math.max(0,65-ed),yAp=Math.min(sim.years,y65),yEx=Math.max(0,y65-yAp);
-    if(yAp<=0)return null;
-    const iA=RATE_ACC/FREQ,N=yAp*FREQ;let FV=0,pY=1;
-    for(let y=0;y<yAp;y++){if(y>0)pY*=(1+INFL_ACC);for(let m=0;m<FREQ;m++)FV+=pY*Math.pow(1+iA,N-(y*FREQ+m));}
-    const grow=Math.pow(1+iA,yEx*FREQ),tf=FV*grow;return tf>0?sim.fondo65/tf:null;
-  }
-  const p1=pmtPDF(1),p3=pmtPDF(3),p5=pmtPDF(5),base=sim.pmt0;
-  function dt(p){if(!base||p==null)return'—';const d=p-base;if(d<=0)return'Igual';return`+${money(d)} (+${(d/base*100).toFixed(1)}%)`;}
+  // Hitos PDF — filas clave
+  const rptH=$('rptHitosTbody');
+  rptH.innerHTML='';
+  const edadesObjPdf={};
+  sim.hitosSim.forEach(h=>{edadesObjPdf[h.edad]=h;});
+  const edadesKeyPdf=new Set();
+  const primerDec=Math.ceil((sim.edad+1)/10)*10;
+  if(primerDec<=65)edadesKeyPdf.add(primerDec);
+  if(Math.round(sim.edadFinPlan)<65)edadesKeyPdf.add(Math.round(sim.edadFinPlan));
+  if(sim.fondo60>0&&sim.edad<60)edadesKeyPdf.add(60);
+  edadesKeyPdf.add(65);
+  [...edadesKeyPdf].sort((a,b)=>a-b).forEach(e=>{
+    const h=edadesObjPdf[e];if(!h)return;
+    const esR=(e===60&&(modoRetiro==='60'||modoRetiro==='comparar'))||e===65;
+    const tr=document.createElement('tr');if(esR)tr.className='highlight-row';
+    const estado=h.aportando?'Aportando':e<65?'Creciendo':'Retiro posible';
+    tr.innerHTML=`<td><strong>${e} años</strong></td><td>Año ${h.yr}</td><td>${h.aportando?money(h.totalAportado):'Completo'}</td><td>${money(h.saldo)}</td><td>${estado}</td>`;
+    rptH.appendChild(tr);
+  });
+
+  // Posponer PDF — hoy, +3, +5
+  const base=sim.pmt0;
+  function dtPdf(p){if(!base||p==null)return'—';const diff=p-base;if(diff<=0)return'Igual';return`+${money(diff)} (+${(diff/base*100).toFixed(1)}%)`;}
   $('rptPHoy').textContent=money(base);
-  $('rptP1').textContent=p1?money(p1):'—';$('rptD1').textContent=dt(p1);
-  $('rptP3').textContent=p3?money(p3):'—';$('rptD3').textContent=dt(p3);
-  $('rptP5').textContent=p5?money(p5):'—';$('rptD5').textContent=dt(p5);
+  $('rptP3').textContent=p3?money(p3):'—';$('rptD3').textContent=dtPdf(p3);
+  $('rptP5').textContent=p5?money(p5):'—';$('rptD5').textContent=dtPdf(p5);
   $('rptMsgPosponer').textContent=`${n} de hoy define el esfuerzo de mañana. Para alcanzar ${money(sim.fondo65)} a los 65 años, cada año que se pospone puede requerir una aportación mensual significativamente mayor.`;
 
-  const rm={ninguno:'Sin beneficio fiscal',93:'Art. 93 (diferido)',151:'Art. 151 (deducible)'};
-  $('rptFiscal').textContent=rm[sim.regimenFiscal]||'—';
+  // Parámetros en una sola línea
+  const rmPdf={ninguno:'Sin beneficio fiscal',93:'Art. 93 Diferido',151:'Art. 151 Deducible'};
+  $('rptParamsLine').textContent=`Supuestos: Rendimiento acumulación 10% anual · Inflación 4% · Rendimiento retiro 7% (referencia) · Periodo de cobro 20 años · ${rmPdf[sim.regimenFiscal]||'Sin beneficio fiscal'} · Aportación mensual`;
 }
 
 // Init sugerencia
