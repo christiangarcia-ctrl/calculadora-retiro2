@@ -1528,6 +1528,8 @@ function actualizarPDF(){
 
   // Posponer PDF — hoy, +3, +5
   const base=sim.pmt0;
+  const p3=calcPMTDelay(3);
+  const p5=calcPMTDelay(5);
   function dtPdf(p){if(!base||p==null)return'—';const diff=p-base;if(diff<=0)return'Igual';return`+${money(diff)} (+${(diff/base*100).toFixed(1)}%)`;}
   $('rptPHoy').textContent=money(base);
   $('rptP3').textContent=p3?money(p3):'—';$('rptD3').textContent=dtPdf(p3);
