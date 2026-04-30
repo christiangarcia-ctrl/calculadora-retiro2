@@ -398,15 +398,80 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
 ::-webkit-scrollbar-thumb{background:var(--electric);border-radius:3px}
 
 /* ══════════════════════════════════════
-   PRINT / PDF — 2 HOJAS
+   PRINT / PDF — 1 HOJA ALTO IMPACTO
 ══════════════════════════════════════ */
 .report-view{display:none}
+.rpt-one-page{display:none}
 @media print{
-  @page{margin:10mm 12mm;size:A4 portrait;}
+  @page{margin:0;size:A4 portrait;}
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
-  html,body{height:auto;overflow:visible;background:white !important;font-size:8.5px;line-height:1.3;}
+  html,body{height:297mm;overflow:hidden;background:white !important;}
   #screen-intro,#screen-results,.wa-fab{display:none !important}
-  .report-view{display:block !important;max-width:760px;margin:0 auto;font-family:'DM Sans',sans-serif;color:#111;}
+  .report-view{display:block !important;width:210mm;height:297mm;position:relative;overflow:hidden;font-family:'DM Sans',sans-serif;}
+  .rpt-cover,.rpt-header,.rpt-timeline,.rpt-hero,.rpt-compare,.rpt-hitos,
+  .rpt-retiro,.rpt-posponer,.rpt-params-line,.rpt-page-break,.rpt-footer{display:none !important;}
+  .rpt-one-page{display:block !important;}
+
+  /* ── BANDA SUPERIOR ── */
+  .rpt-top-band{background:#0A1D66;padding:11mm 14mm 9mm;position:relative;overflow:hidden;}
+  .rpt-top-orb1{position:absolute;top:-18mm;right:-12mm;width:55mm;height:55mm;border-radius:50%;background:rgba(26,75,255,.40);}
+  .rpt-top-orb2{position:absolute;bottom:-14mm;left:60mm;width:35mm;height:35mm;border-radius:50%;background:rgba(245,158,11,.14);}
+  .rpt-top-inner{position:relative;z-index:2;}
+  .rpt-top-meta{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5mm;}
+  .rpt-logo-wrap{display:flex;align-items:center;gap:3mm;}
+  .rpt-logo-img{height:7mm;width:auto;filter:brightness(0) invert(1);opacity:.85;}
+  .rpt-logo-sep{width:.4mm;height:6mm;background:rgba(255,255,255,.30);}
+  .rpt-logo-txt{font-size:7.5pt;color:rgba(255,255,255,.70);font-weight:500;}
+  .rpt-asesor-meta{text-align:right;font-size:7pt;color:rgba(255,255,255,.50);line-height:1.6;}
+  .rpt-asesor-meta strong{color:rgba(255,255,255,.80);}
+  .rpt-kicker{font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.40);margin-bottom:1.5mm;}
+  .rpt-nombre{font-family:'Playfair Display',serif;font-size:28pt;font-weight:900;color:#fff;letter-spacing:-.02em;line-height:1;margin-bottom:1.5mm;}
+  .rpt-nombre-sub{font-size:8pt;color:rgba(255,255,255,.52);margin-bottom:5mm;}
+  .rpt-hero-nums{display:grid;grid-template-columns:1fr 1fr;gap:3mm;}
+  .rpt-hero-num{border-radius:3mm;padding:3.5mm 4.5mm;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);}
+  .rpt-hero-num.gold{background:rgba(245,158,11,.16);border-color:rgba(245,158,11,.38);}
+  .rpt-hero-num-label{font-size:6pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:rgba(255,255,255,.45);margin-bottom:1.5mm;}
+  .rpt-hero-num.gold .rpt-hero-num-label{color:rgba(245,158,11,.78);}
+  .rpt-hero-num-value{font-family:'Playfair Display',serif;font-size:20pt;font-weight:900;color:#fff;letter-spacing:-.02em;line-height:1;}
+  .rpt-hero-num.gold .rpt-hero-num-value{color:#F59E0B;}
+  .rpt-hero-num-sub{font-size:6.5pt;color:rgba(255,255,255,.35);margin-top:1mm;}
+
+  /* ── CUERPO ── */
+  .rpt-body{padding:6mm 14mm 0;}
+  .rpt-tl-sec-label,.rpt-comp-sec-label{font-size:6pt;text-transform:uppercase;letter-spacing:.10em;font-weight:700;color:#1A4BFF;margin-bottom:2.5mm;}
+  .rpt-tl-track{display:flex;align-items:flex-start;margin-bottom:5mm;}
+  .rpt-tl-pt{text-align:center;flex:0 0 auto;width:25mm;}
+  .rpt-tl-circle-p{width:9mm;height:9mm;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5mm;font-family:'DM Mono',monospace;font-size:7pt;font-weight:700;}
+  .rpt-tl-circle-p.filled{background:#0A1D66;color:white;}
+  .rpt-tl-circle-p.outline{background:white;border:1.5px solid #1A4BFF;color:#1A4BFF;}
+  .rpt-tl-circle-p.muted{background:#F1F5F9;border:1.5px solid #CBD5E1;color:#94A3B8;}
+  .rpt-tl-lbl{font-size:5.5pt;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:#94A3B8;margin-bottom:1mm;}
+  .rpt-tl-amt{font-family:'DM Mono',monospace;font-size:6.5pt;font-weight:700;color:#0A1D66;}
+  .rpt-tl-conn{flex:1;display:flex;flex-direction:column;align-items:center;padding-top:4mm;}
+  .rpt-tl-line-p{width:100%;height:1.5px;background:repeating-linear-gradient(90deg,#1A4BFF 0,#1A4BFF 3px,transparent 3px,transparent 6px);opacity:.25;}
+  .rpt-tl-yrs-p{font-size:5.5pt;color:#CBD5E1;margin-top:1mm;text-align:center;white-space:nowrap;}
+  .rpt-comp-rows{display:grid;gap:1.8mm;margin-bottom:2.5mm;}
+  .rpt-comp-row{display:grid;grid-template-columns:16mm 1fr 22mm;gap:2mm 2.5mm;align-items:center;}
+  .rpt-comp-row-label{font-size:7pt;font-weight:700;color:#475569;text-align:right;}
+  .rpt-comp-row-track{height:4.5mm;background:#F1F5F9;border-radius:1.5mm;overflow:hidden;}
+  .rpt-comp-row-fill{height:100%;border-radius:1.5mm;}
+  .rpt-comp-row-val{font-family:'DM Mono',monospace;font-size:7pt;font-weight:700;color:#334155;}
+  .rpt-comp-row-val.featured{color:#0A1D66;font-size:8pt;}
+  .rpt-comp-note{padding:2mm 3mm;background:#FEF3C7;border-left:2.5px solid #F59E0B;font-size:7pt;font-weight:600;color:#78350F;border-radius:0 1.5mm 1.5mm 0;}
+  .rpt-retiro-highlight{margin-top:4.5mm;background:#0A1D66;border-radius:3mm;padding:3.5mm 4.5mm;display:grid;grid-template-columns:1fr auto;align-items:center;gap:3mm;}
+  .rpt-retiro-hl-label{font-size:6.5pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:rgba(255,255,255,.48);}
+  .rpt-retiro-hl-value{font-family:'Playfair Display',serif;font-size:17pt;font-weight:900;color:#fff;letter-spacing:-.01em;margin-top:1mm;}
+  .rpt-retiro-hl-sub{font-size:6pt;color:rgba(255,255,255,.38);margin-top:1mm;}
+  .rpt-retiro-hl-badge{background:rgba(245,158,11,.18);border:1px solid rgba(245,158,11,.42);border-radius:2mm;padding:2mm 3mm;text-align:center;}
+  .rpt-retiro-hl-badge-label{font-size:5.5pt;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:rgba(245,158,11,.78);}
+  .rpt-retiro-hl-badge-val{font-family:'DM Mono',monospace;font-size:9pt;font-weight:700;color:#F59E0B;margin-top:1mm;}
+
+  /* ── FOOTER ── */
+  .rpt-footer-band{position:absolute;bottom:0;left:0;right:0;background:#0A1D66;padding:3mm 14mm;display:flex;align-items:center;justify-content:space-between;}
+  .rpt-footer-left{color:rgba(255,255,255,.58);font-size:7pt;line-height:1.6;}
+  .rpt-footer-left strong{color:rgba(255,255,255,.82);font-size:7.5pt;}
+  .rpt-footer-cierre-p{font-family:'Playfair Display',serif;font-size:8pt;font-style:italic;font-weight:700;color:rgba(255,255,255,.62);text-align:center;flex:1;padding:0 6mm;}
+  .rpt-footer-disc{font-size:5.5pt;color:rgba(255,255,255,.32);text-align:right;max-width:36mm;line-height:1.4;}
 
   /* ── ENCABEZADO con nombre integrado ── */
   .rpt-cover{display:none;} /* sin portada separada */
@@ -960,100 +1025,141 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
 
 <a id="waFab" class="wa-fab" target="_blank" rel="noopener" style="display:none"><span>💬</span> WhatsApp</a>
 
-<!-- ════════════════════════════ PDF 2 HOJAS ════════════════════════════ -->
+<!-- ════════════════════════════ PDF 1 HOJA ════════════════════════════ -->
 <div class="report-view">
 
-  <!-- ── HOJA 1 ── -->
-
-  <!-- Encabezado con nombre integrado -->
-  <div class="rpt-header">
+  <!-- Estructura antigua (oculta en print, visible como fallback) -->
+  <div class="rpt-cover" style="display:none"></div>
+  <div class="rpt-header" style="display:none">
     <div class="rpt-header-left">
       <img src="logo-garba.png" alt="GarBa" class="rpt-logo-img"/>
-      <div class="rpt-branding">
-        <div class="rpt-main-title">Plan de Retiro</div>
-        <div class="rpt-subtitle">Proyección financiera personalizada · Distribuidor Allianz</div>
-      </div>
     </div>
     <div>
-      <div class="rpt-header-name-label">Preparado para</div>
       <div class="rpt-header-name" id="rptHeaderName">—</div>
-      <div class="rpt-meta"><div id="rptFecha"></div><div><strong>Asesor:</strong> Christian GarBa · Tel. 662 417 6032</div></div>
+      <div class="rpt-meta"><div id="rptFecha"></div></div>
     </div>
   </div>
-
-  <!-- Línea de tiempo -->
-  <div class="rpt-timeline">
-    <div class="rpt-timeline-title">Tu línea de tiempo financiera</div>
-    <div class="rpt-timeline-track" id="rptTimelineTrack"></div>
-  </div>
-
-  <!-- Números clave — 5 columnas en una fila -->
-  <div class="rpt-hero">
-    <div class="rpt-hero-title">Tu plan en números</div>
+  <div class="rpt-timeline" style="display:none"><div class="rpt-timeline-track" id="rptTimelineTrack"></div></div>
+  <div class="rpt-hero" style="display:none">
     <div class="rpt-hero-grid">
       <div class="rpt-hero-item"><div class="rpt-hero-label">Aportación mensual</div><div class="rpt-hero-value" id="rptAport">—</div></div>
-      <div class="rpt-hero-item"><div class="rpt-hero-label">Plazo de aportación</div><div class="rpt-hero-value" id="rptPlazo">—</div></div>
+      <div class="rpt-hero-item"><div class="rpt-hero-label">Plazo</div><div class="rpt-hero-value" id="rptPlazo">—</div></div>
       <div class="rpt-hero-item"><div class="rpt-hero-label">Total invertido</div><div class="rpt-hero-value" id="rptTotal">—</div></div>
-      <div class="rpt-hero-item featured"><div class="rpt-hero-label">Capital estimado a los 65 años</div><div class="rpt-hero-value" id="rptFondo65Pdf">—</div></div>
-      <div class="rpt-hero-item featured2"><div class="rpt-hero-label" id="rptIngresoLabel">Ingreso mensual estimado</div><div class="rpt-hero-value" id="rptIngreso">—</div></div>
+      <div class="rpt-hero-item featured"><div class="rpt-hero-label">Capital a los 65</div><div class="rpt-hero-value" id="rptFondo65Pdf">—</div></div>
+      <div class="rpt-hero-item featured2"><div class="rpt-hero-label" id="rptIngresoLabel">Ingreso mensual</div><div class="rpt-hero-value" id="rptIngreso">—</div></div>
     </div>
   </div>
+  <div class="rpt-compare" style="display:none">
+    <div id="rptCompTitle"></div>
+    <div><span id="rptCmpMattress"></span><span id="rptCmpMattressSub"></span><span id="rptCmpBank"></span><span id="rptCmpBankSub"></span><span id="rptCmpAfore"></span><span id="rptCmpPlan"></span></div>
+  </div>
+  <div class="rpt-hitos" style="display:none"><table><tbody id="rptHitosTbody"></tbody></table></div>
+  <div class="rpt-retiro" style="display:none"><div id="rptRetiroContenido"></div></div>
+  <div class="rpt-posponer" style="display:none">
+    <table><tbody>
+      <tr><td id="rptPHoy"></td></tr>
+      <tr><td id="rptP3"></td><td id="rptD3"></td></tr>
+      <tr><td id="rptP5"></td><td id="rptD5"></td></tr>
+    </tbody></table>
+    <span id="rptMsgPosponer"></span>
+  </div>
+  <div class="rpt-params-line" id="rptParamsLine" style="display:none"></div>
+  <div class="rpt-page-break" style="display:none"></div>
+  <div class="rpt-footer" style="display:none"></div>
 
-  <!-- Comparativa -->
-  <div class="rpt-compare">
-    <div class="rpt-compare-title" id="rptCompTitle">¿Cómo podría verse tu dinero?</div>
-    <div class="rpt-compare-grid">
-      <div class="rpt-comp-box mattress"><div class="rpt-comp-label">Alcancía</div><div class="rpt-comp-value" id="rptCmpMattress">—</div><div class="rpt-comp-bar" style="width:20%"></div><div class="rpt-comp-sub" id="rptCmpMattressSub">—</div></div>
-      <div class="rpt-comp-box bank"><div class="rpt-comp-label">Banco</div><div class="rpt-comp-value" id="rptCmpBank">—</div><div class="rpt-comp-bar" style="width:30%"></div><div class="rpt-comp-sub" id="rptCmpBankSub">—</div></div>
-      <div class="rpt-comp-box afore"><div class="rpt-comp-label">AFORE</div><div class="rpt-comp-value" id="rptCmpAfore">—</div><div class="rpt-comp-bar" style="width:50%"></div><div class="rpt-comp-sub">Escenario limitado</div></div>
-      <div class="rpt-comp-box plan"><div class="rpt-comp-label">Tu plan</div><div class="rpt-comp-value" id="rptCmpPlan">—</div><div class="rpt-comp-bar" style="width:100%"></div><div class="rpt-comp-sub">Escenario personalizado</div></div>
+  <!-- ══ DISEÑO UNA HOJA ══ -->
+  <div class="rpt-one-page">
+
+    <!-- Banda superior navy con nombre -->
+    <div class="rpt-top-band">
+      <div class="rpt-top-orb1"></div>
+      <div class="rpt-top-orb2"></div>
+      <div class="rpt-top-inner">
+        <div class="rpt-top-meta">
+          <div class="rpt-logo-wrap">
+            <img src="logo-garba.png" alt="GarBa" class="rpt-logo-img"/>
+            <div class="rpt-logo-sep"></div>
+            <div class="rpt-logo-txt">Distribuidor Allianz · Christian GarBa</div>
+          </div>
+          <div class="rpt-asesor-meta">
+            <div id="rptFechaOne"></div>
+            <div><strong>Tel.</strong> 662 417 6032</div>
+          </div>
+        </div>
+        <div class="rpt-kicker">Tu plan de retiro personalizado</div>
+        <div class="rpt-nombre" id="rptNombreOne">—</div>
+        <div class="rpt-nombre-sub" id="rptNombreSubOne">—</div>
+        <div class="rpt-hero-nums">
+          <div class="rpt-hero-num gold">
+            <div class="rpt-hero-num-label">Capital estimado a los 65 años</div>
+            <div class="rpt-hero-num-value" id="rptCapital65One">—</div>
+            <div class="rpt-hero-num-sub" id="rptCapital65Sub">—</div>
+          </div>
+          <div class="rpt-hero-num">
+            <div class="rpt-hero-num-label" id="rptIngresoLabelOne">Ingreso mensual estimado</div>
+            <div class="rpt-hero-num-value" id="rptIngresoOne">—</div>
+            <div class="rpt-hero-num-sub">Durante 20 años · 240 meses</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="rpt-compare-msg">El mismo hábito puede dar resultados muy distintos según el camino elegido. La inflación erosiona el ahorro pasivo; un plan estructurado busca superarla.</div>
-  </div>
 
-  <!-- ── HOJA 2 ── -->
-  <div class="rpt-page-break"></div>
+    <!-- Cuerpo -->
+    <div class="rpt-body">
 
-  <!-- Retiro -->
-  <div class="rpt-retiro">
-    <div class="rpt-section-title">Escenario de retiro</div>
-    <div id="rptRetiroContenido"></div>
-    <div class="rpt-retiro-nota">Cálculo con rendimiento de referencia del 7% nominal anual y 4% inflación promedio, a 20 años. Valores independientes de la tasa de acumulación.</div>
-  </div>
+      <!-- Timeline -->
+      <div class="rpt-tl-sec-label">Tu trayectoria financiera</div>
+      <div class="rpt-tl-track" id="rptTlTrackOne"></div>
 
-  <!-- Hitos — solo filas clave -->
-  <div class="rpt-hitos">
-    <div class="rpt-section-title">Capital proyectado en momentos clave de tu vida</div>
-    <table class="rpt-hitos-table">
-      <thead><tr><th>Edad</th><th>Año del plan</th><th>Total aportado</th><th>Capital estimado</th><th>Estado</th></tr></thead>
-      <tbody id="rptHitosTbody"></tbody>
-    </table>
-  </div>
+      <!-- Comparativa barras -->
+      <div class="rpt-comp-sec-label">¿Cómo podría verse tu dinero?</div>
+      <div class="rpt-comp-rows">
+        <div class="rpt-comp-row">
+          <div class="rpt-comp-row-label">🐷 Alcancía</div>
+          <div class="rpt-comp-row-track"><div class="rpt-comp-row-fill" id="rptFillMattress" style="background:#EF4444"></div></div>
+          <div class="rpt-comp-row-val" id="rptValMattress">—</div>
+        </div>
+        <div class="rpt-comp-row">
+          <div class="rpt-comp-row-label">🏦 Banco</div>
+          <div class="rpt-comp-row-track"><div class="rpt-comp-row-fill" id="rptFillBank" style="background:#F97316"></div></div>
+          <div class="rpt-comp-row-val" id="rptValBank">—</div>
+        </div>
+        <div class="rpt-comp-row">
+          <div class="rpt-comp-row-label">🏛️ AFORE</div>
+          <div class="rpt-comp-row-track"><div class="rpt-comp-row-fill" id="rptFillAfore" style="background:#F59E0B"></div></div>
+          <div class="rpt-comp-row-val" id="rptValAfore">—</div>
+        </div>
+        <div class="rpt-comp-row">
+          <div class="rpt-comp-row-label">✨ Tu plan</div>
+          <div class="rpt-comp-row-track"><div class="rpt-comp-row-fill" id="rptFillPlan" style="width:100%;background:#1A4BFF"></div></div>
+          <div class="rpt-comp-row-val featured" id="rptValPlan">—</div>
+        </div>
+      </div>
+      <div class="rpt-comp-note">El mismo hábito da resultados muy distintos según el camino elegido. La inflación erosiona el ahorro pasivo.</div>
 
-  <!-- El valor de empezar hoy — 3 filas -->
-  <div class="rpt-posponer">
-    <div class="rpt-section-title">El valor de empezar hoy</div>
-    <table class="rpt-posponer-table">
-      <thead><tr><th>Momento de inicio</th><th>Aportación mensual necesaria</th><th>Costo adicional vs hoy</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Empiezas hoy</strong></td><td id="rptPHoy">—</td><td>Base</td></tr>
-        <tr><td>Dentro de 3 años</td><td id="rptP3">—</td><td id="rptD3">—</td></tr>
-        <tr><td>Dentro de 5 años</td><td id="rptP5">—</td><td id="rptD5">—</td></tr>
-      </tbody>
-    </table>
-    <div class="rpt-highlight-box"><strong>Conclusión:</strong> <span id="rptMsgPosponer">—</span></div>
-  </div>
+      <!-- Ingreso retiro destacado -->
+      <div class="rpt-retiro-highlight" id="rptRetiroHlOne" style="display:none">
+        <div>
+          <div class="rpt-retiro-hl-label" id="rptRetiroHlLabel">Comparativa de retiro</div>
+          <div class="rpt-retiro-hl-value" id="rptRetiroHlVal">—</div>
+          <div class="rpt-retiro-hl-sub" id="rptRetiroHlSub">—</div>
+        </div>
+        <div class="rpt-retiro-hl-badge">
+          <div class="rpt-retiro-hl-badge-label">A los 65</div>
+          <div class="rpt-retiro-hl-badge-val" id="rptRetiroHlBadge">—</div>
+        </div>
+      </div>
 
-  <!-- Parámetros en una línea -->
-  <div class="rpt-params-line" id="rptParamsLine">—</div>
+    </div><!-- /rpt-body -->
 
-  <!-- Footer -->
-  <div class="rpt-footer">
-    <div class="rpt-footer-contact"><strong>Christian GarBa</strong> · Seguros con Estrategia<br>Tel. 662 417 6032 · sfgarba.com/Blog</div>
-    <div class="rpt-footer-cierre">"Este es tu escenario.<br>La decisión de hoy define el número de mañana."</div>
-    <div class="rpt-footer-disclaimer">Cifras de referencia. Rendimiento estimado 10% anual. Los resultados son proyecciones, no garantías de rendimiento futuro.</div>
-  </div>
+    <!-- Footer banda -->
+    <div class="rpt-footer-band">
+      <div class="rpt-footer-left"><strong>Christian GarBa</strong> · Seguros con Estrategia<br>662 417 6032 · sfgarba.com/Blog</div>
+      <div class="rpt-footer-cierre-p">"Este es tu escenario.<br>La decisión de hoy define el número de mañana."</div>
+      <div class="rpt-footer-disc">Proyección de referencia. Rendimiento estimado 10% anual. No garantiza resultados futuros.</div>
+    </div>
 
+  </div><!-- /rpt-one-page -->
 </div>
 
 <script>
@@ -1458,87 +1564,81 @@ function exportCSV(){
 }
 
 function actualizarPDF(){
-  const hoy=new Date().toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
-  $('rptFecha').textContent=hoy;
+  const n = sim.nombre || 'Tu plan';
+  const hoy = new Date().toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
 
-  const n=sim.nombre||'Tu plan';
-  $('rptHeaderName').textContent=sim.nombre||'Tu Plan de Retiro';
+  // Campos ocultos legacy (para no romper referencias)
+  if($('rptFecha')) $('rptFecha').textContent = hoy;
+  if($('rptAport')) $('rptAport').textContent = money(sim.pmt0);
+  if($('rptPlazo')) $('rptPlazo').textContent = `${sim.yrsAport} años`;
+  if($('rptTotal')) $('rptTotal').textContent = money(sim.totalAportado);
+  if($('rptFondo65Pdf')) $('rptFondo65Pdf').textContent = money(sim.fondo65);
+  if($('rptIngreso')) $('rptIngreso').textContent = money(sim.ing65);
 
-  $('rptAport').textContent=money(sim.pmt0);$('rptPlazo').textContent=`${sim.yrsAport} años`;
-  $('rptTotal').textContent=money(sim.totalAportado);$('rptFondo65Pdf').textContent=money(sim.fondo65);
+  // ── Una hoja ──
+  $('rptFechaOne').textContent = hoy;
+  $('rptNombreOne').textContent = sim.nombre ? `El plan de ${sim.nombre}` : 'Tu Plan de Retiro';
+  $('rptNombreSubOne').textContent = `${sim.edad} años · ${sim.yrsAport} años de aportación · ${money(sim.pmt0)}/mes`;
+  $('rptCapital65One').textContent = money(sim.fondo65);
+  $('rptCapital65Sub').textContent = `Crecimiento sin aportar: ${sim.yrsExtra} años`;
 
-  const ingLabel=modoRetiro==='60'&&sim.ing60>0?'60':'65';
-  const ingVal=modoRetiro==='60'&&sim.ing60>0?sim.ing60:sim.ing65;
-  $('rptIngresoLabel').textContent=`Ingreso mensual estimado (${ingLabel} años · 20 años)`;
-  $('rptIngreso').textContent=money(ingVal);
-  $('rptCompTitle').textContent=`¿Cómo podría verse tu dinero en ${sim.yrsAport} años?`;
-  $('rptCmpMattress').textContent=money(sim.comp.colchonNom);$('rptCmpMattressSub').textContent=`Valor real: ${money(sim.comp.colchonReal)}`;
-  $('rptCmpBank').textContent=money(sim.comp.saldoBanco);$('rptCmpBankSub').textContent=`Valor real: ${money(sim.comp.bancoReal)}`;
-  $('rptCmpAfore').textContent=money(sim.comp.saldoAfore);$('rptCmpPlan').textContent=money(sim.fondoPlan);
+  const ingLabel = modoRetiro==='60'&&sim.ing60>0 ? 'Ingreso mensual estimado (60 años)' : 'Ingreso mensual estimado (65 años)';
+  const ingVal = modoRetiro==='60'&&sim.ing60>0 ? sim.ing60 : sim.ing65;
+  $('rptIngresoLabelOne').textContent = ingLabel;
+  $('rptIngresoOne').textContent = money(ingVal);
 
-  // Timeline PDF
-  const rptTrack=$('rptTimelineTrack');rptTrack.innerHTML='';
-  const puntos=[{edad:Math.round(sim.edad),label:'Hoy',monto:'Comienzas',filled:true}];
-  if(Math.round(sim.edadFinPlan)<65)puntos.push({edad:Math.round(sim.edadFinPlan),label:'Fin aportaciones',monto:money(sim.fondoPlan)});
-  if(sim.fondo60>0&&sim.edad<60&&(modoRetiro==='60'||modoRetiro==='comparar'))puntos.push({edad:60,label:'Retiro posible',monto:money(sim.fondo60)});
-  puntos.push({edad:65,label:'A los 65',monto:money(sim.fondo65)});
+  // Timeline una hoja
+  const track = $('rptTlTrackOne');
+  track.innerHTML = '';
+  const puntos = [{edad:Math.round(sim.edad), label:'Hoy', monto:'Comienzas', type:'filled'}];
+  if(Math.round(sim.edadFinPlan)<65) puntos.push({edad:Math.round(sim.edadFinPlan), label:'Fin aportaciones', monto:money(sim.fondoPlan), type:'outline'});
+  if(sim.fondo60>0&&sim.edad<60&&(modoRetiro==='60'||modoRetiro==='comparar')) puntos.push({edad:60, label:'Retiro posible', monto:money(sim.fondo60), type:'outline'});
+  puntos.push({edad:65, label:'A los 65 años', monto:money(sim.fondo65), type:'muted'});
   for(let p=0;p<puntos.length;p++){
     const pt=puntos[p];
-    const d=document.createElement('div');d.className='rpt-tl-point';
-    d.innerHTML=`<div class="rpt-tl-circle ${pt.filled?'filled':''}">${pt.edad}</div><div class="rpt-tl-label">${pt.label}</div><div class="rpt-tl-amount">${pt.monto}</div>`;
-    rptTrack.appendChild(d);
+    const d=document.createElement('div'); d.className='rpt-tl-pt';
+    d.innerHTML=`<div class="rpt-tl-circle-p ${pt.type}">${pt.edad}</div><div class="rpt-tl-lbl">${pt.label}</div><div class="rpt-tl-amt">${pt.monto}</div>`;
+    track.appendChild(d);
     if(p<puntos.length-1){
       const yrs=puntos[p+1].edad-pt.edad;
-      const c=document.createElement('div');c.className='rpt-tl-connector';
-      c.innerHTML=`<div style="flex:1"><div class="rpt-tl-line"></div><div class="rpt-tl-years">${yrs} año${yrs!==1?'s':''}</div></div>`;
-      rptTrack.appendChild(c);
+      const c=document.createElement('div'); c.className='rpt-tl-conn';
+      c.innerHTML=`<div class="rpt-tl-line-p"></div><div class="rpt-tl-yrs-p">${yrs} año${yrs!==1?'s':''}</div>`;
+      track.appendChild(c);
     }
   }
 
-  // Retiro PDF
-  const cont=$('rptRetiroContenido');
+  // Comparativa barras
+  const maxV = sim.fondoPlan;
+  $('rptValMattress').textContent = money(sim.comp.colchonNom);
+  $('rptFillMattress').style.width = `${Math.max(4,sim.comp.colchonNom/maxV*100)}%`;
+  $('rptValBank').textContent = money(sim.comp.saldoBanco);
+  $('rptFillBank').style.width = `${Math.max(4,sim.comp.saldoBanco/maxV*100)}%`;
+  $('rptValAfore').textContent = money(sim.comp.saldoAfore);
+  $('rptFillAfore').style.width = `${Math.max(4,sim.comp.saldoAfore/maxV*100)}%`;
+  $('rptValPlan').textContent = money(sim.fondoPlan);
+
+  // Retiro comparar si aplica
   if(modoRetiro==='comparar'&&sim.ing60>0){
-    cont.innerHTML=`<div class="rpt-retiro-grid"><div class="rpt-retiro-col"><div class="rpt-retiro-col-title">A los 60 años</div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Capital</div><div class="rpt-retiro-value">${money(sim.fondo60)}</div></div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Ingreso mensual</div><div class="rpt-retiro-value">${money(sim.ing60)}</div></div></div><div class="rpt-retiro-col secondary"><div class="rpt-retiro-col-title">A los 65 años</div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Capital</div><div class="rpt-retiro-value">${money(sim.fondo65)}</div></div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Ingreso mensual</div><div class="rpt-retiro-value">${money(sim.ing65)}</div></div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Diferencia</div><div class="rpt-retiro-value">+${money(sim.ing65-sim.ing60)}/mes</div></div></div></div>`;
+    $('rptRetiroHlOne').style.display='grid';
+    $('rptRetiroHlLabel').textContent='Ingreso mensual si te retiras a los 60';
+    $('rptRetiroHlVal').textContent=money(sim.ing60);
+    $('rptRetiroHlSub').textContent=`Capital disponible: ${money(sim.fondo60)}`;
+    $('rptRetiroHlBadge').textContent=money(sim.ing65);
   } else {
-    const usarF=modoRetiro==='60'&&sim.ing60>0?sim.fondo60:sim.fondo65;
-    const usarI=modoRetiro==='60'&&sim.ing60>0?sim.ing60:sim.ing65;
-    const eL=modoRetiro==='60'&&sim.ing60>0?'60':'65';
-    cont.innerHTML=`<div class="rpt-retiro-grid"><div class="rpt-retiro-col"><div class="rpt-retiro-col-title">Retiro a los ${eL} años</div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Capital disponible</div><div class="rpt-retiro-value">${money(usarF)}</div></div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Ingreso mensual</div><div class="rpt-retiro-value">${money(usarI)}</div></div></div><div class="rpt-retiro-col secondary"><div class="rpt-retiro-col-title">Periodo de cobro</div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Duración</div><div class="rpt-retiro-value">20 años</div></div><div class="rpt-retiro-item"><div class="rpt-retiro-label">Regla 4% anual</div><div class="rpt-retiro-value">${money(usarF*0.04)}/año</div></div></div></div>`;
+    $('rptRetiroHlOne').style.display='none';
   }
 
-  // Hitos PDF — filas clave
-  const rptH=$('rptHitosTbody');
-  rptH.innerHTML='';
-  const edadesObjPdf={};
-  sim.hitosSim.forEach(h=>{edadesObjPdf[h.edad]=h;});
-  const edadesKeyPdf=new Set();
-  const primerDec=Math.ceil((sim.edad+1)/10)*10;
-  if(primerDec<=65)edadesKeyPdf.add(primerDec);
-  if(Math.round(sim.edadFinPlan)<65)edadesKeyPdf.add(Math.round(sim.edadFinPlan));
-  if(sim.fondo60>0&&sim.edad<60)edadesKeyPdf.add(60);
-  edadesKeyPdf.add(65);
-  [...edadesKeyPdf].sort((a,b)=>a-b).forEach(e=>{
-    const h=edadesObjPdf[e];if(!h)return;
-    const esR=(e===60&&(modoRetiro==='60'||modoRetiro==='comparar'))||e===65;
-    const tr=document.createElement('tr');if(esR)tr.className='highlight-row';
-    const estado=h.aportando?'Aportando':e<65?'Creciendo':'Retiro posible';
-    tr.innerHTML=`<td><strong>${e} años</strong></td><td>Año ${h.yr}</td><td>${h.aportando?money(h.totalAportado):'Completo'}</td><td>${money(h.saldo)}</td><td>${estado}</td>`;
-    rptH.appendChild(tr);
-  });
-
-  // Posponer PDF — hoy, +3, +5
+  // IDs legacy para no romper referencias en posponer
   const base=sim.pmt0;
-  const p3=calcPMTDelay(3);
-  const p5=calcPMTDelay(5);
-  function dtPdf(p){if(!base||p==null)return'—';const diff=p-base;if(diff<=0)return'Igual';return`+${money(diff)} (+${(diff/base*100).toFixed(1)}%)`;}
-  $('rptPHoy').textContent=money(base);
-  $('rptP3').textContent=p3?money(p3):'—';$('rptD3').textContent=dtPdf(p3);
-  $('rptP5').textContent=p5?money(p5):'—';$('rptD5').textContent=dtPdf(p5);
-  $('rptMsgPosponer').textContent=`${n} de hoy define el esfuerzo de mañana. Para alcanzar ${money(sim.fondo65)} a los 65 años, cada año que se pospone puede requerir una aportación mensual significativamente mayor.`;
-
-  // Parámetros en una sola línea
-  const rmPdf={ninguno:'Sin beneficio fiscal',93:'Art. 93 Diferido',151:'Art. 151 Deducible'};
-  $('rptParamsLine').textContent=`Supuestos: Rendimiento acumulación 10% anual · Inflación 4% · Rendimiento retiro 7% (referencia) · Periodo de cobro 20 años · ${rmPdf[sim.regimenFiscal]||'Sin beneficio fiscal'} · Aportación mensual`;
+  const p3=calcPMTDelay(3), p5=calcPMTDelay(5);
+  function dtPdf(p){if(!base||p==null)return'—';const d=p-base;if(d<=0)return'Igual';return`+${money(d)} (+${(d/base*100).toFixed(1)}%)`;}
+  if($('rptPHoy'))$('rptPHoy').textContent=money(base);
+  if($('rptP3'))$('rptP3').textContent=p3?money(p3):'—';
+  if($('rptD3'))$('rptD3').textContent=dtPdf(p3);
+  if($('rptP5'))$('rptP5').textContent=p5?money(p5):'—';
+  if($('rptD5'))$('rptD5').textContent=dtPdf(p5);
+  if($('rptMsgPosponer'))$('rptMsgPosponer').textContent=`${n} de hoy define el esfuerzo de mañana.`;
+  if($('rptParamsLine'))$('rptParamsLine').textContent='';
 }
 
 // Init sugerencia
