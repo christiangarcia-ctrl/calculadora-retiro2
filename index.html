@@ -35,12 +35,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--slate)
 #screen-intro{min-height:100vh;display:flex;flex-direction:column;position:relative;overflow:hidden;}
 .intro-bg{
   position:absolute;inset:0;
-  background:
-    linear-gradient(160deg,rgba(10,29,102,0.93) 0%,rgba(26,75,255,0.82) 50%,rgba(10,29,102,0.96) 100%),
-    url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1400&q=80&auto=format&fit=crop') center/cover no-repeat;
+  background:linear-gradient(160deg,#0A1D66 0%,#0D2275 40%,#0F2D8A 70%,#0A1D66 100%);
   z-index:0;
 }
-.intro-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(26,75,255,0.18) 0%,transparent 70%);}
+.intro-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 65% 45%,rgba(26,75,255,0.22) 0%,transparent 70%);}
 .intro-orb{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;z-index:1;}
 .intro-orb-1{width:400px;height:400px;background:rgba(26,75,255,0.22);top:-100px;right:-80px;}
 .intro-orb-2{width:280px;height:280px;background:rgba(245,158,11,0.13);bottom:60px;left:-60px;}
@@ -146,6 +144,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--slate)
 .btn-simular svg{width:20px;height:20px;}
 
 .intro-footer{position:relative;z-index:2;text-align:center;padding:18px;font-size:11px;color:rgba(255,255,255,0.38);}
+
+/* Ilustración */
+.illustration-wrap{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  z-index:1;
+  pointer-events:none;
+  overflow:hidden;
+  height:340px;
+  display:flex;align-items:flex-end;
+}
+.illustration-wrap svg{
+  width:100%;
+  height:auto;
+  display:block;
+}
 
 /* ══════════════════════════════════════
    PANTALLA 2 — RESULTADOS
@@ -524,6 +538,96 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
   <div class="intro-bg"></div>
   <div class="intro-orb intro-orb-1"></div>
   <div class="intro-orb intro-orb-2"></div>
+
+  <!-- Ilustración tres generaciones -->
+  <div class="illustration-wrap">
+    <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+
+      <!-- SUELO -->
+      <ellipse cx="450" cy="298" rx="380" ry="14" fill="rgba(255,255,255,0.06)"/>
+
+      <!-- ══ ABUELO (derecha, esperando sereno) ══ -->
+      <!-- Sombra -->
+      <ellipse cx="730" cy="296" rx="32" ry="7" fill="rgba(0,0,0,0.18)"/>
+      <!-- Cuerpo / torso -->
+      <rect x="706" y="188" width="48" height="68" rx="14" fill="rgba(255,255,255,0.18)"/>
+      <!-- Cabeza -->
+      <circle cx="730" cy="172" r="22" fill="rgba(255,255,255,0.22)"/>
+      <!-- Cabello blanco/gris -->
+      <path d="M708 165 Q730 150 752 165 Q750 155 730 150 Q710 155 708 165Z" fill="rgba(255,255,255,0.45)"/>
+      <!-- Brazo izquierdo extendido (abierto, esperando) -->
+      <path d="M706 210 Q680 220 655 215" stroke="rgba(255,255,255,0.22)" stroke-width="14" stroke-linecap="round" fill="none"/>
+      <!-- Mano izquierda -->
+      <circle cx="652" cy="215" r="7" fill="rgba(255,255,255,0.22)"/>
+      <!-- Brazo derecho -->
+      <path d="M754 210 Q770 225 768 245" stroke="rgba(255,255,255,0.18)" stroke-width="13" stroke-linecap="round" fill="none"/>
+      <!-- Piernas -->
+      <path d="M718 256 L714 298" stroke="rgba(255,255,255,0.20)" stroke-width="14" stroke-linecap="round" fill="none"/>
+      <path d="M742 256 L746 298" stroke="rgba(255,255,255,0.20)" stroke-width="14" stroke-linecap="round" fill="none"/>
+      <!-- Bastón sutil -->
+      <line x1="770" y1="240" x2="778" y2="298" stroke="rgba(255,255,255,0.25)" stroke-width="4" stroke-linecap="round"/>
+      <ellipse cx="779" cy="299" rx="5" ry="3" fill="rgba(255,255,255,0.20)"/>
+
+      <!-- ══ PAPÁ (centro, en movimiento hacia el abuelo) ══ -->
+      <!-- Sombra -->
+      <ellipse cx="450" cy="296" rx="28" ry="7" fill="rgba(0,0,0,0.20)"/>
+      <!-- Cuerpo dinámico — inclinado hacia adelante -->
+      <path d="M432 194 Q450 185 468 194 L472 255 Q450 262 428 255 Z" fill="rgba(255,255,255,0.25)"/>
+      <!-- Cabeza -->
+      <circle cx="450" cy="175" r="24" fill="rgba(255,255,255,0.28)"/>
+      <!-- Cabello oscuro -->
+      <path d="M426 170 Q450 155 474 170 Q472 160 450 155 Q428 160 426 170Z" fill="rgba(255,255,255,0.15)"/>
+      <!-- Brazo derecho hacia atrás (tomando al niño) -->
+      <path d="M428 210 Q400 225 372 232" stroke="rgba(255,255,255,0.25)" stroke-width="15" stroke-linecap="round" fill="none"/>
+      <!-- Mano derecha -->
+      <circle cx="369" cy="233" r="8" fill="rgba(255,255,255,0.25)"/>
+      <!-- Brazo izquierdo hacia adelante -->
+      <path d="M472 210 Q500 220 515 210" stroke="rgba(255,255,255,0.22)" stroke-width="14" stroke-linecap="round" fill="none"/>
+      <!-- Pierna delantera (zancada) -->
+      <path d="M460 255 Q468 275 480 298" stroke="rgba(255,255,255,0.28)" stroke-width="16" stroke-linecap="round" fill="none"/>
+      <!-- Pierna trasera -->
+      <path d="M440 255 Q425 270 418 298" stroke="rgba(255,255,255,0.22)" stroke-width="14" stroke-linecap="round" fill="none"/>
+
+      <!-- ══ NIÑO (izquierda, corriendo hacia su papá) ══ -->
+      <!-- Sombra -->
+      <ellipse cx="200" cy="296" rx="22" ry="6" fill="rgba(0,0,0,0.18)"/>
+      <!-- Cuerpo pequeño y dinámico -->
+      <path d="M186 218 Q200 210 214 218 L217 265 Q200 270 183 265 Z" fill="rgba(255,255,255,0.22)"/>
+      <!-- Cabeza -->
+      <circle cx="200" cy="200" r="20" fill="rgba(255,255,255,0.26)"/>
+      <!-- Cabello -->
+      <path d="M180 196 Q200 183 220 196 Q218 187 200 183 Q182 187 180 196Z" fill="rgba(255,255,255,0.18)"/>
+      <!-- Brazos corriendo -->
+      <path d="M186 230 Q165 240 150 235" stroke="rgba(255,255,255,0.22)" stroke-width="11" stroke-linecap="round" fill="none"/>
+      <path d="M214 228 Q238 220 350 230" stroke="rgba(255,255,255,0.20)" stroke-width="11" stroke-linecap="round" fill="none"/>
+      <!-- Mano tomando la del papá -->
+      <circle cx="353" cy="231" r="7" fill="rgba(255,255,255,0.22)"/>
+      <!-- Piernas corriendo -->
+      <path d="M193 265 Q185 278 178 298" stroke="rgba(255,255,255,0.24)" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <path d="M207 265 Q220 278 225 298" stroke="rgba(255,255,255,0.18)" stroke-width="11" stroke-linecap="round" fill="none"/>
+
+      <!-- ══ LÍNEA DE TIEMPO / CAMINO bajo los pies ══ -->
+      <path d="M140 299 Q320 292 450 293 Q580 292 760 299"
+            stroke="rgba(255,255,255,0.12)" stroke-width="2.5"
+            stroke-dasharray="6 5" fill="none"/>
+
+      <!-- ══ ETIQUETAS flotantes sutiles ══ -->
+      <!-- Niño -->
+      <text x="200" y="162" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.40)" letter-spacing="0.08em">HOY</text>
+      <!-- Papá -->
+      <text x="450" y="148" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.50)" letter-spacing="0.08em">TÚ</text>
+      <!-- Abuelo -->
+      <text x="730" y="138" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.45)" letter-spacing="0.08em">TU FUTURO</text>
+
+      <!-- ══ DESTELLOS decorativos ══ -->
+      <circle cx="340" cy="80" r="2.5" fill="rgba(245,158,11,0.55)"/>
+      <circle cx="560" cy="55" r="1.8" fill="rgba(255,255,255,0.30)"/>
+      <circle cx="120" cy="120" r="2" fill="rgba(255,255,255,0.22)"/>
+      <circle cx="800" cy="100" r="1.5" fill="rgba(245,158,11,0.35)"/>
+      <circle cx="620" cy="130" r="1.2" fill="rgba(255,255,255,0.20)"/>
+
+    </svg>
+  </div>
 
   <div class="intro-content">
     <div class="intro-brand">
