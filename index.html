@@ -869,6 +869,20 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);}
             <option value="35">35%</option>
           </select>
         </div>
+        <div style="margin-top:10px;">
+          <label class="field-label" style="margin-bottom:8px;">¿Qué haces con la devolución?</label>
+          <div style="display:flex;gap:8px;">
+            <div class="reinvert-pill active" id="reinvertSi" onclick="setReinvert(true)" style="flex:1;padding:10px 8px;border:1.5px solid var(--border);border-radius:10px;background:#FAFBFF;text-align:center;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;">
+              <div style="font-size:13px;font-weight:700;color:var(--slate);">Reinvertir</div>
+              <div style="font-size:10px;color:var(--slate-light);margin-top:2px;">Suma al plan</div>
+            </div>
+            <div class="reinvert-pill" id="reinvertNo" onclick="setReinvert(false)" style="flex:1;padding:10px 8px;border:1.5px solid var(--border);border-radius:10px;background:#FAFBFF;text-align:center;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;">
+              <div style="font-size:13px;font-weight:700;color:var(--slate);">No reinvertir</div>
+              <div style="font-size:10px;color:var(--slate-light);margin-top:2px;">La recibo en efectivo</div>
+            </div>
+          </div>
+        </div>
+        </div>
       </div>
 
       <button class="btn-simular" id="btnSimular">
@@ -1254,9 +1268,28 @@ const money = v => new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN
 
 const FREQ=12, YRS_RET=20, RATE_RET=0.07, INFL_RET=0.04, RATE_ACC=0.10, INFL_ACC=0.04;
 
-let modoRetiro='65', regimenFiscal='ninguno';
+let modoRetiro='65', regimenFiscal='ninguno', reinvertirISR=true;
 let gaugeCharts=[null,null,null];
 let sim={};
+
+function setReinvert(val){
+  reinvertirISR=val;
+  document.querySelectorAll('.reinvert-pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById(val?'reinvertSi':'reinvertNo').classList.add('active');
+  // Actualizar estilos activo/inactivo
+  const si=$('reinvertSi'), no=$('reinvertNo');
+  if(val){
+    si.style.borderColor='var(--electric)';si.style.background='linear-gradient(135deg,#EEF2FF,#E0E7FF)';
+    si.querySelector('div').style.color='var(--electric)';
+    no.style.borderColor='var(--border)';no.style.background='#FAFBFF';
+    no.querySelector('div').style.color='var(--slate)';
+  } else {
+    no.style.borderColor='var(--electric)';no.style.background='linear-gradient(135deg,#EEF2FF,#E0E7FF)';
+    no.querySelector('div').style.color='var(--electric)';
+    si.style.borderColor='var(--border)';si.style.background='#FAFBFF';
+    si.querySelector('div').style.color='var(--slate)';
+  }
+}
 
 // ── Sugerencia en tiempo real ──
 function calcSugerencia(){
@@ -1423,7 +1456,7 @@ function simular(){
     if(yr<=yrsAport){
       if(yr>1)pmtYear*=(1+INFL_ACC);
       for(let k=0;k<FREQ;k++){saldo*=(1+iAcc);saldo+=pmtYear;aportAno+=pmtYear;totalAportado+=pmtYear;}
-      if(regimenFiscal==='151'&&isrPct>0){benefAno=aportAno*isrPct;saldo+=benefAno;benefFiscal+=benefAno;}
+      if(regimenFiscal==='151'&&isrPct>0&&reinvertirISR){benefAno=aportAno*isrPct;saldo+=benefAno;benefFiscal+=benefAno;}
     } else {
       for(let k=0;k<FREQ;k++)saldo*=(1+iAcc);
     }
@@ -1727,8 +1760,9 @@ function actualizarPDF(){
   if($('rptParamsLine'))$('rptParamsLine').textContent='';
 }
 
-// Init sugerencia
+// Init sugerencia y estado reinvertir
 calcSugerencia();
+setReinvert(true);
 </script>
 </body>
 </html>
