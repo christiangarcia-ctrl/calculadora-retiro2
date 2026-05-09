@@ -1474,18 +1474,18 @@ function actualizarPDF(){
       <!-- Nombre -->
       <div style="font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.13em;color:rgba(255,255,255,.48);margin-bottom:1.5mm;">Simulación personalizada de retiro</div>
       <div style="font-family:'Playfair Display',serif;font-size:30pt;font-weight:900;color:#fff;letter-spacing:-.02em;line-height:1;margin-bottom:2mm;">${nombre}</div>
-      <div style="font-size:7.5pt;color:rgba(255,255,255,.55);margin-bottom:5mm;">${sim.edad} años · ${sim.yrsAport} años de aportación · ${money(sim.pmt0)}/mes · Escenario ilustrativo</div>
+      <div style="font-size:7.5pt;color:rgba(255,255,255,.55);margin-bottom:5mm;">${sim.edad} años · ${sim.yrsAport} años de aportación · ${money(sim.pmt0)}/mes</div>
       <!-- Dos números héroe -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm;">
         <div style="border-radius:3mm;padding:3.5mm 4.5mm;background:rgba(245,158,11,.18);border:1px solid rgba(245,158,11,.55);border-left:3px solid #F59E0B;">
-          <div style="font-size:6pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:rgba(245,158,11,.90);margin-bottom:1.5mm;">Capital proyectado a los 65 años (estimación ilustrativa)</div>
+          <div style="font-size:6pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:rgba(245,158,11,.90);margin-bottom:1.5mm;">Capital proyectado a los 65 años</div>
           <div style="font-family:'Playfair Display',serif;font-size:21pt;font-weight:900;color:#F59E0B;letter-spacing:-.02em;line-height:1;">${money(sim.fondo65)}</div>
-          <div style="font-size:6pt;color:rgba(255,255,255,.38);margin-top:1mm;">Incluye crecimiento hipotético sin aportaciones: ${sim.yrsExtra} años</div>
+          <div style="font-size:6pt;color:rgba(255,255,255,.38);margin-top:1mm;">Bajo este escenario · Incluye ${sim.yrsExtra} años de crecimiento sin aportaciones</div>
         </div>
         <div style="border-radius:3mm;padding:3.5mm 4.5mm;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);">
-          <div style="font-size:6pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:rgba(255,255,255,.50);margin-bottom:1.5mm;">Referencia de ingreso mensual estimado (${edadIng} años)</div>
+          <div style="font-size:6pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:rgba(255,255,255,.50);margin-bottom:1.5mm;">Ingreso mensual estimado al retiro (${edadIng} años)</div>
           <div style="font-family:'Playfair Display',serif;font-size:21pt;font-weight:900;color:#fff;letter-spacing:-.02em;line-height:1;">${money(usarIng)}</div>
-          <div style="font-size:6pt;color:rgba(255,255,255,.38);margin-top:1mm;">Escenario de retiro a 20 años · 240 meses</div>
+          <div style="font-size:6pt;color:rgba(255,255,255,.38);margin-top:1mm;">Bajo este escenario · 20 años · 240 meses</div>
         </div>
       </div>
     </div>
@@ -1497,17 +1497,17 @@ function actualizarPDF(){
     <!-- Escenario en una línea -->
     <div style="background:linear-gradient(135deg,#EEF2FF,#E8EEFF);border-radius:3mm;padding:4mm 5mm;margin-bottom:5mm;display:flex;align-items:center;justify-content:space-between;">
       <div style="text-align:center;flex:1;">
-        <div style="font-size:6pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:#64748B;margin-bottom:1mm;">Aportaciones en el escenario</div>
+        <div style="font-size:6pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:#64748B;margin-bottom:1mm;">Lo que aportarías</div>
         <div style="font-family:'DM Mono',monospace;font-size:13pt;font-weight:700;color:#475569;">${totalAport}</div>
       </div>
       <div style="font-size:18pt;color:#1A4BFF;font-weight:300;padding:0 4mm;">→</div>
       <div style="text-align:center;flex:1;">
-        <div style="font-size:6pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:#F59E0B;margin-bottom:1mm;">Capital proyectado que podrías acumular</div>
+        <div style="font-size:6pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:#F59E0B;margin-bottom:1mm;">Capital que podrías acumular</div>
         <div style="font-family:'DM Mono',monospace;font-size:13pt;font-weight:700;color:#0A1D66;">${fondo65}</div>
       </div>
       <div style="font-size:18pt;color:#10B981;font-weight:300;padding:0 4mm;">→</div>
       <div style="text-align:center;flex:1;">
-        <div style="font-size:6pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:#059669;margin-bottom:1mm;">Referencia de ingreso mensual estimado</div>
+        <div style="font-size:6pt;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:#059669;margin-bottom:1mm;">Ingreso mensual estimado</div>
         <div style="font-family:'DM Mono',monospace;font-size:13pt;font-weight:700;color:#065F46;">${money(usarIng)}</div>
       </div>
     </div>
@@ -1546,8 +1546,8 @@ function actualizarPDF(){
     <div style="font-size:7pt;color:rgba(255,255,255,.55);">Simulación ilustrativa con supuestos definidos · ${hoy}</div>
   </div>
 
-  <!-- CUERPO P2: top 18mm, bottom 16mm -->
-  <div style="position:absolute;top:18mm;left:0;right:0;bottom:16mm;background:white;padding:5mm 13mm 0;overflow:hidden;">
+  <!-- CUERPO P2: top 18mm, bottom 30mm -->
+  <div style="position:absolute;top:18mm;left:0;right:0;bottom:30mm;background:white;padding:5mm 13mm 0;overflow:hidden;">
 
     <!-- El valor de empezar hoy -->
     <div style="font-size:6pt;text-transform:uppercase;letter-spacing:.11em;font-weight:700;color:#1A4BFF;display:flex;align-items:center;gap:2mm;margin-bottom:4mm;">
@@ -1620,10 +1620,18 @@ function actualizarPDF(){
 
   </div>
 
+  <!-- BLOQUE JUSTIFICACIÓN 10% -->
+  <div style="position:absolute;bottom:16mm;left:0;right:0;padding:0 13mm;">
+    <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-left:3px solid #1A4BFF;border-radius:0 2mm 2mm 0;padding:3mm 4mm;">
+      <div style="font-size:6.5pt;font-weight:700;color:#0A1D66;margin-bottom:1mm;">¿Por qué usamos 10% anual en esta simulación?</div>
+      <div style="font-size:6pt;color:#475569;line-height:1.6;">Este supuesto refleja un escenario de referencia moderado, alineado con el comportamiento histórico del ahorro de largo plazo en México. Es un parámetro ilustrativo, no el rendimiento del producto contratado. El rendimiento real depende de las condiciones del mercado, el plan elegido y el plazo de permanencia. Con gusto te explico los detalles en nuestra conversación.</div>
+    </div>
+  </div>
+
   <!-- FOOTER P2 -->
   <div style="position:absolute;bottom:0;left:0;right:0;height:16mm;background:linear-gradient(135deg,#0A1D66,#0D2580);padding:0 13mm;display:flex;align-items:center;justify-content:space-between;">
     <div style="color:rgba(255,255,255,.65);font-size:7pt;line-height:1.7;"><strong style="color:#fff;">Christian GarBa</strong> · Distribuidor Allianz<br>662 417 6032 · sfgarba.com/Blog</div>
-    <div style="font-size:6pt;color:rgba(255,255,255,.40);text-align:center;flex:1;padding:0 7mm;line-height:1.5;">Simulación ilustrativa elaborada con supuestos definidos: rendimiento hipotético del 10% anual e inflación del 4%. Los resultados reales pueden ser mayores o menores. No constituye garantía, promesa ni asesoría de inversión. Pólizas supervisadas por la CNSF · Régimen fiscal conforme a la LISR.</div>
+    <div style="font-size:6pt;color:rgba(255,255,255,.40);text-align:center;flex:1;padding:0 7mm;line-height:1.5;">Simulación ilustrativa con supuestos definidos. Los resultados reales pueden ser mayores o menores.<br>Este documento no constituye contrato ni garantía de rendimiento. Supervisado por la CNSF · LISR.</div>
     <div style="font-size:6pt;color:rgba(255,255,255,.40);text-align:right;">Página 2 de 2</div>
   </div>
 </div>
