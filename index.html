@@ -473,83 +473,112 @@ td{padding:12px 13px;border-bottom:1px solid #EEF2F7;font-size:13px}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   #screen-intro,#screen-results,.no-print{display:none!important}
   .pdf-pages{display:block!important}
+
+  /* Cada página ocupa exactamente 297mm sin overflow */
   .pdf-page{
     width:210mm;
     height:297mm;
+    min-height:297mm;
+    max-height:297mm;
     position:relative;
     overflow:hidden;
     background:#fff;
     page-break-after:always;
     break-after:page;
+    display:flex;
+    flex-direction:column;
   }
   .pdf-page:last-child{page-break-after:auto;break-after:auto}
+
+  /* Header compacto: 20mm */
   .pdf-header{
-    height:25mm;
-    padding:7mm 13mm 0;
+    height:20mm;
+    min-height:20mm;
+    max-height:20mm;
+    padding:5mm 13mm 0;
     display:flex;
     align-items:flex-start;
     justify-content:space-between;
     border-bottom:1px solid #E2E8F0;
+    flex-shrink:0;
   }
-  .pdf-brand{display:flex;align-items:center;gap:4mm}
-  .pdf-brand img{height:9mm}
-  .pdf-brand .divider{height:8mm;width:.35mm;background:#CBD5E1}
-  .pdf-brand b{font-size:10pt;color:#0A1D66}
-  .pdf-meta{text-align:right;font-size:7pt;color:#64748B;line-height:1.45}
-  .pdf-body{padding:8mm 13mm 0}
-  .pdf-kicker{font-size:7pt;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:#1A4BFF;margin-bottom:2mm}
-  .pdf-h1{font-family:'Playfair Display',serif;font-size:24pt;color:#0A1D66;line-height:1;letter-spacing:-.03em;margin-bottom:2mm}
-  .pdf-sub{font-size:8pt;color:#64748B;margin-bottom:6mm}
-  .pdf-blue{
-    background:linear-gradient(135deg,#071B5F,#123D93);
-    border-radius:5mm;
-    padding:7mm;
-    color:#fff;
-    margin-bottom:6mm;
-  }
-  .pdf-blue span{display:block;font-size:7pt;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:rgba(255,255,255,.62);margin-bottom:2mm}
-  .pdf-blue strong{display:block;font-family:'Playfair Display',serif;font-size:31pt;color:#F59E0B;line-height:1}
-  .pdf-blue small{display:block;margin-top:2mm;color:rgba(255,255,255,.72);font-size:8pt}
-  .pdf-table-title{font-size:8pt;text-transform:uppercase;letter-spacing:.10em;font-weight:900;color:#1A4BFF;margin:5mm 0 2.5mm}
-  .pdf-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #E2E8F0;border-radius:3mm;overflow:hidden;margin-bottom:5mm}
-  .pdf-table th{background:#F8FAFC;color:#64748B;font-size:7pt;padding:3mm;text-transform:uppercase;letter-spacing:.08em}
-  .pdf-table td{font-size:8.5pt;padding:3.2mm;border-top:1px solid #E2E8F0;color:#172033}
-  .pdf-table td.money{font-family:'DM Mono',monospace;font-weight:700;color:#0A1D66}
-  .pdf-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2.5mm;margin-bottom:5mm}
-  .pdf-metric{border:1px solid #E2E8F0;background:#F8FAFC;border-radius:3mm;padding:3mm}
-  .pdf-metric span{display:block;font-size:6pt;text-transform:uppercase;letter-spacing:.08em;color:#64748B;font-weight:900;margin-bottom:1mm}
-  .pdf-metric strong{font-family:'DM Mono',monospace;font-size:9.5pt;color:#0A1D66}
-  .pdf-compare{display:grid;grid-template-columns:repeat(4,1fr);gap:2.5mm;margin-bottom:4mm}
-  .pdf-comp{border:1px solid #E2E8F0;border-radius:3mm;padding:3mm;text-align:center;background:#fff}
-  .pdf-comp.featured{background:#ECFDF5;border-color:#A7F3D0}
-  .pdf-comp span{display:block;font-size:6pt;text-transform:uppercase;letter-spacing:.07em;color:#64748B;font-weight:900;min-height:8mm}
-  .pdf-comp strong{display:block;font-family:'DM Mono',monospace;font-size:10pt;color:#0A1D66;margin-top:1.5mm}
-  .pdf-note{background:#F8FAFC;border-left:3px solid #1A4BFF;border-radius:0 2mm 2mm 0;padding:3mm;font-size:7pt;color:#475569;line-height:1.45;margin-top:4mm}
-  .pdf-advisor{
-    display:grid;
-    grid-template-columns:1.1fr .9fr;
-    gap:6mm;
-    margin-top:6mm
-  }
-  .advisor-card,.allianz-card{border:1px solid #E2E8F0;border-radius:4mm;padding:4mm;background:#fff}
-  .advisor-row{display:flex;gap:4mm;align-items:center}
-  .advisor-row img{width:22mm;height:22mm;border-radius:50%;object-fit:cover;border:1px solid #E2E8F0}
-  .advisor-row h3{font-family:'Playfair Display',serif;color:#0A1D66;font-size:15pt;margin-bottom:1mm}
-  .advisor-row p,.allianz-card p{font-size:7.5pt;color:#475569;line-height:1.55}
-  .qr-row{display:flex;gap:3mm;align-items:center;margin-top:4mm;background:#F8FAFC;border-radius:3mm;padding:3mm}
-  .qr-row img{width:21mm;height:21mm;object-fit:contain}
-  .qr-row p{font-size:7pt;color:#475569;line-height:1.45}
-  .badge-grid{display:grid;grid-template-columns:1fr 1fr;gap:2mm;margin-top:3mm}
-  .badge{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:2mm;padding:2.5mm;text-align:center;font-size:6.5pt;color:#0A1D66;font-weight:800}
+  .pdf-brand{display:flex;align-items:center;gap:3mm}
+  .pdf-brand img{height:8mm}
+  .pdf-brand .divider{height:7mm;width:.35mm;background:#CBD5E1}
+  .pdf-brand b{font-size:9pt;color:#0A1D66}
+  .pdf-meta{text-align:right;font-size:6.5pt;color:#64748B;line-height:1.4}
+
+  /* Footer fijo: 14mm */
   .pdf-footer{
-    position:absolute;bottom:0;left:0;right:0;height:16mm;
+    position:absolute;bottom:0;left:0;right:0;height:14mm;
     background:linear-gradient(135deg,#071B5F,#0A1D66);
     color:rgba(255,255,255,.72);
     display:flex;align-items:center;justify-content:space-between;
     padding:0 13mm;
-    font-size:6.5pt;
-    line-height:1.35
+    font-size:6pt;
+    line-height:1.3;
+    flex-shrink:0;
   }
+
+  /* Body: espacio disponible = 297 - 20(header) - 14(footer) = 263mm */
+  .pdf-body{
+    padding:5mm 13mm 14mm;
+    overflow:hidden;
+    flex:1;
+  }
+
+  .pdf-kicker{font-size:6.5pt;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:#1A4BFF;margin-bottom:1.5mm}
+  .pdf-h1{font-family:'Playfair Display',serif;font-size:20pt;color:#0A1D66;line-height:1;letter-spacing:-.03em;margin-bottom:1.5mm}
+  .pdf-sub{font-size:7.5pt;color:#64748B;margin-bottom:4mm}
+
+  /* Bloque azul más compacto */
+  .pdf-blue{
+    background:linear-gradient(135deg,#071B5F,#123D93);
+    border-radius:4mm;
+    padding:5mm 6mm;
+    color:#fff;
+    margin-bottom:4mm;
+  }
+  .pdf-blue span{display:block;font-size:6.5pt;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:rgba(255,255,255,.62);margin-bottom:1.5mm}
+  .pdf-blue strong{display:block;font-family:'Playfair Display',serif;font-size:26pt;color:#F59E0B;line-height:1}
+  .pdf-blue small{display:block;margin-top:1.5mm;color:rgba(255,255,255,.72);font-size:7.5pt}
+
+  .pdf-table-title{font-size:7pt;text-transform:uppercase;letter-spacing:.10em;font-weight:900;color:#1A4BFF;margin:3.5mm 0 2mm}
+  .pdf-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #E2E8F0;border-radius:2.5mm;overflow:hidden;margin-bottom:4mm}
+  .pdf-table th{background:#F8FAFC;color:#64748B;font-size:6.5pt;padding:2.5mm;text-transform:uppercase;letter-spacing:.08em}
+  .pdf-table td{font-size:8pt;padding:2.8mm;border-top:1px solid #E2E8F0;color:#172033}
+  .pdf-table td.money{font-family:'DM Mono',monospace;font-weight:700;color:#0A1D66}
+
+  .pdf-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:4mm}
+  .pdf-metric{border:1px solid #E2E8F0;background:#F8FAFC;border-radius:2.5mm;padding:2.5mm}
+  .pdf-metric span{display:block;font-size:5.5pt;text-transform:uppercase;letter-spacing:.08em;color:#64748B;font-weight:900;margin-bottom:1mm}
+  .pdf-metric strong{font-family:'DM Mono',monospace;font-size:9pt;color:#0A1D66}
+
+  .pdf-compare{display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:3.5mm}
+  .pdf-comp{border:1px solid #E2E8F0;border-radius:2.5mm;padding:2.5mm;text-align:center;background:#fff}
+  .pdf-comp.featured{background:#ECFDF5;border-color:#A7F3D0}
+  .pdf-comp span{display:block;font-size:5.5pt;text-transform:uppercase;letter-spacing:.07em;color:#64748B;font-weight:900;min-height:7mm}
+  .pdf-comp strong{display:block;font-family:'DM Mono',monospace;font-size:9.5pt;color:#0A1D66;margin-top:1mm}
+
+  .pdf-note{background:#F8FAFC;border-left:2.5px solid #1A4BFF;border-radius:0 2mm 2mm 0;padding:2.5mm 3mm;font-size:6.5pt;color:#475569;line-height:1.4;margin-top:3mm}
+
+  /* Asesor en página 2 */
+  .pdf-advisor{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:5mm;
+    margin-top:5mm;
+  }
+  .advisor-card,.allianz-card{border:1px solid #E2E8F0;border-radius:3.5mm;padding:3.5mm;background:#fff}
+  .advisor-row{display:flex;gap:3.5mm;align-items:center}
+  .advisor-row img{width:20mm;height:20mm;border-radius:50%;object-fit:cover;border:1px solid #E2E8F0}
+  .advisor-row h3{font-family:'Playfair Display',serif;color:#0A1D66;font-size:13pt;margin-bottom:1mm}
+  .advisor-row p,.allianz-card p{font-size:7pt;color:#475569;line-height:1.5}
+  .qr-row{display:flex;gap:3mm;align-items:center;margin-top:3.5mm;background:#F8FAFC;border-radius:2.5mm;padding:2.5mm}
+  .qr-row img{width:19mm;height:19mm;object-fit:contain}
+  .qr-row p{font-size:6.5pt;color:#475569;line-height:1.4}
+  .badge-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm;margin-top:2.5mm}
+  .badge{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:2mm;padding:2mm;text-align:center;font-size:6pt;color:#0A1D66;font-weight:800}
 }
 @media(max-width:900px){
   .intro-shell,.main-result,.grid-2{grid-template-columns:1fr}
@@ -564,50 +593,126 @@ td{padding:12px 13px;border-bottom:1px solid #EEF2F7;font-size:13px}
   .btn-top{flex:1}
 }
 
-/* ===== Ajuste balanceado: resultado + selector de ingreso ===== */
-.income-selector{
-  margin-top:18px;
-  border-top:1px solid var(--line);
-  padding-top:18px;
+/* ===== Hero rediseñado: métricas balanceadas ===== */
+.hero-metrics{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-bottom:16px;
 }
-.income-selector .selector-title{
-  font-size:12px;
-  color:#64748B;
+.hero-metric{
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:20px;
+  padding:20px 22px;
+  backdrop-filter:blur(8px);
+}
+.hero-metric.gold{
+  background:rgba(245,158,11,.14);
+  border-color:rgba(245,158,11,.3);
+}
+.hm-label{
+  font-size:11px;
   text-transform:uppercase;
-  letter-spacing:.10em;
+  letter-spacing:.12em;
   font-weight:900;
-  margin-bottom:10px;
+  color:rgba(255,255,255,.55);
+  margin-bottom:8px;
 }
-.income-pills{
+.hero-metric.gold .hm-label{color:rgba(245,158,11,.85)}
+.hm-value{
+  font-family:"DM Mono",monospace;
+  font-size:clamp(20px,2.4vw,28px);
+  font-weight:700;
+  color:#fff;
+  line-height:1.1;
+}
+.hero-metric.gold .hm-value{color:var(--gold)}
+.hm-sub{
+  margin-top:6px;
+  font-size:12px;
+  color:rgba(255,255,255,.5);
+}
+.hero-metric.gold .hm-sub{color:rgba(245,158,11,.6)}
+.income-block{
+  background:rgba(255,255,255,.96);
+  border-radius:22px;
+  padding:20px 22px;
+  color:var(--ink);
+}
+.income-tabs{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
+  margin-bottom:16px;
 }
-.income-pill{
+.income-tab{
   border:1.5px solid var(--line);
-  background:#fff;
-  border-radius:15px;
-  padding:13px 14px;
+  background:#F8FAFC;
+  border-radius:14px;
+  padding:13px 15px;
   cursor:pointer;
   text-align:left;
   transition:.18s;
 }
-.income-pill b{
+.income-tab b{
   display:block;
   color:var(--navy);
   font-size:13px;
-  margin-bottom:4px;
+  margin-bottom:3px;
 }
-.income-pill span{
+.income-tab span{
   display:block;
   color:#64748B;
   font-size:11px;
   line-height:1.35;
 }
-.income-pill.active{
+.income-tab.active{
   border-color:var(--blue);
   background:linear-gradient(135deg,#EEF2FF,#F7FAFF);
   box-shadow:0 0 0 3px rgba(26,75,255,.08);
+}
+.income-tab.active b{color:var(--blue)}
+.income-detail{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:14px;
+}
+.income-detail-item{
+  background:#F8FAFC;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+}
+.income-detail-item.accent{
+  background:var(--green-bg);
+  border-color:#A7F3D0;
+}
+.id-label{
+  display:block;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.09em;
+  color:#64748B;
+  font-weight:900;
+  margin-bottom:6px;
+}
+.income-detail-item.accent .id-label{color:#047857}
+.id-value{
+  display:block;
+  font-family:"DM Mono",monospace;
+  font-size:18px;
+  color:var(--navy);
+  line-height:1.1;
+  margin-bottom:4px;
+}
+.income-detail-item.accent .id-value{color:var(--green)}
+.id-sub{
+  display:block;
+  font-size:11px;
+  color:#64748B;
+  line-height:1.35;
 }
 .reading-grid{
   display:grid;
@@ -626,52 +731,16 @@ td{padding:12px 13px;border-bottom:1px solid #EEF2F7;font-size:13px}
 }
 #growthSection{display:none!important}
 @media(max-width:900px){
+  .hero-metrics{grid-template-columns:1fr 1fr}
+  .income-detail{grid-template-columns:1fr 1fr}
   .reading-grid{grid-template-columns:1fr 1fr}
+  .client-row{flex-direction:column}
 }
 @media(max-width:560px){
-  .income-pills,.reading-grid{grid-template-columns:1fr}
+  .hero-metrics,.income-tabs,.income-detail,.reading-grid{grid-template-columns:1fr}
 }
 
-/* ===== Print fix: exactamente dos páginas A4 ===== */
-@media print{
-  html,body{
-    width:210mm!important;
-    min-width:210mm!important;
-    max-width:210mm!important;
-    height:auto!important;
-    margin:0!important;
-    padding:0!important;
-    overflow:visible!important;
-    background:#fff!important;
-  }
-  .pdf-pages{
-    display:block!important;
-    width:210mm!important;
-    margin:0!important;
-    padding:0!important;
-    overflow:visible!important;
-  }
-  .pdf-page{
-    width:210mm!important;
-    height:296.5mm!important;
-    min-height:296.5mm!important;
-    max-height:296.5mm!important;
-    margin:0!important;
-    padding:0!important;
-    overflow:hidden!important;
-    page-break-after:always!important;
-    break-after:page!important;
-    page-break-inside:avoid!important;
-    break-inside:avoid!important;
-  }
-  .pdf-page:last-child{
-    page-break-after:auto!important;
-    break-after:auto!important;
-  }
-  .pdf-body{
-    overflow:hidden!important;
-  }
-}
+
 
 </style>
 </head>
@@ -812,33 +881,60 @@ td{padding:12px 13px;border-bottom:1px solid #EEF2F7;font-size:13px}
         </a>
       </div>
 
-      <div class="main-result">
-        <div class="result-card-main">
-          <div class="label">Fondo estimado al finalizar tu plan</div>
-          <div class="amount" id="mainFondoPlan">—</div>
-          <p id="mainSub">—</p>
+      <!-- Tres métricas en igual jerarquía -->
+      <div class="hero-metrics">
+        <div class="hero-metric gold">
+          <div class="hm-label">Fondo al finalizar aportaciones</div>
+          <div class="hm-value" id="mainFondoPlan">—</div>
+          <div class="hm-sub" id="mainSub">—</div>
         </div>
-        <div class="future-card">
-          <h3 id="futureTitle">Lectura del escenario</h3>
-          <div class="future-list" id="futureList">
-            <div class="future-item" id="ref60Box"><span>Referencia Art. 93 a los 60 años</span><strong id="fondo60">—</strong></div>
-            <div class="future-item"><span>Proyección a los 65 años</span><strong id="fondo65">—</strong></div>
-          </div>
-          <div class="income-selector" id="incomeSelector">
-            <div class="selector-title">Calcular ingreso mensual con:</div>
-            <div class="income-pills">
-              <button class="income-pill active" id="income60" data-income-base="60" type="button">
-                <b>60 años · Art. 93</b>
-                <span>Usa la referencia fiscal a los 60 años.</span>
-              </button>
-              <button class="income-pill" id="income65" data-income-base="65" type="button">
-                <b>65 años · Proyección extendida</b>
-                <span>Usa el capital proyectado a los 65 años.</span>
-              </button>
-            </div>
-          </div>
-          <p class="future-note" id="fiscalNote">—</p>
+        <div class="hero-metric" id="ref60Box">
+          <div class="hm-label">Referencia Art. 93 · 60 años</div>
+          <div class="hm-value" id="fondo60">—</div>
+          <div class="hm-sub">Con crecimiento acumulado</div>
         </div>
+        <div class="hero-metric">
+          <div class="hm-label">Proyección extendida · 65 años</div>
+          <div class="hm-value" id="fondo65">—</div>
+          <div class="hm-sub">Escenario de mayor plazo</div>
+        </div>
+      </div>
+
+      <!-- Selector + panel de detalle de ingreso -->
+      <div class="income-block" id="incomeSelector">
+        <div class="income-tabs">
+          <button class="income-tab active" id="income60" data-income-base="60" type="button">
+            <b>60 años · Art. 93</b>
+            <span>Ingreso basado en referencia fiscal</span>
+          </button>
+          <button class="income-tab" id="income65" data-income-base="65" type="button">
+            <b>65 años · Proyección extendida</b>
+            <span>Ingreso con capital máximo acumulado</span>
+          </button>
+        </div>
+        <div class="income-detail">
+          <div class="income-detail-item">
+            <span class="id-label">Capital base</span>
+            <strong class="id-value" id="capitalBaseRetiro">—</strong>
+            <span class="id-sub" id="capitalBaseSub">—</span>
+          </div>
+          <div class="income-detail-item accent">
+            <span class="id-label">Ingreso mensual estimado</span>
+            <strong class="id-value" id="sumIngreso">—</strong>
+            <span class="id-sub" id="ingresoSub">—</span>
+          </div>
+          <div class="income-detail-item" id="idItem3">
+            <span class="id-label" id="idLabel3">Edad de inicio</span>
+            <strong class="id-value" id="idVal3">—</strong>
+            <span class="id-sub" id="idSub3">—</span>
+          </div>
+          <div class="income-detail-item" id="idItem4">
+            <span class="id-label" id="idLabel4">Beneficio</span>
+            <strong class="id-value" id="idVal4">—</strong>
+            <span class="id-sub" id="idSub4">—</span>
+          </div>
+        </div>
+        <p class="future-note" id="fiscalNote">—</p>
       </div>
     </div>
   </div>
@@ -853,8 +949,8 @@ td{padding:12px 13px;border-bottom:1px solid #EEF2F7;font-size:13px}
         <div class="reading-grid">
           <div class="metric"><span>Aportación mensual inicial</span><strong id="sumPmt">—</strong></div>
           <div class="metric"><span>Total aportado estimado</span><strong id="sumAportado">—</strong></div>
-          <div class="metric"><span>Capital base para retiro</span><strong id="capitalBaseRetiro">—</strong><span class="sub" id="capitalBaseSub">—</span></div>
-          <div class="metric green"><span>Ingreso mensual estimado</span><strong id="sumIngreso">—</strong><span class="sub" id="ingresoSub">—</span></div>
+          <div class="metric"><span>Rendimiento acumulado estimado</span><strong id="sumRendimiento">—</strong></div>
+          <div class="metric green"><span>Multiplicador del capital</span><strong id="sumMultiplicador">—</strong></div>
         </div>
       </div>
     </section>
@@ -953,9 +1049,9 @@ document.querySelectorAll('.fiscal-pill').forEach(p=>{
 $('advancedToggle').addEventListener('click',()=> $('advancedBox').classList.toggle('visible'));
 $('toggleDetalle').addEventListener('click',()=> $('detalleContent').classList.toggle('visible'));
 
-document.querySelectorAll('.income-pill').forEach(p=>{
+document.querySelectorAll('.income-tab').forEach(p=>{
   p.addEventListener('click',()=>{
-    document.querySelectorAll('.income-pill').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.income-tab').forEach(x=>x.classList.remove('active'));
     p.classList.add('active');
     incomeBase = p.dataset.incomeBase;
     if(sim && sim.fondo65) renderIncomeBase();
@@ -1090,33 +1186,17 @@ function render(){
 
   $('fiscalHead').textContent = sim.regimenFiscal==='151'?'Art. 151':sim.regimenFiscal==='93'?'Art. 93':'General';
   $('fiscalTitle').textContent = sim.regimenFiscal==='151'?'Lectura Art. 151':sim.regimenFiscal==='93'?'Lectura Art. 93':'Lectura general del escenario';
-  if(sim.regimenFiscal==='151'){
-    $('futureTitle').textContent='Lectura Art. 151';
-    $('incomeSelector').style.display='none';
-    $('ref60Box').style.display='none';
-    $('fiscalMetric1Label').textContent='Posible devolución ISR estimada';
-    $('fiscalMetric1').textContent=money(sim.totalIsr);
-    $('fiscalMetric2Label').textContent='Capital proyectado a los 65';
-    $('fiscalMetric2').textContent=money(sim.fondo65);
-    $('fiscalText').textContent='En Art. 151 el enfoque principal es la deducibilidad. Esta lectura estima una posible devolución de ISR con base en el porcentaje capturado y considera su reinversión dentro del escenario.';
-  }else if(sim.regimenFiscal==='93'){
-    $('futureTitle').textContent='Lectura Art. 93';
-    $('incomeSelector').style.display = (sim.fondo60 && sim.edad < 60) ? 'block':'none';
-    $('ref60Box').style.display = (sim.fondo60 && sim.edad < 60) ? 'block':'none';
-    $('fiscalMetric1Label').textContent='Referencia a los 60';
-    $('fiscalMetric1').textContent=sim.fondo60?money(sim.fondo60):'—';
-    $('fiscalMetric2Label').textContent='Proyección extendida a los 65';
-    $('fiscalMetric2').textContent=money(sim.fondo65);
-    $('fiscalText').textContent='En Art. 93, la referencia a los 60 años es relevante porque puede representar un punto fiscalmente importante para el uso del fondo. También puedes visualizar cuánto podría crecer si decides mantenerlo proyectándose hasta los 65 años.';
-  }else{
-    $('futureTitle').textContent='Lectura general del escenario';
-    $('incomeSelector').style.display='none';
-    $('ref60Box').style.display='none';
-    $('fiscalMetric1Label').textContent='Fondo al finalizar aportaciones';
-    $('fiscalMetric1').textContent=money(sim.fondoPlan);
-    $('fiscalMetric2Label').textContent='Proyección a los 65';
-    $('fiscalMetric2').textContent=money(sim.fondo65);
-    $('fiscalText').textContent='Escenario de planeación patrimonial sin beneficio fiscal específico. El ingreso mensual estimado se calcula sobre la proyección a los 65 años.';
+  // Visibilidad del bloque de ingreso y métrica 60
+  const canUse60 = sim.regimenFiscal==='93' && sim.fondo60 && sim.edad < 60;
+  $('incomeSelector').style.display = canUse60 ? 'block' : 'block'; // siempre visible, tab 65 siempre disponible
+  $('ref60Box').style.display = canUse60 ? '' : 'none';
+  if(!canUse60){
+    // Ocultar tab de 60 si no aplica
+    const t60 = $('income60');
+    if(t60) t60.style.display = 'none';
+  } else {
+    const t60 = $('income60');
+    if(t60) t60.style.display = '';
   }
 
   const maxV = Math.max(sim.fondoPlan,sim.cash,sim.bank,sim.afore);
@@ -1150,18 +1230,47 @@ function renderIncomeBase(){
     capital = sim.fondo60;
     ingreso = sim.retMonthly60;
     baseLabel = 'Referencia Art. 93 a los 60 años';
-    sub = 'Calculado sobre la referencia a los 60 años durante 20 años.';
+    sub = 'Calculado durante 20 años desde los 60.';
   }else{
     capital = sim.fondo65;
     ingreso = sim.retMonthly;
     baseLabel = 'Proyección a los 65 años';
-    sub = 'Calculado sobre la proyección a los 65 años durante 20 años.';
+    sub = 'Calculado durante 20 años desde los 65.';
   }
+
+  // Panel de 4 datos en el income-block
   $('capitalBaseRetiro').textContent = money(capital);
   $('capitalBaseSub').textContent = baseLabel;
   $('sumIngreso').textContent = money(ingreso);
   $('ingresoSub').textContent = sub;
   $('readingSmall').textContent = sub;
+
+  // Dato 3: edad de inicio de retiro
+  const edadRetiro = incomeBase==='60' && canUse60 ? '60 años' : '65 años';
+  const yearsAfter = incomeBase==='60' && canUse60
+    ? (60 - (sim.edad + sim.yrsAport)) + ' años después de finalizar aportaciones'
+    : (65 - (sim.edad + sim.yrsAport)) + ' años después de finalizar aportaciones';
+  $('idLabel3').textContent = 'Edad de inicio';
+  $('idVal3').textContent = edadRetiro;
+  $('idSub3').textContent = yearsAfter;
+
+  // Dato 4: beneficio/diferencia
+  if(incomeBase==='60' && canUse60){
+    $('idLabel4').textContent = 'Beneficio fiscal';
+    $('idVal4').textContent = 'Art. 93 LISR';
+    $('idSub4').textContent = 'Exención aplicable en retiro';
+  } else {
+    const diff = sim.fondo65 - (sim.fondo60 || sim.fondoPlan);
+    $('idLabel4').textContent = 'Crecimiento adicional';
+    $('idVal4').textContent = diff > 0 ? '+ ' + money(diff) : '—';
+    $('idSub4').textContent = 'Vs referencia anterior';
+  }
+
+  // Lectura rápida: rendimiento acumulado y multiplicador
+  const rendimiento = sim.fondoPlan - sim.totalAportado;
+  const multiplicador = sim.totalAportado > 0 ? (sim.fondoPlan / sim.totalAportado).toFixed(1) + 'x' : '—';
+  if($('sumRendimiento')) $('sumRendimiento').textContent = money(rendimiento);
+  if($('sumMultiplicador')) $('sumMultiplicador').textContent = multiplicador;
 }
 
 function renderChart(){
