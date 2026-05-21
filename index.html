@@ -469,26 +469,38 @@ td{padding:12px 13px;border-bottom:1px solid #EEF2F7;font-size:13px}
 .pdf-pages{display:none}
 @media print{
   @page{size:A4 portrait;margin:0}
-  html,body{background:#fff!important;width:210mm;margin:0;overflow:visible!important}
+  html,body{background:#fff!important;width:210mm!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible!important}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   #screen-intro,#screen-results,.no-print{display:none!important}
   .pdf-pages{display:block!important}
 
-  /* Cada página ocupa exactamente 297mm sin overflow */
+  /* Safari WebKit: la estrategia más confiable es NO usar height fijo en .pdf-page.
+     En su lugar se fuerza cada página con un contenedor que Safari respeta:
+     - html/body sin height
+     - .pdf-pages como contenedor neutral
+     - cada .pdf-page usa min-height:100vh equivalente a A4
+     - page-break-after:always SOLO en el primero vía :first-child
+     - el último NO lleva break */
+  .pdf-pages{
+    display:block!important;
+    width:210mm!important;
+  }
   .pdf-page{
     width:210mm;
-    height:297mm;
     min-height:297mm;
     max-height:297mm;
     position:relative;
     overflow:hidden;
     background:#fff;
-    page-break-after:always;
-    break-after:page;
     display:flex;
     flex-direction:column;
+    page-break-after:always;
+    -webkit-column-break-after:always;
   }
-  .pdf-page:last-child{page-break-after:auto;break-after:auto}
+  .pdf-page:last-of-type{
+    page-break-after:auto!important;
+    -webkit-column-break-after:auto!important;
+  }
 
   /* Header compacto: 20mm */
   .pdf-header{
