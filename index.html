@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador de Retiro — Christian GarBa</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700;800&family=DM+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--navy:#071B5F;--blue:#2f63ff;--gold:#f59e0b;--green:#059669;--ink:#0f172a;--muted:#64748b;--border:#dbe6f4;--soft:#f4f7fc}
+*{box-sizing:border-box}body{margin:0;font-family:'DM Sans',sans-serif;background:var(--soft);color:var(--ink)}button,input,select{font-family:inherit}a{text-decoration:none}
+.bg-pattern{position:absolute;inset:0;opacity:.14;pointer-events:none}.bg-pattern:before{content:"";position:absolute;inset:-20%;background-image:url('logo-garba.png'),url('logo-allianz-white.png');background-size:150px auto,170px auto;background-repeat:repeat;transform:rotate(-8deg);filter:brightness(0) invert(1) grayscale(1);opacity:.35}
+.shade{position:absolute;inset:0;background:radial-gradient(circle at 78% 30%,rgba(65,105,255,.35),transparent 40%),linear-gradient(90deg,rgba(4,15,55,.84),rgba(4,15,55,.25))}
+#screen-intro{min-height:100vh;position:relative;overflow:hidden;background:linear-gradient(135deg,#071b5f,#123b9d 68%,#1d55e5)}.intro{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:36px 20px 48px}
+.brand{display:flex;align-items:center;gap:14px;color:#fff;margin-bottom:30px}.brand img{height:44px}.brand .sep{height:30px;width:1px;background:rgba(255,255,255,.28)}.brand span{font-weight:800;color:rgba(255,255,255,.88)}
+.intro h1{font-family:'Playfair Display',serif;color:#fff;font-size:clamp(42px,6vw,74px);line-height:.96;text-align:center;margin:0 0 14px;letter-spacing:-.035em}.intro p{color:rgba(255,255,255,.78);font-size:18px;text-align:center;margin:0 0 30px}
+.card{background:#fff;border-radius:28px;padding:30px;width:100%;max-width:560px;box-shadow:0 30px 80px rgba(0,0,0,.25)}.kicker{font-size:13px;text-transform:uppercase;letter-spacing:.13em;font-weight:900;color:var(--blue);margin-bottom:20px}
+.field{margin-bottom:17px}label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#475569;margin-bottom:8px}input,select{width:100%;padding:15px 17px;border:1.5px solid var(--border);border-radius:14px;background:#f8fafc;font-size:17px;font-weight:800;color:#111827}input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(47,99,255,.1);background:#fff}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.suggestion{display:none;margin-top:10px;padding:13px 15px;border:1px solid #d7e2ff;background:#eef3ff;border-radius:14px}.suggestion.visible{display:block}.sugtop{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:#475569;font-weight:800}.sugval{font-family:'DM Mono',monospace;color:var(--navy)}.progress{height:7px;background:#dce5f5;border-radius:99px;margin:10px 0 6px;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#5d82ff);border-radius:99px}.sugnote{font-size:12px;font-weight:800;color:#64748b}
+.fiscal{display:flex;gap:10px}.pill{flex:1;border:1.5px solid var(--border);background:#f8fafc;border-radius:13px;padding:12px 8px;text-align:center;cursor:pointer}.pill strong{display:block}.pill small{color:#64748b;font-weight:800}.pill.active{background:#eef3ff;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,99,255,.1)}.pill.active strong{color:var(--blue)}#isrField{display:none}#isrField.visible{display:block}
+.btn-main{width:100%;border:0;border-radius:16px;padding:18px;background:linear-gradient(135deg,var(--blue),#1c49e9);color:#fff;font-size:17px;font-weight:900;cursor:pointer;box-shadow:0 14px 34px rgba(47,99,255,.36)}
+#screen-results{display:none}#screen-results.visible{display:block}.topbar{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#061853,#0d2c83);height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 34px;box-shadow:0 6px 22px rgba(0,0,0,.22)}.topbrand{display:flex;align-items:center;gap:12px;color:#fff}.topbrand img{height:36px}.topbrand h2{font-family:'Playfair Display',serif;margin:0;font-size:22px}.topbrand p{margin:0;color:rgba(255,255,255,.65);font-size:12px;font-weight:800}.actions{display:flex;gap:10px}.btn-top{border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:10px 14px;font-weight:900;cursor:pointer;text-transform:uppercase}.btn-top.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(135deg,#071b5f,#123b9d 72%,#1e54dd);padding:38px 40px 42px}.hero-inner{position:relative;z-index:2;max-width:1500px;margin:0 auto}.client-row{display:flex;justify-content:space-between;gap:22px;margin-bottom:30px}.client-name{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;margin:7px 0 6px}.client-meta{color:rgba(255,255,255,.72);font-weight:800}.wa-card{color:#fff;display:flex;gap:12px;align-items:center;padding:14px 18px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.10);border-radius:15px}.wa-card small{display:block;color:rgba(255,255,255,.72);font-weight:800}.wa-card strong{font-family:'DM Mono',monospace;font-size:17px}.hero h1{font-family:'Playfair Display',serif;font-size:clamp(38px,5vw,68px);line-height:.97;margin:0 0 18px;letter-spacing:-.035em}.hero p{font-size:19px;line-height:1.45;color:rgba(255,255,255,.78);max-width:760px}.chip{display:inline-flex;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.13);padding:12px 18px;border-radius:999px;font-weight:900}
+.section{max-width:1400px;margin:0 auto;padding:42px 30px}.moment-wrap{margin-top:-20px;position:relative;z-index:3}.panel{background:#fff;border:1px solid var(--border);box-shadow:0 18px 45px rgba(7,27,95,.14);border-radius:28px;padding:32px 36px}.section-title{font-family:'Playfair Display',serif;font-size:42px;line-height:1.05;color:var(--navy);margin:0 0 28px;font-weight:900}.moment-grid,.compare-grid,.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.moment-card{border:1.5px solid var(--border);background:linear-gradient(180deg,#fff,#f8fbff);border-radius:22px;padding:25px;min-height:300px;display:flex;flex-direction:column;align-items:center;text-align:center}.moment-card.primary{border-color:#b9d2ff;background:#eef5ff}.moment-card.green{border-color:#a7f3d0;background:#ecfdf5}.moment-label{font-size:14px;text-transform:uppercase;letter-spacing:.11em;color:#64748b;font-weight:900;min-height:40px}.gauge{width:180px;height:98px;position:relative;margin:10px auto 8px}.gauge-pct{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:28px;font-weight:900;color:var(--navy)}.amount{font-family:'DM Mono',monospace;font-size:34px;font-weight:900;color:var(--navy);margin:8px 0}.green .amount{color:var(--green)}.sub{font-size:16px;color:#64748b;line-height:1.45;font-weight:800}
+.compare-grid{grid-template-columns:repeat(4,1fr);gap:16px}.compare-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:24px 18px;text-align:center;box-shadow:0 8px 22px rgba(7,27,95,.06)}.compare-card.featured{border-color:var(--blue);background:#f0f5ff}.bar{height:7px;background:#eaf0f8;border-radius:99px;margin:12px 0;overflow:hidden}.bar span{display:block;height:100%;border-radius:99px}.compare-value{font-family:'DM Mono',monospace;font-size:22px;font-weight:900}.note{margin-top:16px;background:#fff7dd;border-left:5px solid var(--gold);border-radius:0 14px 14px 0;padding:16px 20px;color:#784900;font-weight:800}
+.metric-grid{grid-template-columns:repeat(4,1fr)}.metric{background:#f8fafc;border:1.5px solid var(--border);border-radius:18px;padding:20px}.metric-label{text-transform:uppercase;letter-spacing:.11em;font-size:12px;color:#64748b;font-weight:900;min-height:32px}.metric-value{font-family:'DM Mono',monospace;font-size:25px;font-weight:900;color:var(--navy);margin:10px 0}.metric-sub{font-size:13px;color:#64748b;font-weight:800}.wa-fab{position:fixed;right:28px;bottom:24px;z-index:20;background:#25d366;color:#fff;border-radius:999px;padding:16px 24px;font-weight:900;display:none}
+#pdfPrintArea{display:none}
+@media print{ @page{size:A4 portrait;margin:0}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}html,body{background:#fff!important;width:210mm;margin:0!important}body *{visibility:hidden!important}#pdfPrintArea,#pdfPrintArea *{visibility:visible!important}#pdfPrintArea{display:block!important;position:absolute!important;left:0!important;top:0!important;width:210mm!important;background:#fff!important}#screen-intro,#screen-results,.topbar,.wa-fab{display:none!important}.pdf-page{page-break-after:always;break-after:page}.pdf-page:last-child{page-break-after:auto;break-after:auto}}
+.pdf-page{width:210mm;height:297mm;position:relative;overflow:hidden;background:#fff;font-family:'DM Sans',sans-serif}.pdf-hero{height:56mm;background:linear-gradient(135deg,#071b5f,#123b9d);color:#fff;padding:13mm 14mm;position:relative;overflow:hidden}.pdf-hero:before{content:"";position:absolute;inset:-25%;background-image:url('logo-garba.png'),url('logo-allianz-white.png');background-size:42mm auto,43mm auto;background-repeat:repeat;transform:rotate(-9deg);opacity:.06}.pdf-hero-inner{position:relative;z-index:2}.pdf-head{display:flex;justify-content:space-between;margin-bottom:9mm}.pdf-brand{display:flex;gap:3mm;align-items:center}.pdf-brand img{height:11mm}.pdf-date{text-align:right;font-size:8pt;color:rgba(255,255,255,.72);line-height:1.45}.pdf-title{font-family:'Playfair Display',serif;font-size:24pt;line-height:.98;font-weight:900;margin-bottom:3mm}.pdf-subtitle{font-size:9pt;color:rgba(255,255,255,.78);max-width:132mm;line-height:1.35}.pdf-chip{display:inline-block;margin-top:4mm;border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.13);padding:2.2mm 4mm;border-radius:999px;font-size:8pt;font-weight:800}.pdf-body{padding:6mm 12mm 0}.pdf-k{font-size:7pt;text-transform:uppercase;letter-spacing:.13em;color:#2f63ff;font-weight:900;margin-bottom:1.5mm}.pdf-h{font-family:'Playfair Display',serif;font-size:19pt;color:#071b5f;margin:0 0 4mm;font-weight:900}.pdf-moments,.pdf-summary,.pdf-compare,.pdf-cost{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;margin-bottom:6mm}.pdf-moment,.pdf-comp,.pdf-summary-card,.pdf-cost-card,.pdf-box{border:1px solid #dde7f4;border-radius:4mm;padding:4mm;background:#fff}.pdf-moment.blue{background:#eef5ff;border-color:#b9d2ff}.pdf-moment.green{background:#ecfdf5;border-color:#a7f3d0}.pdf-label{font-size:7pt;text-transform:uppercase;letter-spacing:.08em;color:#64748b;font-weight:900;margin-bottom:3mm}.pdf-val{font-family:'DM Mono',monospace;font-size:16pt;font-weight:900;color:#071b5f;margin-bottom:2mm}.pdf-moment.green .pdf-val,.pdf-summary-card.green .pdf-val{color:#059669}.pdf-txt{font-size:8pt;line-height:1.35;color:#64748b;font-weight:700}.pdf-summary{grid-template-columns:repeat(4,1fr);gap:3mm}.pdf-summary-card{border-left:3px solid #0b3a86;border-radius:3mm;padding:3.5mm}.pdf-summary-card.green{border-left-color:#059669;background:#ecfdf5}.pdf-compare{grid-template-columns:repeat(4,1fr);gap:3mm}.pdf-comp{text-align:center;border-radius:3mm}.pdf-comp.featured{background:#f0f5ff;border-color:#2f63ff}.pdf-note{margin-top:4mm;background:#fff7dd;border-left:3px solid #f59e0b;border-radius:0 2mm 2mm 0;padding:3mm;font-size:7.5pt;color:#784900;font-weight:700}.pdf-footer{position:absolute;left:0;right:0;bottom:0;height:15mm;background:#071b5f;color:rgba(255,255,255,.72);display:flex;align-items:center;justify-content:space-between;padding:0 12mm;font-size:7pt}.pdf-page2-body{padding:8mm 12mm 0}.pdf-cost{grid-template-columns:repeat(3,1fr)}.pdf-cost-card{border-left:3px solid #2f63ff}.orange{background:#fff7ed;border-left-color:#f97316}.red{background:#fef2f2;border-left-color:#ef4444}.pdf-two-col{display:grid;grid-template-columns:1fr 1fr;gap:7mm}.pdf-photo{width:24mm;height:24mm;border-radius:50%;object-fit:cover;border:2px solid #dde7f4}.pdf-qr{width:30mm;height:30mm;object-fit:contain;border:1px solid #dde7f4;border-radius:2mm}.pdf-advisor{display:flex;gap:4mm}.pdf-box h3{font-family:'Playfair Display',serif;font-size:16pt;color:#071b5f;margin:0 0 2mm}.pdf-box p{font-size:8pt;line-height:1.45;color:#475569;margin:0 0 2mm}.pdf-disclaimer{position:absolute;left:12mm;right:12mm;bottom:18mm;background:#f8fafc;border-left:3px solid #2f63ff;padding:3.5mm;border-radius:0 2mm 2mm 0;font-size:7pt;color:#475569;line-height:1.4;font-weight:700}
+@media(max-width:900px){.topbar{height:auto;flex-direction:column;align-items:flex-start;padding:14px 18px}.client-row{flex-direction:column}.hero{padding:32px 22px}.moment-grid,.compare-grid,.metric-grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}.section-title{font-size:34px}}
+
+/* ===== AJUSTE V14: LOGOS BLANCOS + MOMENTOS EJECUTIVOS SIN RUEDITAS ===== */
+.brand img,
+.topbrand img,
+.pdf-brand img{
+  filter:brightness(0) invert(1) !important;
+}
+
+/* El logo del patrón sí debe verse tenue, no negro */
+.bg-pattern:before{
+  filter:brightness(0) invert(1) grayscale(1) !important;
+  opacity:.22 !important;
+}
+
+/* Recupera estilo premium en momentos clave */
+.moment-grid{
+  display:grid !important;
+  grid-template-columns:repeat(3,1fr) !important;
+  gap:18px !important;
+}
+
+.moment-card{
+  position:relative !important;
+  min-height:220px !important;
+  display:block !important;
+  text-align:left !important;
+  align-items:initial !important;
+  padding:26px 26px 24px !important;
+  overflow:hidden !important;
+  border-radius:22px !important;
+  background:linear-gradient(180deg,#FFFFFF 0%,#F9FBFF 100%) !important;
+  border:1.5px solid var(--border) !important;
+  box-shadow:0 10px 26px rgba(7,27,95,.06) !important;
+}
+
+.moment-card.primary{
+  background:linear-gradient(180deg,#F6F9FF 0%,#EEF5FF 100%) !important;
+  border-color:#B9D2FF !important;
+}
+
+.moment-card.green{
+  background:linear-gradient(180deg,#F0FDF4 0%,#ECFDF5 100%) !important;
+  border-color:#A7F3D0 !important;
+}
+
+.moment-card:before{
+  content:"" !important;
+  position:absolute !important;
+  left:0 !important;
+  top:0 !important;
+  bottom:0 !important;
+  width:6px !important;
+  background:#CBD5E1 !important;
+}
+
+.moment-card.primary:before{background:#2F63FF !important;}
+.moment-card.green:before{background:#059669 !important;}
+
+/* Ocultamos completamente las rueditas anteriores */
+.moment-card .gauge{
+  display:none !important;
+}
+
+.moment-label{
+  min-height:auto !important;
+  margin-bottom:18px !important;
+  padding-right:82px !important;
+  font-size:12px !important;
+  line-height:1.35 !important;
+  letter-spacing:.12em !important;
+  color:#64748B !important;
+  font-weight:900 !important;
+}
+
+/* El monto vuelve a ser protagonista limpio */
+.moment-card .amount{
+  display:block !important;
+  font-family:'DM Mono',monospace !important;
+  font-size:clamp(28px,3vw,39px) !important;
+  line-height:1.05 !important;
+  letter-spacing:-.045em !important;
+  font-weight:900 !important;
+  color:var(--navy) !important;
+  margin:0 0 14px !important;
+  white-space:nowrap !important;
+}
+
+.moment-card.green .amount{
+  color:var(--green) !important;
+}
+
+.moment-card .sub{
+  font-size:15px !important;
+  line-height:1.45 !important;
+  color:#64748B !important;
+  font-weight:800 !important;
+  max-width:95% !important;
+}
+
+/* Badge discreto creado por JS */
+.moment-badge{
+  position:absolute !important;
+  top:20px !important;
+  right:20px !important;
+  border-radius:999px !important;
+  padding:7px 10px !important;
+  font-family:'DM Mono',monospace !important;
+  font-size:12px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  color:#0B3A86 !important;
+  background:#EAF1FF !important;
+  border:1px solid #CFE0FF !important;
+}
+
+.moment-card.green .moment-badge{
+  color:#047857 !important;
+  background:#DDFBEA !important;
+  border-color:#A7F3D0 !important;
+}
+
+.moment-foot{
+  margin-top:16px !important;
+  padding-top:13px !important;
+  border-top:1px solid rgba(100,116,139,.16) !important;
+  font-size:13px !important;
+  color:#334155 !important;
+  font-weight:800 !important;
+  line-height:1.35 !important;
+}
+
+@media(max-width:900px){
+  .moment-grid{grid-template-columns:1fr !important;}
+  .moment-card .amount{white-space:normal !important;}
+}
+
+</style>
+</head>
+<body>
+<section id="screen-intro"><div class="bg-pattern"></div><div class="shade"></div><div class="intro">
+<div class="brand"><img src="logo-garba.png" alt="Christian GarBa"><div class="sep"></div><span>Distribuidor Allianz · Christian GarBa</span></div>
+<h1>Proyecta tu retiro<br>con estrategia.</h1><p>Visualiza una proyección de largo plazo con aportaciones crecientes e interés compuesto.</p>
+<div class="card"><div class="kicker">Captura tus datos</div>
+<div class="field"><label>Tu nombre (opcional)</label><input id="inNombre" placeholder="Ej. Fernanda López"></div>
+<div class="row"><div class="field"><label>Edad actual</label><input id="inEdad" type="number" value="29" min="18" max="64"></div><div class="field"><label>Años de aportación</label><select id="inYears"><option>10</option><option selected>15</option><option>20</option><option>25</option><option>30</option></select></div></div>
+<div class="field"><label>Meta mensual en retiro (valor de hoy)</label><input id="inMeta" type="number" value="32000"><div id="metaSuggestion" class="suggestion"><div class="sugtop"><span>Aportación sugerida para esta meta:</span><span id="metaSugValue" class="sugval">—</span></div><div class="progress"><span id="metaProgressFill"></span></div><div id="metaProgressLabel" class="sugnote">—</div></div></div>
+<div class="field"><label>Tu aportación mensual inicial</label><input id="inPmt" type="number" value="2500"></div>
+<div class="field"><label>Régimen fiscal</label><div class="fiscal"><div class="pill active" data-val="ninguno"><strong>Sin beneficio</strong><small>Estándar</small></div><div class="pill" data-val="93"><strong>Art. 93</strong><small>Referencia 60</small></div><div class="pill" data-val="151"><strong>Art. 151</strong><small>Deducible</small></div></div></div>
+<div id="isrField" class="field"><label>Devolución ISR estimada</label><select id="inIsrPct"><option value="10">10%</option><option value="20" selected>20%</option><option value="30">30%</option><option value="35">35%</option></select></div>
+<button id="btnSimular" class="btn-main">Simular mi plan</button></div></div></section>
+<section id="screen-results"><div class="topbar"><div class="topbrand"><img src="logo-garba.png"><div><h2>Tu escenario de retiro</h2><p>Escenario proyectado al 10% anual compuesto</p></div></div><div class="actions"><button id="btnVolver" class="btn-top">← Editar datos</button><button id="btnCsv" class="btn-top">CSV</button><button id="btnPdf" class="btn-top gold">Generar PDF</button></div></div>
+<div class="hero"><div class="bg-pattern"></div><div class="shade"></div><div class="hero-inner"><div class="client-row"><div><div class="kicker">Tu escenario personalizado</div><div id="heroNombre" class="client-name">—</div><div id="heroMeta" class="client-meta">—</div></div><a id="waBtn" class="wa-card" target="_blank"><span style="font-size:25px">💬</span><span><small>¿Preguntas? Escríbeme</small><strong>662 417 6032</strong></span></a></div><h1>Una decisión hoy.<br>Tres momentos para visualizar tu futuro.</h1><p>Una proyección clara para visualizar cómo la constancia y el tiempo pueden construir patrimonio.</p><span id="heroChip" class="chip">Aportación inicial: — · con incremento anual estimado por inflación</span></div></div>
+<div class="section moment-wrap"><div class="panel"><div class="kicker">Momentos clave</div><h2 class="section-title">Tu patrimonio por etapas</h2><div class="moment-grid"><div class="moment-card primary"><div class="moment-label">Fin de aportaciones</div><div class="gauge"><canvas id="gaugePlan"></canvas><div id="pctPlan" class="gauge-pct">—</div></div><div id="momentPlan" class="amount">—</div><div id="momentPlanSub" class="sub">—</div></div><div class="moment-card"><div class="moment-label">Referencia Art. 93 a los 60 años</div><div class="gauge"><canvas id="gauge60"></canvas><div id="pct60" class="gauge-pct">—</div></div><div id="moment60" class="amount">—</div><div id="moment60Sub" class="sub">—</div></div><div class="moment-card green"><div class="moment-label">Proyección a los 65 años</div><div class="gauge"><canvas id="gauge65"></canvas><div id="pct65" class="gauge-pct">—</div></div><div id="moment65" class="amount">—</div><div class="sub">Escenario estimado a edad 65.</div></div></div></div></div>
+<div class="section"><div class="panel"><div class="kicker">Comparativa de alternativas</div><h2 id="compareTitle" class="section-title">¿Cómo podría verse tu dinero?</h2><div class="compare-grid"><div class="compare-card">🐷<div class="kicker">Alcancía</div><div class="bar"><span id="barMattress" style="background:#ef4444;width:0%"></span></div><div id="cmpMattress" class="compare-value">—</div><div id="cmpMattressSub" class="sub">—</div></div><div class="compare-card">🏦<div class="kicker">Banco</div><div class="bar"><span id="barBank" style="background:#f97316;width:0%"></span></div><div id="cmpBank" class="compare-value">—</div><div id="cmpBankSub" class="sub">—</div></div><div class="compare-card">🏛️<div class="kicker">AFORE</div><div class="bar"><span id="barAfore" style="background:#f59e0b;width:0%"></span></div><div id="cmpAfore" class="compare-value">—</div><div class="sub">Escenario limitado</div></div><div class="compare-card featured">✨<div class="kicker">Escenario proyectado</div><div class="bar"><span id="barPlan" style="background:#2f63ff;width:100%"></span></div><div id="cmpPlan" class="compare-value">—</div><div class="sub">Escenario personalizado</div></div></div><div class="note">El mismo hábito puede generar resultados muy distintos según el camino elegido. Esta proyección usa interés compuesto del 10% anual e incremento estimado de aportación del 4% anual.</div></div></div>
+<div class="section" style="padding-top:0"><div class="panel"><div class="kicker">Resumen ejecutivo</div><h2 class="section-title">Lectura rápida de tu escenario</h2><div class="metric-grid"><div class="metric"><div class="metric-label">Aportación mensual inicial</div><div id="resPmt" class="metric-value">—</div><div class="metric-sub">Con incremento anual estimado por inflación</div></div><div class="metric"><div class="metric-label">Plazo de aportación</div><div id="resYears" class="metric-value">—</div><div id="resFin" class="metric-sub">—</div></div><div class="metric"><div class="metric-label">Total aportado estimado</div><div id="resAportado" class="metric-value">—</div><div class="metric-sub">Incluye incrementos anuales</div></div><div class="metric"><div class="metric-label">Ingreso mensual estimado</div><div id="resIngreso" class="metric-value" style="color:var(--green)">—</div><div class="metric-sub">Con base en fondo a los 65</div></div></div></div></div></section>
+<a id="waFab" class="wa-fab" target="_blank">💬 WhatsApp</a><div id="pdfPrintArea"></div>
+<script>
+const $=id=>document.getElementById(id),money=v=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',minimumFractionDigits:0,maximumFractionDigits:0}).format(Number(v)||0);
+const RATE_ACC=.10,INFL=.04,RATE_RET=.07,YRS_RET=20,BANK=.02,AFORE=.0347;let regimenFiscal='ninguno',sim={},charts={};
+function n(id,d=0){const x=parseFloat($(id).value);return Number.isFinite(x)?x:d}
+function calcPMTRetiro(f){const i=RATE_RET/12,N=YRS_RET*12;return f<=0?0:f*(i/(1-Math.pow(1+i,-N)))}
+function project(edad,years,pmt0,isrPct=0){const y65=Math.max(0,65-edad),yAp=Math.min(years,y65),yEx=Math.max(0,y65-yAp),i=RATE_ACC/12;let saldo=0,total=0,pmt=pmt0,fondoPlan=0,fondo60=0,detalle=[];for(let y=1;y<=yAp+yEx;y++){let aport=0,benef=0;if(y<=yAp){if(y>1)pmt*=1+INFL;for(let m=0;m<12;m++){saldo*=1+i;saldo+=pmt;aport+=pmt;total+=pmt}if(isrPct>0){benef=aport*isrPct;saldo+=benef}}else{for(let m=0;m<12;m++)saldo*=1+i}if(y===yAp)fondoPlan=saldo;if(Math.round(edad+y)===60)fondo60=saldo;detalle.push({y,edad:Math.round(edad+y),aport,total,benef,saldo})}if(edad>=60)fondo60=0;return{y65,yAp,yEx,edadFin:edad+yAp,fondoPlan,fondo60,fondo65:saldo,total,detalle}}
+function reqPMT(edad,years,meta){const y65=Math.max(0,65-edad),yAp=Math.min(years,y65),yEx=Math.max(0,y65-yAp);if(yAp<=0||meta<=0)return 0;const metaNom=meta*Math.pow(1+INFL,y65),ir=RATE_RET/12,Nr=YRS_RET*12,pv=metaNom*((1-Math.pow(1+ir,-Nr))/ir),ia=RATE_ACC/12,N=yAp*12;let factor=0,py=1;for(let y=0;y<yAp;y++){if(y>0)py*=1+INFL;for(let m=0;m<12;m++)factor+=py*Math.pow(1+ia,N-(y*12+m))}return pv/(factor*Math.pow(1+ia,yEx*12))}
+function calcSug(){const edad=n('inEdad',29),years=n('inYears',15),meta=n('inMeta',0),pmt=n('inPmt',0);if(!meta){$('metaSuggestion').classList.remove('visible');return}const sug=reqPMT(edad,years,meta),pct=sug>0?Math.min(pmt/sug*100,100):0;$('metaSugValue').textContent=money(sug);$('metaProgressFill').style.width=pct+'%';$('metaProgressLabel').textContent=pct>=100?'Tu aportación cubre el 100% de esta meta.':`Tu aportación cubre el ${pct.toFixed(0)}% de esta meta — cada peso suma.`;$('metaSuggestion').classList.add('visible')}
+function simular(){const edad=n('inEdad',29),years=n('inYears',15),pmt0=n('inPmt',0),meta=n('inMeta',0),nombre=($('inNombre').value||'').trim(),isr=regimenFiscal==='151'?n('inIsrPct',20)/100:0,p=project(edad,years,pmt0,isr);const metaNom=meta*Math.pow(1+INFL,p.y65),ir=RATE_RET/12,Nr=YRS_RET*12,pv=metaNom*((1-Math.pow(1+ir,-Nr))/ir);let banco=0,afore=0,mes=p.yAp*12;for(let m=0;m<mes;m++){banco*=1+BANK/12;banco+=pmt0;afore*=1+AFORE/12;afore+=pmt0}sim={nombre,edad,years,pmt0,meta,...p,pv,pctPlan:pv?Math.min(p.fondoPlan/pv*100,100):0,pct60:pv&&p.fondo60?Math.min(p.fondo60/pv*100,100):0,pct65:pv?Math.min(p.fondo65/pv*100,100):0,ing65:calcPMTRetiro(p.fondo65),comp:{colchon:mes*pmt0,colchonReal:(mes*pmt0)/Math.pow(1+INFL,p.yAp),banco,bancoReal:banco/Math.pow(1+INFL,p.yAp),afore}};render();linkWA();$('screen-intro').style.display='none';$('screen-results').classList.add('visible');$('waFab').style.display='flex';scrollTo(0,0)}
+function gauge(canvasId,pctId,pct,color){if(charts[canvasId])charts[canvasId].destroy();charts[canvasId]=new Chart($(canvasId),{type:'doughnut',data:{datasets:[{data:[Math.max(0,Math.min(pct/100,1)),1-Math.max(0,Math.min(pct/100,1))],backgroundColor:[color,'rgba(100,116,139,.25)'],borderWidth:0,borderRadius:12,circumference:180,rotation:270}]},options:{responsive:false,cutout:'70%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});$(pctId).textContent=Math.round(pct)+'%'}
+function render(){const name=sim.nombre||'Tu plan';$('heroNombre').textContent=name;$('heroMeta').textContent=`${sim.edad} años · ${sim.yAp} años de aportación · ${money(sim.pmt0)}/mes inicial · incremento anual estimado 4%`;$('heroChip').textContent=`Aportación inicial: ${money(sim.pmt0)}/mes · con incremento anual estimado por inflación`;$('momentPlan').textContent=money(sim.fondoPlan);$('momentPlanSub').textContent=`A los ${Math.round(sim.edadFin)} años · ${sim.yAp} años de aportación`;$('moment60').textContent=sim.fondo60?money(sim.fondo60):'No aplica';$('moment60Sub').textContent=sim.fondo60?'Si el fondo continúa proyectándose sin nuevas aportaciones.':'La edad/plazo no permite una referencia previa a los 60.';$('moment65').textContent=money(sim.fondo65);gauge('gaugePlan','pctPlan',sim.pctPlan,'#f59e0b');gauge('gauge60','pct60',sim.fondo60?sim.pct60:0,'#2f63ff');gauge('gauge65','pct65',sim.pct65,'#059669');$('compareTitle').textContent=`¿Cómo podría verse tu dinero en ${sim.yAp} años?`;let max=Math.max(sim.fondoPlan,sim.comp.colchon,sim.comp.banco,sim.comp.afore,1);$('cmpMattress').textContent=money(sim.comp.colchon);$('cmpMattressSub').textContent=`Valor real estimado: ${money(sim.comp.colchonReal)}`;$('cmpBank').textContent=money(sim.comp.banco);$('cmpBankSub').textContent=`Valor real estimado: ${money(sim.comp.bancoReal)}`;$('cmpAfore').textContent=money(sim.comp.afore);$('cmpPlan').textContent=money(sim.fondoPlan);$('barMattress').style.width=Math.max(5,sim.comp.colchon/max*100)+'%';$('barBank').style.width=Math.max(5,sim.comp.banco/max*100)+'%';$('barAfore').style.width=Math.max(5,sim.comp.afore/max*100)+'%';$('barPlan').style.width=Math.max(5,sim.fondoPlan/max*100)+'%';$('resPmt').textContent=money(sim.pmt0);$('resYears').textContent=sim.yAp+' años';$('resFin').textContent=`Fin estimado a los ${Math.round(sim.edadFin)} años`;$('resAportado').textContent=money(sim.total);$('resIngreso').textContent=money(sim.ing65)}
+function linkWA(){let msg=`Hola Christian, me interesa revisar mi escenario de retiro.\nEdad: ${sim.edad}\nAportación inicial: ${money(sim.pmt0)}/mes`;let url='https://wa.me/5216624176032?text='+encodeURIComponent(msg);$('waBtn').href=url;$('waFab').href=url}
+function pmtDelay(d){const p=project(sim.edad+d,sim.years,1,0);return p.fondo65?sim.fondo65/p.fondo65:null}
+function updatePDF(){const hoy=new Date().toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'}),nombre=sim.nombre||'Tu escenario de retiro',p3=pmtDelay(3),p5=pmtDelay(5);$('pdfPrintArea').innerHTML=`<div class="pdf-page"><div class="pdf-hero"><div class="pdf-hero-inner"><div class="pdf-head"><div class="pdf-brand"><img src="logo-garba.png"><div><b>Christian GarBa</b><br><span style="font-size:7pt;color:rgba(255,255,255,.68)">Distribuidor Allianz</span></div></div><div class="pdf-date"><b>${hoy}</b><br>Simulación ilustrativa</div></div><div class="pdf-title">Una decisión hoy.<br>Tres momentos para visualizar tu futuro.</div><div class="pdf-subtitle">Una proyección clara para visualizar cómo la constancia y el tiempo pueden construir patrimonio.</div><div class="pdf-chip">Aportación inicial: ${money(sim.pmt0)}/mes · con incremento anual estimado por inflación</div></div></div><div class="pdf-body"><div class="pdf-k">Cliente</div><h2 class="pdf-h">${nombre}</h2><div class="pdf-k">Momentos clave</div><div class="pdf-moments"><div class="pdf-moment blue"><div class="pdf-label">Fin de aportaciones</div><div class="pdf-val">${money(sim.fondoPlan)}</div><div class="pdf-txt">Edad estimada: ${Math.round(sim.edadFin)} años.<br>${sim.yAp} años de aportación.</div></div><div class="pdf-moment"><div class="pdf-label">Referencia Art. 93 a los 60 años</div><div class="pdf-val">${sim.fondo60?money(sim.fondo60):'No aplica'}</div><div class="pdf-txt">${sim.fondo60?'Si el fondo continúa sin nuevas aportaciones.':'La edad/plazo no permite una referencia previa a los 60.'}</div></div><div class="pdf-moment green"><div class="pdf-label">Proyección a los 65 años</div><div class="pdf-val">${money(sim.fondo65)}</div><div class="pdf-txt">Escenario estimado a edad 65.</div></div></div><div class="pdf-k">Resumen ejecutivo</div><div class="pdf-summary"><div class="pdf-summary-card"><div class="pdf-label">Aportación mensual inicial</div><div class="pdf-val">${money(sim.pmt0)}</div></div><div class="pdf-summary-card"><div class="pdf-label">Plazo de aportación</div><div class="pdf-val">${sim.yAp} años</div></div><div class="pdf-summary-card"><div class="pdf-label">Total aportado estimado</div><div class="pdf-val">${money(sim.total)}</div></div><div class="pdf-summary-card green"><div class="pdf-label">Ingreso mensual estimado</div><div class="pdf-val">${money(sim.ing65)}</div></div></div><div class="pdf-k">Comparativo ilustrativo a ${sim.yAp} años</div><div class="pdf-compare"><div class="pdf-comp">🐷<div class="pdf-label">Alcancía</div><div class="pdf-val">${money(sim.comp.colchon)}</div></div><div class="pdf-comp">🏦<div class="pdf-label">Banco</div><div class="pdf-val">${money(sim.comp.banco)}</div></div><div class="pdf-comp">🏛️<div class="pdf-label">AFORE</div><div class="pdf-val">${money(sim.comp.afore)}</div></div><div class="pdf-comp featured">✨<div class="pdf-label">Escenario proyectado</div><div class="pdf-val">${money(sim.fondoPlan)}</div></div></div><div class="pdf-note">El mismo hábito puede generar resultados distintos según el camino elegido. Esta proyección usa interés compuesto del 10% anual e incremento estimado de aportación del 4% anual.</div></div><div class="pdf-footer"><div><b>Christian GarBa</b> · Seguros con Estrategia · 662 417 6032</div><div>Página 1 de 2</div></div></div><div class="pdf-page"><div style="height:22mm;background:linear-gradient(135deg,#071b5f,#123b9d);color:#fff;padding:6mm 12mm"><div style="font-family:'Playfair Display',serif;font-size:18pt;font-weight:900">${nombre}</div><div style="font-size:8pt;color:rgba(255,255,255,.68)">Simulación ilustrativa · ${hoy}</div></div><div class="pdf-page2-body"><div class="pdf-k">El valor de comenzar hoy</div><h2 class="pdf-h">Costo estimado de esperar</h2><div class="pdf-cost"><div class="pdf-cost-card"><div class="pdf-label">Escenario base · hoy</div><div class="pdf-val">${money(sim.pmt0)}/mes</div></div><div class="pdf-cost-card orange"><div class="pdf-label">Si se pospone 3 años</div><div class="pdf-val">${p3?money(p3):'—'}</div></div><div class="pdf-cost-card red"><div class="pdf-label">Si se pospone 5 años</div><div class="pdf-val">${p5?money(p5):'—'}</div></div></div><div class="pdf-two-col"><div class="pdf-box"><div class="pdf-k">Asesor autorizado CNSF</div><div class="pdf-advisor"><img src="foto-christian.jpg%20.jpg" class="pdf-photo"><div><h3>Christian Iván García Barragán</h3><p><b>Cédula:</b> G384982<br><b>Vigencia:</b> 03/03/2025 al 03/03/2028<br>Agente de seguros por cuenta propia · Riesgos personales y familiares</p></div></div><div style="display:flex;gap:4mm;align-items:center;margin-top:5mm"><img src="qr-cedula-cnsf.png" class="pdf-qr"><p><b>Escanea el QR para validar la información.</b><br>La validación ayuda a confirmar que estás tratando con un asesor autorizado.</p></div></div><div class="pdf-box"><div class="pdf-k">Respaldo institucional</div><h3>Allianz</h3><p>Esta simulación es únicamente ilustrativa y debe revisarse junto con las condiciones del producto, perfil del cliente y horizonte de inversión.</p></div></div></div><div class="pdf-disclaimer">Supuestos: rendimiento anual compuesto del 10%, incremento anual estimado de aportación del 4% e ingreso mensual calculado con referencia financiera de retiro. Los resultados son ilustrativos y no constituyen garantía de rendimiento, oferta contractual ni promesa de pago.</div><div class="pdf-footer"><div><b>Christian GarBa</b> · Distribuidor Allianz · 662 417 6032</div><div>Página 2 de 2</div></div></div>`}
+function printPDF(){if(!sim.fondoPlan)simular();updatePDF();setTimeout(()=>window.print(),150)}
+function exportCSV(){if(!sim.detalle)return;let rows=[['Año','Edad','Aportado año','Total aportado','Saldo'],...sim.detalle.map(h=>[h.y,h.edad,Math.round(h.aport),Math.round(h.total),Math.round(h.saldo)])];let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'}));a.download='simulacion_retiro.csv';a.click()}
+document.querySelectorAll('.pill').forEach(p=>p.onclick=function(){document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));this.classList.add('active');regimenFiscal=this.dataset.val;$('isrField').classList.toggle('visible',regimenFiscal==='151');calcSug()});
+['inEdad','inYears','inMeta','inPmt','inIsrPct'].forEach(id=>{$(id).addEventListener('input',calcSug);$(id).addEventListener('change',calcSug)});
+$('btnSimular').onclick=simular;$('btnVolver').onclick=()=>{$('screen-results').classList.remove('visible');$('screen-intro').style.display='block';$('waFab').style.display='none';scrollTo(0,0)};$('btnCsv').onclick=exportCSV;$('btnPdf').onclick=printPDF;calcSug();
+</script>
+
+<script>
+/* ===== AJUSTE V14: PRESENTACIÓN EJECUTIVA DE MOMENTOS ===== */
+(function(){
+  function moneyV14(v){
+    try{
+      return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',minimumFractionDigits:0,maximumFractionDigits:0}).format(Number(v)||0);
+    }catch(e){ return '$' + Math.round(Number(v)||0).toLocaleString('es-MX'); }
+  }
+
+  function ensureMomentExecutive(){
+    if(!window.sim || !sim.fondoPlan) return;
+
+    const cards = document.querySelectorAll('.moment-card');
+    if(cards.length < 3) return;
+
+    const data = [
+      {
+        card: cards[0],
+        badge: `${Math.round(sim.pctPlan || 0)}% meta`,
+        foot: 'Primer punto de referencia del escenario.'
+      },
+      {
+        card: cards[1],
+        badge: sim.fondo60 ? `${Math.round(sim.pct60 || 0)}% meta` : 'N/A',
+        foot: sim.fondo60 ? 'Visibilidad fiscal y patrimonial a los 60.' : 'No aplica por edad o plazo.'
+      },
+      {
+        card: cards[2],
+        badge: `${Math.round(sim.pct65 || 0)}% meta`,
+        foot: 'Referencia de largo plazo para ingreso futuro.'
+      }
+    ];
+
+    data.forEach(item => {
+      let badge = item.card.querySelector('.moment-badge');
+      if(!badge){
+        badge = document.createElement('div');
+        badge.className = 'moment-badge';
+        item.card.insertBefore(badge, item.card.firstChild);
+      }
+      badge.textContent = item.badge;
+
+      let foot = item.card.querySelector('.moment-foot');
+      if(!foot){
+        foot = document.createElement('div');
+        foot.className = 'moment-foot';
+        item.card.appendChild(foot);
+      }
+      foot.textContent = item.foot;
+    });
+
+    // Asegura que las ruedas viejas desaparezcan aunque Chart.js ya haya pintado.
+    document.querySelectorAll('.moment-card .gauge').forEach(g => {
+      g.style.display = 'none';
+    });
+  }
+
+  const oldRender = window.render;
+  if(typeof oldRender === 'function'){
+    window.render = function(){
+      oldRender.apply(this, arguments);
+      setTimeout(ensureMomentExecutive, 0);
+    };
+  }
+
+  const oldSimular = window.simular;
+  if(typeof oldSimular === 'function'){
+    window.simular = function(){
+      oldSimular.apply(this, arguments);
+      setTimeout(ensureMomentExecutive, 80);
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(ensureMomentExecutive, 300);
+  });
+})();
+</script>
+
+</body></html>
