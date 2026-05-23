@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- v2.1 - 2026-05-23 -->
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
@@ -440,7 +441,7 @@ td{padding:9px;border-bottom:1px solid #edf2f7;color:#334155;font-weight:600}
     position:relative;
   }
   .pdf-page+.pdf-page{page-break-before:always;break-before:page;-webkit-column-break-before:always}
-  .pdf-page:last-of-type{page-break-after:auto!important;break-after:auto!important}
+  .pdf-page:last-of-type{page-break-after:auto!important;break-after:auto!important;-webkit-column-break-after:auto!important}
 
   /* ── HEADER 18mm ── */
   .pdf-header{
@@ -458,19 +459,18 @@ td{padding:9px;border-bottom:1px solid #edf2f7;color:#334155;font-weight:600}
   .pdf-meta .pdf-meta-name{font-size:11pt;font-weight:900;color:#133f7a;letter-spacing:-.02em}
   .pdf-meta .pdf-meta-date{font-size:6.5pt;color:#94a3b8}
 
-  /* ── FOOTER 11mm absolute ── */
+  /* ── FOOTER 11mm as flex item, not absolute ── */
   .pdf-footer{
-    position:absolute;bottom:0;left:0;right:0;height:11mm;
+    height:11mm;min-height:11mm;max-height:11mm;flex-shrink:0;
     background:linear-gradient(135deg,#071b5f,#133f7a);
     color:rgba(255,255,255,.75);font-size:6pt;
     display:flex;align-items:center;justify-content:space-between;
     padding:0 12mm;
+    margin-top:auto;
   }
 
-  /* ── BODY: 297-18-11 = 268mm, padding-bottom covers footer ── */
-  .pdf-body{padding:4mm 12mm 11mm;overflow:hidden;flex:1}
-
-  /* ── P1: PROSPECTO HERO ── */
+  /* ── BODY: 297-18-11 = 268mm ── */
+  .pdf-body{padding:4mm 12mm 3mm;overflow:hidden;flex:1}
   .pdf-prospect-hero{
     background:linear-gradient(135deg,#071b5f 0%,#133f7a 55%,#1e5aa0 100%);
     border-radius:3mm;padding:5mm 6mm;color:#fff;
