@@ -433,114 +433,202 @@ td{padding:9px;border-bottom:1px solid #edf2f7;color:#334155;font-weight:600}
   .report-view{display:block!important;width:210mm!important}
 
   .pdf-page{
-    width:210mm;min-height:297mm;max-height:297mm;
-    overflow:hidden;background:#fff;
+    width:210mm;min-height:297mm;max-height:297mm;overflow:hidden;background:#fff;
     display:flex;flex-direction:column;
     page-break-inside:avoid;break-inside:avoid;
     page-break-after:avoid;break-after:avoid;
+    position:relative;
   }
-  .pdf-page + .pdf-page{page-break-before:always;break-before:page;-webkit-column-break-before:always}
+  .pdf-page+.pdf-page{page-break-before:always;break-before:page;-webkit-column-break-before:always}
   .pdf-page:last-of-type{page-break-after:auto!important;break-after:auto!important}
 
+  /* ── HEADER 18mm ── */
   .pdf-header{
-    height:19mm;min-height:19mm;max-height:19mm;
-    padding:4mm 12mm 0;
-    display:flex;align-items:flex-start;justify-content:space-between;
-    border-bottom:1px solid #e2e8f0;flex-shrink:0;
+    height:18mm;min-height:18mm;max-height:18mm;flex-shrink:0;
+    padding:3.5mm 12mm 0;
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:0.5px solid #dbe4f0;
   }
   .pdf-brand{display:flex;align-items:center;gap:3mm}
-  .rpt-logo{height:10mm;width:auto;max-width:50mm;object-fit:contain;object-position:left}
-  .pdf-divider{height:8mm;width:.3mm;background:#cbd5e1;margin:0 2mm}
-  .pdf-meta{text-align:right;font-size:7pt;color:#64748b;line-height:1.4}
-  .pdf-meta strong{color:#133f7a;font-size:9pt}
+  .rpt-logo{height:9mm;width:auto;max-width:48mm;object-fit:contain;object-position:left}
+  .pdf-divider{height:7mm;width:.3mm;background:#cbd5e1;margin:0 2.5mm}
+  .pdf-header-text strong{font-size:8.5pt;font-weight:900;color:#133f7a;display:block}
+  .pdf-header-text span{font-size:6.5pt;color:#94a3b8}
+  .pdf-meta{text-align:right;font-size:7pt;color:#64748b;line-height:1.5}
+  .pdf-meta .pdf-meta-name{font-size:11pt;font-weight:900;color:#133f7a;letter-spacing:-.02em}
+  .pdf-meta .pdf-meta-date{font-size:6.5pt;color:#94a3b8}
 
+  /* ── FOOTER 11mm absolute ── */
   .pdf-footer{
-    position:absolute;bottom:0;left:0;right:0;height:12mm;
+    position:absolute;bottom:0;left:0;right:0;height:11mm;
     background:linear-gradient(135deg,#071b5f,#133f7a);
-    color:rgba(255,255,255,.8);font-size:6.5pt;
+    color:rgba(255,255,255,.75);font-size:6pt;
     display:flex;align-items:center;justify-content:space-between;
-    padding:0 12mm;flex-shrink:0;
+    padding:0 12mm;
   }
 
-  .pdf-body{padding:4mm 12mm 12mm;overflow:hidden;flex:1;position:relative}
+  /* ── BODY: 297-18-11 = 268mm, padding-bottom covers footer ── */
+  .pdf-body{padding:4mm 12mm 11mm;overflow:hidden;flex:1}
 
-  /* Hero band */
-  .pdf-hero-band{
-    background:linear-gradient(135deg,#0f2f5d,#133f7a);
-    border-radius:3mm;padding:4mm 5mm;color:#fff;margin-bottom:3.5mm;
-    display:flex;justify-content:space-between;align-items:center;gap:4mm;
+  /* ── P1: PROSPECTO HERO ── */
+  .pdf-prospect-hero{
+    background:linear-gradient(135deg,#071b5f 0%,#133f7a 55%,#1e5aa0 100%);
+    border-radius:3mm;padding:5mm 6mm;color:#fff;
+    margin-bottom:3.5mm;
+    display:grid;grid-template-columns:1fr auto;gap:4mm;align-items:center;
+    position:relative;overflow:hidden;
   }
-  .pdf-hero-label{font-size:7pt;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:rgba(255,255,255,.65);margin-bottom:3mm}
-  .pdf-hero-value{font-size:22pt;font-weight:900;color:#fff;line-height:1;letter-spacing:-.04em}
-  .pdf-hero-sub{font-size:7pt;color:rgba(255,255,255,.7);margin-top:2mm}
-  .pdf-hero-aside{text-align:right;min-width:42mm}
-  .pdf-hero-aside-label{font-size:6.5pt;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:rgba(255,255,255,.6);margin-bottom:2mm}
-  .pdf-hero-aside-val{font-size:16pt;font-weight:900;color:#93c5fd}
-  .pdf-hero-aside-sub{font-size:6.5pt;color:rgba(255,255,255,.55);margin-top:1.5mm}
+  .pdf-prospect-hero::after{
+    content:'';position:absolute;right:-14mm;top:-14mm;
+    width:45mm;height:45mm;border-radius:50%;
+    background:rgba(255,255,255,.04);pointer-events:none;
+  }
+  .pph-eyebrow{font-size:6.5pt;text-transform:uppercase;letter-spacing:.13em;font-weight:900;color:rgba(255,255,255,.55);margin-bottom:2.5mm}
+  .pph-name{font-size:20pt;font-weight:900;line-height:1;letter-spacing:-.035em;color:#fff;margin-bottom:2mm}
+  .pph-meta{font-size:7pt;color:rgba(255,255,255,.65)}
+  .pph-right{text-align:right}
+  .pph-ingreso-label{font-size:6pt;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:rgba(255,255,255,.5);margin-bottom:2mm}
+  .pph-ingreso-amount{font-size:18pt;font-weight:900;color:#93c5fd;line-height:1;letter-spacing:-.03em}
+  .pph-ingreso-sub{font-size:6pt;color:rgba(255,255,255,.45);margin-top:1.5mm;line-height:1.35}
+  .pph-badge{display:inline-block;background:rgba(255,255,255,.12);border:0.5px solid rgba(255,255,255,.2);border-radius:999px;padding:1.5mm 3mm;font-size:6pt;font-weight:900;color:rgba(255,255,255,.8);margin-top:2mm}
 
-  .pdf-section-title{font-size:8pt;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:#133f7a;margin:3.5mm 0 2mm;border-bottom:1.5px solid #c79a2c;padding-bottom:1mm}
-
-  /* Etapas */
-  .pdf-etapas{display:grid;grid-template-columns:repeat(3,1fr);gap:2mm}
-  .pdf-etapa{border:1px solid #dbe4f0;border-radius:2.5mm;padding:2.5mm 3mm}
-  .pdf-etapa-plan{border-left:3px solid #133f7a}
-  .pdf-etapa-60{border-left:3px solid #c79a2c;background:#fffbeb}
-  .pdf-etapa-65{border-left:3px solid #1e5aa0}
-  .pdf-etapa-label{font-size:7pt;text-transform:uppercase;letter-spacing:.07em;font-weight:900;color:#64748b;margin-bottom:2mm}
-  .pdf-etapa-val{font-size:13pt;font-weight:900;color:#133f7a}
+  /* ── P1: ETAPAS ── */
+  .pdf-etapas{display:grid;grid-template-columns:repeat(3,1fr);gap:2mm;margin-bottom:3.5mm}
+  .pdf-etapa{border-radius:2.5mm;padding:3mm;position:relative}
+  .pdf-etapa-plan{background:#f0f4ff;border:1px solid #c7d9f5;border-left:3px solid #133f7a}
+  .pdf-etapa-60{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #c79a2c}
+  .pdf-etapa-65{background:#f0fdf4;border:1px solid #a7f3d0;border-left:3px solid #0f8a5f}
+  .pdf-etapa-step{font-size:6pt;text-transform:uppercase;letter-spacing:.1em;font-weight:900;color:#94a3b8;margin-bottom:1.5mm}
+  .pdf-etapa-plan .pdf-etapa-step{color:#2563a8}
+  .pdf-etapa-60 .pdf-etapa-step{color:#92400e}
+  .pdf-etapa-65 .pdf-etapa-step{color:#065f46}
+  .pdf-etapa-label{font-size:7pt;font-weight:700;color:#334155;margin-bottom:2mm;line-height:1.3}
+  .pdf-etapa-val{font-size:14pt;font-weight:900;line-height:1;letter-spacing:-.03em;margin-bottom:1.5mm}
+  .pdf-etapa-plan .pdf-etapa-val{color:#133f7a}
   .pdf-etapa-60 .pdf-etapa-val{color:#c79a2c}
-  .pdf-etapa-65 .pdf-etapa-val{color:#1e5aa0}
-  .pdf-etapa-age{font-size:7pt;color:#64748b;margin-top:1.5mm;font-weight:700}
+  .pdf-etapa-65 .pdf-etapa-val{color:#0f8a5f}
+  .pdf-etapa-age{font-size:6.5pt;font-weight:700}
+  .pdf-etapa-plan .pdf-etapa-age{color:#4a7abf}
+  .pdf-etapa-60 .pdf-etapa-age{color:#92400e}
+  .pdf-etapa-65 .pdf-etapa-age{color:#047857}
+  .pdf-etapa-tag{display:inline-block;font-size:5.5pt;font-weight:900;border-radius:999px;padding:1mm 2.5mm;margin-top:1.5mm}
+  .pdf-etapa-60 .pdf-etapa-tag{background:#fef3c7;color:#92400e;border:0.5px solid #fde68a}
+  .pdf-etapa-65 .pdf-etapa-tag{background:#dcfce7;color:#065f46;border:0.5px solid #a7f3d0}
 
-  /* Ingreso */
-  .pdf-ingreso-dual{display:grid;grid-template-columns:1fr 1fr;gap:2mm}
-  .pdf-ingreso-single{display:block}
-  .pdf-ingreso-card{border:1px solid #dbe4f0;border-radius:2.5mm;padding:3mm}
-  .pdf-ic-60{border-top:3px solid #c79a2c}
-  .pdf-ic-65{border-top:3px solid #1e5aa0}
-  .pdf-ic-tag{font-size:6.5pt;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#64748b;margin-bottom:2mm}
-  .pdf-ic-60 .pdf-ic-tag{color:#7c5a0a}
-  .pdf-ic-65 .pdf-ic-tag{color:#1e5aa0}
-  .pdf-ic-amount{font-size:16pt;font-weight:900;color:#133f7a;line-height:1;margin-bottom:2mm}
+  /* ── P1: INGRESO ── */
+  .pdf-ingreso-dual{display:grid;grid-template-columns:1fr 1fr;gap:2mm;margin-bottom:3mm}
+  .pdf-ingreso-single{margin-bottom:3mm}
+  .pdf-ingreso-card{border-radius:2.5mm;padding:3mm;border:1px solid #e2e8f0}
+  .pdf-ic-60{border-top:3px solid #c79a2c;background:#fffdf5}
+  .pdf-ic-65{border-top:3px solid #0f8a5f;background:#f9fffd}
+  .pdf-ic-tag{font-size:6pt;text-transform:uppercase;letter-spacing:.08em;font-weight:900;margin-bottom:1.5mm}
+  .pdf-ic-60 .pdf-ic-tag{color:#92400e}
+  .pdf-ic-65 .pdf-ic-tag{color:#047857}
+  .pdf-ic-exento{display:inline-block;font-size:6pt;font-weight:900;border-radius:999px;padding:1mm 2.5mm;margin-bottom:2mm}
+  .pdf-ic-60 .pdf-ic-exento{background:#fef3c7;color:#92400e;border:0.5px solid #fde68a}
+  .pdf-ic-65 .pdf-ic-exento{background:#dcfce7;color:#065f46;border:0.5px solid #a7f3d0}
+  .pdf-ic-amount{font-size:15pt;font-weight:900;line-height:1;letter-spacing:-.03em;margin-bottom:1.5mm}
   .pdf-ic-60 .pdf-ic-amount{color:#c79a2c}
-  .pdf-ic-65 .pdf-ic-amount{color:#1e5aa0}
-  .pdf-ic-cap{font-size:6.5pt;color:#64748b;margin-bottom:2mm}
-  .pdf-ic-row{display:flex;justify-content:space-between;font-size:7pt;padding:1.5mm 0;border-top:1px solid #e2e8f0}
-  .pdf-ic-row strong{color:#133f7a;font-weight:900}
-  .pdf-ic-note{font-size:6pt;color:#94a3b8;margin-top:2mm;font-style:italic;line-height:1.35}
+  .pdf-ic-65 .pdf-ic-amount{color:#0f8a5f}
+  .pdf-ic-cap{font-size:6.5pt;color:#64748b;margin-bottom:2mm;line-height:1.35}
+  .pdf-ic-row{display:flex;justify-content:space-between;font-size:6.5pt;padding:1.5mm 0;border-top:0.5px solid #e2e8f0}
+  .pdf-ic-row span{color:#94a3b8;font-weight:700}
+  .pdf-ic-row strong{color:#334155;font-weight:900}
+  .pdf-ic-optional{font-size:5.5pt;color:#94a3b8;margin-top:2mm;line-height:1.35;font-style:italic}
 
-  /* Summary grid */
-  .pdf-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5mm}
-  .pdf-metric{border:1px solid #e2e8f0;border-radius:2mm;padding:2.5mm;background:#f8fafc}
-  .pdf-metric-hi{background:var(--asc-soft,#eaf2ff);border-color:#c7d9f5}
-  .pdf-metric span{display:block;font-size:6pt;text-transform:uppercase;letter-spacing:.07em;font-weight:900;color:#64748b;margin-bottom:1.5mm}
+  /* ── P1: RESUMEN 8 métricas ── */
+  .pdf-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5mm;margin-bottom:2.5mm}
+  .pdf-metric{border:0.5px solid #e2e8f0;border-radius:2mm;padding:2mm 2.5mm;background:#f8fafc}
+  .pdf-metric-hi{background:#eff6ff;border-color:#bfdbfe}
+  .pdf-metric span{display:block;font-size:5.5pt;text-transform:uppercase;letter-spacing:.07em;font-weight:900;color:#94a3b8;margin-bottom:1.5mm}
   .pdf-metric strong{font-size:9pt;font-weight:900;color:#133f7a}
+  .pdf-metric-hi strong{color:#1d4ed8}
 
-  /* Compare */
+  .pdf-section-title{
+    font-size:7.5pt;text-transform:uppercase;letter-spacing:.1em;font-weight:900;
+    color:#133f7a;margin:3mm 0 2mm;
+    display:flex;align-items:center;gap:2mm;
+  }
+  .pdf-section-title::after{content:'';flex:1;height:.5px;background:linear-gradient(to right,#c79a2c,transparent)}
+
+  .pdf-note{background:#f8fafc;border-left:2px solid #c79a2c;padding:2mm 3mm;font-size:6pt;color:#475569;line-height:1.45;border-radius:0 2mm 2mm 0;margin-bottom:2mm}
+
+  /* ── P2: URGENCIA ── */
+  .pdf-urgency{
+    background:linear-gradient(135deg,#7f1d1d,#991b1b);
+    border-radius:3mm;padding:4mm 5mm;color:#fff;margin-bottom:3.5mm;
+  }
+  .pdf-urgency-title{font-size:10pt;font-weight:900;letter-spacing:-.02em;margin-bottom:2mm}
+  .pdf-urgency-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5mm}
+  .pdf-urg-item{background:rgba(255,255,255,.1);border-radius:2mm;padding:2.5mm;text-align:center;border:0.5px solid rgba(255,255,255,.15)}
+  .pdf-urg-item .urg-when{font-size:6pt;font-weight:900;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2mm}
+  .pdf-urg-item .urg-pmt{font-size:11pt;font-weight:900;color:#fff;line-height:1}
+  .pdf-urg-item .urg-delta{font-size:6pt;color:rgba(255,255,255,.55);margin-top:1.5mm}
+  .pdf-urg-item.urg-now{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35)}
+  .pdf-urg-item.urg-now .urg-pmt{color:#fbbf24}
+  .pdf-urgency-note{font-size:6.5pt;color:rgba(255,255,255,.65);margin-top:2.5mm;line-height:1.4}
+
+  /* ── P2: COMPARATIVO ── */
   .pdf-compare{display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:2mm}
-  .pdf-comp{border:1px solid #e2e8f0;border-radius:2.5mm;padding:2.5mm;text-align:center;background:#fff}
-  .pdf-comp-winner{background:#e8f7f1;border-color:#a7f3d0}
-  .pdf-comp span{display:block;font-size:6.5pt;font-weight:900;color:#64748b;margin-bottom:2mm}
+  .pdf-comp{border:0.5px solid #e2e8f0;border-radius:2.5mm;padding:2.5mm;text-align:center;background:#fff}
+  .pdf-comp-winner{background:#f0fdf4;border-color:#a7f3d0;border-top:3px solid #0f8a5f}
+  .pdf-comp .comp-emoji{font-size:12pt;display:block;margin-bottom:1.5mm}
+  .pdf-comp span{display:block;font-size:6pt;font-weight:900;color:#94a3b8;margin-bottom:1.5mm;text-transform:uppercase;letter-spacing:.06em}
   .pdf-comp-winner span{color:#047857}
-  .pdf-comp strong{display:block;font-size:11pt;font-weight:900;color:#0b1420;margin-bottom:1mm}
+  .pdf-comp strong{display:block;font-size:11pt;font-weight:900;color:#0b1420;line-height:1;margin-bottom:1mm}
   .pdf-comp-winner strong{color:#0f8a5f;font-size:13pt}
-  .pdf-comp small{font-size:6pt;color:#94a3b8}
+  .pdf-comp small{font-size:5.5pt;color:#94a3b8;line-height:1.35}
   .pdf-comp-winner small{color:#065f46}
 
-  .pdf-note{background:#f8fafc;border-left:2.5px solid #133f7a;padding:2.5mm 3mm;font-size:6.5pt;color:#475569;line-height:1.45;border-radius:0 2mm 2mm 0}
+  /* ── P2: RESPALDO ── */
+  .pdf-respaldo{
+    display:grid;grid-template-columns:1.1fr .9fr;gap:3.5mm;margin-top:3.5mm;
+  }
+  .pdf-asesor-card{border:0.5px solid #dbe4f0;border-radius:3mm;padding:3.5mm;background:#fff;border-top:3px solid #133f7a}
+  .pdf-asesor-row{display:flex;gap:3mm;align-items:flex-start;margin-bottom:3mm}
+  .pdf-asesor-photo{width:17mm;height:17mm;border-radius:50%;object-fit:cover;border:1.5px solid #dbe4f0;flex-shrink:0}
+  .pdf-asesor-name{font-size:11pt;font-weight:900;color:#133f7a;line-height:1.1;margin-bottom:1.5mm;letter-spacing:-.02em}
+  .pdf-asesor-title{font-size:6.5pt;color:#64748b;line-height:1.4}
+  .pdf-asesor-title strong{color:#334155}
+  .pdf-qr-row{display:flex;gap:3mm;align-items:center;background:#f8fafc;border-radius:2mm;padding:2.5mm;border:0.5px solid #e2e8f0}
+  .pdf-qr-img{width:17mm;height:17mm;object-fit:contain;flex-shrink:0}
+  .pdf-qr-text{font-size:6.5pt;color:#475569;line-height:1.4}
+  .pdf-qr-text strong{color:#133f7a;display:block;margin-bottom:1mm}
 
-  /* Asesor */
-  .pdf-advisor{display:grid;grid-template-columns:1.15fr .85fr;gap:4mm;margin-top:4mm}
-  .advisor-card,.allianz-card{border:1px solid #dbe4f0;border-radius:3mm;padding:3.5mm;background:#fff}
-  .advisor-row{display:flex;gap:3mm;align-items:center;margin-bottom:3mm}
-  .advisor-row img{width:18mm;height:18mm;border-radius:50%;object-fit:cover;border:1px solid #dbe4f0;flex-shrink:0}
-  .advisor-row h3{font-size:12pt;color:#133f7a;font-weight:900;margin-bottom:2mm}
-  .advisor-row p,.allianz-card p{font-size:7pt;color:#475569;line-height:1.45}
-  .qr-row{display:flex;gap:3mm;align-items:center;background:#f8fafc;border-radius:2mm;padding:2.5mm}
-  .qr-row img{width:18mm;height:18mm;object-fit:contain;flex-shrink:0}
-  .qr-row p{font-size:6.5pt;color:#475569;line-height:1.4}
-  .badge-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm;margin-top:2mm}
-  .badge{background:#f8fafc;border:1px solid #dbe4f0;border-radius:2mm;padding:2mm;text-align:center;font-size:6pt;font-weight:900;color:#133f7a}
+  .pdf-allianz-card{border:0.5px solid #dbe4f0;border-radius:3mm;padding:3.5mm;background:#fff;border-top:3px solid #c79a2c}
+  .pdf-allianz-logo-row{display:flex;align-items:center;gap:2.5mm;margin-bottom:3mm;padding-bottom:2.5mm;border-bottom:0.5px solid #e2e8f0}
+  .pdf-allianz-logo{height:8mm;width:auto;object-fit:contain}
+  .pdf-allianz-claim{font-size:6pt;color:#64748b;line-height:1.4}
+  .pdf-allianz-claim strong{color:#133f7a;display:block;font-size:7pt;margin-bottom:0.5mm}
+
+  .pdf-fiscal-note{
+    background:linear-gradient(135deg,#fffbeb,#fef9ec);
+    border:0.5px solid #fde68a;border-left:3px solid #c79a2c;
+    border-radius:0 2.5mm 2.5mm 0;
+    padding:2.5mm 3mm;margin-bottom:3mm;
+  }
+  .pdf-fiscal-note-title{font-size:7pt;font-weight:900;color:#92400e;margin-bottom:1.5mm}
+  .pdf-fiscal-note-text{font-size:6.5pt;color:#78350f;line-height:1.45}
+
+  .pdf-reguladores{display:flex;gap:2mm;align-items:center;margin-top:2.5mm;padding:2mm 3mm;background:#f8fafc;border-radius:2mm;border:0.5px solid #e2e8f0}
+  .pdf-reg-label{font-size:6pt;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-right:1mm;white-space:nowrap}
+  .pdf-reg-logo{height:6mm;width:auto;object-fit:contain;opacity:.75}
+  .pdf-reg-sep{width:.5px;height:5mm;background:#e2e8f0;margin:0 1mm}
+  .pdf-reg-text{font-size:6pt;color:#94a3b8;line-height:1.35;flex:1}
+
+  .pdf-cta{
+    background:linear-gradient(135deg,#133f7a,#1e5aa0);
+    border-radius:2.5mm;padding:3mm 4mm;
+    display:flex;align-items:center;justify-content:space-between;gap:3mm;
+    margin-top:3mm;
+  }
+  .pdf-cta-text strong{display:block;font-size:9pt;font-weight:900;color:#fff;margin-bottom:1mm}
+  .pdf-cta-text span{font-size:6.5pt;color:rgba(255,255,255,.7)}
+  .pdf-cta-contact{text-align:right}
+  .pdf-cta-contact .cta-wa{font-size:8pt;font-weight:900;color:#4ade80}
+  .pdf-cta-contact .cta-num{font-size:10pt;font-weight:900;color:#fff;letter-spacing:.03em}
+
+  .pdf-disclaimer{font-size:5.5pt;color:#94a3b8;line-height:1.4;margin-top:3mm;padding-top:2mm;border-top:0.5px solid #e2e8f0}
 }
 
 </style>
@@ -934,182 +1022,265 @@ td{padding:9px;border-bottom:1px solid #edf2f7;color:#334155;font-weight:600}
 
 <div class="report-view">
 
-  <!-- PAGE 1: Results + Key moments -->
-  <div class="pdf-page">
-    <div class="pdf-header">
-      <div class="pdf-brand">
-        <img src="logo-garba.png" class="rpt-logo" alt="Christian GarBa" onerror="this.style.display='none'">
-        <div class="pdf-divider"></div>
-        <div>
-          <div style="font-size:9pt;font-weight:900;color:#133f7a">Simulación Personalizada de Retiro</div>
-          <div style="font-size:7.5pt;color:#64748b">Proyección ilustrativa para planeación financiera</div>
-        </div>
-      </div>
-      <div class="pdf-meta">
-        <strong id="rptClientName2">—</strong><br>
-        <span id="rptFecha"></span><br>
-        Presentado por <strong>Christian GarBa</strong>
+<!-- ══════════════════ PÁGINA 1 ══════════════════ -->
+<div class="pdf-page">
+  <div class="pdf-header">
+    <div class="pdf-brand">
+      <img src="logo-garba.png" class="rpt-logo" alt="Christian GarBa" onerror="this.style.display='none'">
+      <div class="pdf-divider"></div>
+      <div class="pdf-header-text">
+        <strong>Simulación Personalizada de Retiro</strong>
+        <span>Proyección ilustrativa · Christian GarBa</span>
       </div>
     </div>
-
-    <div class="pdf-body">
-      <!-- Hero band -->
-      <div class="pdf-hero-band">
-        <div>
-          <div class="pdf-hero-label">Fondo estimado al finalizar tu plan</div>
-          <div class="pdf-hero-value" id="rptFondoPlanExec">—</div>
-          <div class="pdf-hero-sub" id="rptFondoPlanExecSub">—</div>
-        </div>
-        <div class="pdf-hero-aside">
-          <div class="pdf-hero-aside-label">Ingreso mensual estimado</div>
-          <div class="pdf-hero-aside-val" id="rptIngresoMensual">—</div>
-          <div class="pdf-hero-aside-sub" id="rptIngresoSub">Referencia ilustrativa · 20 años</div>
-        </div>
-      </div>
-
-      <!-- 3 etapas -->
-      <div class="pdf-section-title">Etapas del plan</div>
-      <div class="pdf-etapas">
-        <div class="pdf-etapa pdf-etapa-plan">
-          <div class="pdf-etapa-label">Al finalizar aportaciones</div>
-          <div class="pdf-etapa-val" id="rptFondoFinAport">—</div>
-          <div class="pdf-etapa-age" id="rptEdadFinAport">—</div>
-        </div>
-        <div class="pdf-etapa pdf-etapa-60" id="rptEtapa60">
-          <div class="pdf-etapa-label" id="rptLabel60e">A los 60 años · Art. 93</div>
-          <div class="pdf-etapa-val" id="rptFondo60e">—</div>
-          <div class="pdf-etapa-age">60 años · Exento ISR</div>
-        </div>
-        <div class="pdf-etapa pdf-etapa-65">
-          <div class="pdf-etapa-label" id="rptLabel65e">A los 65 años</div>
-          <div class="pdf-etapa-val" id="rptFondo65Moment">—</div>
-          <div class="pdf-etapa-age" id="rptAge65e">65 años</div>
-        </div>
-      </div>
-
-      <!-- Ingreso dual -->
-      <div class="pdf-section-title" style="margin-top:5mm">Ingreso mensual estimado en retiro</div>
-      <div class="pdf-ingreso-dual" id="rptIngresoDual">
-        <div class="pdf-ingreso-card pdf-ic-60">
-          <div class="pdf-ic-tag">Desde los 60 años · Art. 93 · Exento ISR</div>
-          <div class="pdf-ic-amount" id="rptIngreso60">—</div>
-          <div class="pdf-ic-cap">Durante 20 años · capital a los 60</div>
-          <div class="pdf-ic-row"><span>Capital base</span><strong id="rptCapBase60">—</strong></div>
-          <div class="pdf-ic-note">El titular puede disponer del fondo total o retiros parciales a su criterio.</div>
-        </div>
-        <div class="pdf-ingreso-card pdf-ic-65">
-          <div class="pdf-ic-tag" id="rptTag65">Desde los 65 años</div>
-          <div class="pdf-ic-amount" id="rptIngreso65">—</div>
-          <div class="pdf-ic-cap">Durante 20 años · capital a los 65</div>
-          <div class="pdf-ic-row"><span>Capital base</span><strong id="rptCapBase65">—</strong></div>
-          <div class="pdf-ic-note">El titular puede disponer del fondo total o retiros parciales a su criterio.</div>
-        </div>
-      </div>
-      <div class="pdf-ingreso-single" id="rptIngresoSingle">
-        <div class="pdf-ingreso-card pdf-ic-65" style="max-width:260px">
-          <div class="pdf-ic-tag" id="rptSingleTag">Desde los 65 años</div>
-          <div class="pdf-ic-amount" id="rptIngreso65Single">—</div>
-          <div class="pdf-ic-cap">Durante 20 años · capital proyectado a los 65</div>
-          <div class="pdf-ic-row"><span>Capital base</span><strong id="rptCapBase65Single">—</strong></div>
-          <div class="pdf-ic-note">El ingreso mensual es una referencia ilustrativa. El titular puede disponer del capital conforme a las condiciones del producto.</div>
-        </div>
-      </div>
-
-      <!-- Resumen rápido -->
-      <div class="pdf-section-title" style="margin-top:5mm">Resumen del escenario</div>
-      <div class="pdf-summary-grid">
-        <div class="pdf-metric"><span>Aportación mensual inicial</span><strong id="rptAportMensual">—</strong></div>
-        <div class="pdf-metric"><span>Total aportado estimado</span><strong id="rptTotalAportado">—</strong></div>
-        <div class="pdf-metric"><span>Rendimiento generado</span><strong id="rptRendimiento">—</strong></div>
-        <div class="pdf-metric pdf-metric-hi"><span>Multiplicador del capital</span><strong id="rptMultiplicador">—</strong></div>
-        <div class="pdf-metric"><span>Régimen fiscal</span><strong id="rptRegimen">—</strong></div>
-        <div class="pdf-metric"><span>Rendimiento nominal</span><strong id="rptRendimientoUsado">—</strong></div>
-        <div class="pdf-metric"><span>Inflación estimada</span><strong id="rptInflacionUsada">—</strong></div>
-        <div class="pdf-metric"><span>Plazo de aportación</span><strong id="rptPlazo">—</strong></div>
-      </div>
-
-      <div class="pdf-note" id="rptNotaMomentos">Art. 93: referencia a los 60 años por relevancia fiscal. Montos ilustrativos sujetos a condiciones del producto y normativa vigente.</div>
-    </div>
-
-    <div class="pdf-footer">
-      <span>Christian GarBa · Seguros con estrategia · 662 417 6032 · Distribuidor Allianz</span>
-      <span>Página 1 de 2</span>
+    <div class="pdf-meta">
+      <div class="pdf-meta-date" id="rptFecha"></div>
     </div>
   </div>
 
-  <!-- PAGE 2: Comparativo + Asesor + Nota técnica -->
-  <div class="pdf-page">
-    <div class="pdf-header">
-      <div class="pdf-brand">
-        <img src="logo-garba.png" class="rpt-logo" alt="Christian GarBa" onerror="this.style.display='none'">
-        <div class="pdf-divider"></div>
-        <div>
-          <div style="font-size:9pt;font-weight:900;color:#133f7a">Respaldo y notas de simulación</div>
-          <div style="font-size:7.5pt;color:#64748b">Proyección ilustrativa</div>
-        </div>
+  <div class="pdf-body">
+
+    <!-- Hero: nombre + ingreso mensual protagonista -->
+    <div class="pdf-prospect-hero">
+      <div>
+        <div class="pph-eyebrow">Tu escenario personalizado</div>
+        <div class="pph-name" id="rptClientName2">—</div>
+        <div class="pph-meta" id="rptHeroMeta">—</div>
+        <div class="pph-badge" id="rptHeroBadge">—</div>
       </div>
-      <div class="pdf-meta">
-        <span id="rptClientName3">—</span><br>
-        <span id="rptFecha2"></span>
+      <div class="pph-right">
+        <div class="pph-ingreso-label">Podrías recibir mensualmente</div>
+        <div class="pph-ingreso-amount" id="rptIngresoMensual">—</div>
+        <div class="pph-ingreso-sub" id="rptIngresoSub">Referencia ilustrativa · 20 años</div>
       </div>
     </div>
 
-    <div class="pdf-body">
-
-      <!-- Comparativo -->
-      <div class="pdf-section-title">Comparativo ilustrativo al finalizar aportaciones</div>
-      <div class="pdf-compare">
-        <div class="pdf-comp"><span>💸 Colchón (sin rendimiento)</span><strong id="rptCompMattress">—</strong><small id="rptCompMattressReal">—</small></div>
-        <div class="pdf-comp"><span>🏦 Banco (~2% anual)</span><strong id="rptCompBank">—</strong><small id="rptCompBankReal">—</small></div>
-        <div class="pdf-comp"><span>🏛 AFORE conservador</span><strong id="rptCompAfore">—</strong><small>Escenario ~3.47% anual</small></div>
-        <div class="pdf-comp pdf-comp-winner"><span>📈 Tu plan proyectado</span><strong id="rptCompPlan">—</strong><small id="rptCompPlanAge">—</small></div>
+    <!-- 3 etapas siempre visibles -->
+    <div class="pdf-section-title">Tu patrimonio por etapas</div>
+    <div class="pdf-etapas">
+      <div class="pdf-etapa pdf-etapa-plan">
+        <div class="pdf-etapa-step">Etapa 1 · Al finalizar aportaciones</div>
+        <div class="pdf-etapa-label" id="rptEtapa1Label">Capital acumulado al cerrar tu periodo</div>
+        <div class="pdf-etapa-val" id="rptFondoFinAport">—</div>
+        <div class="pdf-etapa-age" id="rptEdadFinAport">—</div>
       </div>
-      <div class="pdf-note" id="rptCompMessage" style="margin-bottom:5mm">—</div>
-
-      <!-- Costo de esperar -->
-      <div class="pdf-section-title">Valor de comenzar hoy</div>
-      <div class="pdf-compare" style="grid-template-columns:repeat(4,1fr)">
-        <div class="pdf-comp"><span>Hoy</span><strong id="rptHoyMonto">—</strong><small>Base</small></div>
-        <div class="pdf-comp"><span>+1 año</span><strong id="rpt1Monto">—</strong><small id="rpt1Delta">—</small></div>
-        <div class="pdf-comp"><span>+3 años</span><strong id="rpt3Monto">—</strong><small id="rpt3Delta">—</small></div>
-        <div class="pdf-comp"><span>+5 años</span><strong id="rpt5Monto">—</strong><small id="rpt5Delta">—</small></div>
+      <div class="pdf-etapa pdf-etapa-60">
+        <div class="pdf-etapa-step">Etapa 2 · A los 60 años</div>
+        <div class="pdf-etapa-label" id="rptEtapa2Label">El fondo crece sin nuevas aportaciones</div>
+        <div class="pdf-etapa-val" id="rptFondo60e">—</div>
+        <div class="pdf-etapa-age">60 años</div>
+        <div class="pdf-etapa-tag" id="rptEtapa2Tag"></div>
       </div>
+      <div class="pdf-etapa pdf-etapa-65">
+        <div class="pdf-etapa-step">Etapa 3 · A los 65 años</div>
+        <div class="pdf-etapa-label" id="rptEtapa3Label">Proyección máxima del fondo</div>
+        <div class="pdf-etapa-val" id="rptFondo65Moment">—</div>
+        <div class="pdf-etapa-age">65 años</div>
+        <div class="pdf-etapa-tag" id="rptEtapa3Tag"></div>
+      </div>
+    </div>
 
-      <!-- Asesor + Allianz -->
-      <div class="pdf-advisor">
-        <div class="advisor-card">
-          <div class="advisor-row">
-            <img src="foto-christian.jpg" alt="Christian GarBa" onerror="this.style.display='none'">
-            <div>
-              <h3>Christian Iván García Barragán</h3>
-              <p>Asesor autorizado CNSF<br>Cédula: G384982<br>Vigencia: 03/03/2025 al 03/03/2028<br>Agente de seguros · Riesgos personales y familiares</p>
+    <!-- Ingreso mensual: dual Art.93 / single resto -->
+    <div class="pdf-section-title">Ingreso mensual estimado en retiro</div>
+    <div class="pdf-ingreso-dual" id="rptIngresoDual">
+      <div class="pdf-ingreso-card pdf-ic-60">
+        <div class="pdf-ic-tag">Desde los 60 años · Art. 93</div>
+        <div class="pdf-ic-exento">Exento de ISR por ley</div>
+        <div class="pdf-ic-amount" id="rptIngreso60">—</div>
+        <div class="pdf-ic-cap">Durante 20 años · sobre capital a los 60</div>
+        <div class="pdf-ic-row"><span>Capital base</span><strong id="rptCapBase60">—</strong></div>
+        <div class="pdf-ic-optional">El titular puede disponer del fondo total o retiros parciales a su criterio.</div>
+      </div>
+      <div class="pdf-ingreso-card pdf-ic-65">
+        <div class="pdf-ic-tag" id="rptTag65">Desde los 65 años</div>
+        <div class="pdf-ic-exento" id="rptExento65">—</div>
+        <div class="pdf-ic-amount" id="rptIngreso65">—</div>
+        <div class="pdf-ic-cap">Durante 20 años · sobre capital a los 65</div>
+        <div class="pdf-ic-row"><span>Capital base</span><strong id="rptCapBase65">—</strong></div>
+        <div class="pdf-ic-optional">El titular puede disponer del fondo total o retiros parciales a su criterio.</div>
+      </div>
+    </div>
+    <div class="pdf-ingreso-single" id="rptIngresoSingle">
+      <div class="pdf-ingreso-card pdf-ic-65" style="max-width:240px">
+        <div class="pdf-ic-tag" id="rptSingleTag">Desde los 65 años</div>
+        <div class="pdf-ic-exento" id="rptSingleExento">—</div>
+        <div class="pdf-ic-amount" id="rptIngreso65Single">—</div>
+        <div class="pdf-ic-cap">Durante 20 años · capital proyectado a los 65</div>
+        <div class="pdf-ic-row"><span>Capital base</span><strong id="rptCapBase65Single">—</strong></div>
+        <div class="pdf-ic-optional">El ingreso mensual es referencia ilustrativa. El titular puede disponer del capital conforme a las condiciones del producto.</div>
+      </div>
+    </div>
+
+    <!-- Resumen del escenario -->
+    <div class="pdf-section-title">Resumen del escenario</div>
+    <div class="pdf-summary-grid">
+      <div class="pdf-metric"><span>Aportación mensual inicial</span><strong id="rptAportMensual">—</strong></div>
+      <div class="pdf-metric"><span>Total aportado estimado</span><strong id="rptTotalAportado">—</strong></div>
+      <div class="pdf-metric"><span>Rendimiento generado</span><strong id="rptRendimiento">—</strong></div>
+      <div class="pdf-metric pdf-metric-hi"><span>Multiplicador del capital</span><strong id="rptMultiplicador">—</strong></div>
+      <div class="pdf-metric"><span>Régimen fiscal</span><strong id="rptRegimen">—</strong></div>
+      <div class="pdf-metric"><span>Rendimiento nominal</span><strong id="rptRendimientoUsado">—</strong></div>
+      <div class="pdf-metric"><span>Inflación estimada</span><strong id="rptInflacionUsada">—</strong></div>
+      <div class="pdf-metric"><span>Plazo de aportación</span><strong id="rptPlazo">—</strong></div>
+    </div>
+
+  </div>
+  <div class="pdf-footer">
+    <span>Christian GarBa · Seguros con estrategia · 662 417 6032 · Distribuidor Allianz</span>
+    <span>Página 1 de 2</span>
+  </div>
+</div>
+
+<!-- ══════════════════ PÁGINA 2 ══════════════════ -->
+<div class="pdf-page">
+  <div class="pdf-header">
+    <div class="pdf-brand">
+      <img src="logo-garba.png" class="rpt-logo" alt="Christian GarBa" onerror="this.style.display='none'">
+      <div class="pdf-divider"></div>
+      <div class="pdf-header-text">
+        <strong>Respaldo · Comparativo · Urgencia</strong>
+        <span><span id="rptClientName3">—</span> · <span id="rptFecha2"></span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pdf-body">
+
+    <!-- URGENCIA: costo de esperar en rojo -->
+    <div class="pdf-urgency">
+      <div class="pdf-urgency-title">⏰ Cada año que esperas, cuesta más llegar al mismo lugar</div>
+      <div class="pdf-urgency-grid">
+        <div class="pdf-urg-item urg-now">
+          <div class="urg-when">Comenzando hoy</div>
+          <div class="urg-pmt" id="rptHoyMonto">—</div>
+          <div class="urg-delta">Aportación mensual base</div>
+        </div>
+        <div class="pdf-urg-item">
+          <div class="urg-when">+1 año después</div>
+          <div class="urg-pmt" id="rpt1Monto">—</div>
+          <div class="urg-delta" id="rpt1Delta">—</div>
+        </div>
+        <div class="pdf-urg-item">
+          <div class="urg-when">+3 años después</div>
+          <div class="urg-pmt" id="rpt3Monto">—</div>
+          <div class="urg-delta" id="rpt3Delta">—</div>
+        </div>
+        <div class="pdf-urg-item">
+          <div class="urg-when">+5 años después</div>
+          <div class="urg-pmt" id="rpt5Monto">—</div>
+          <div class="urg-delta" id="rpt5Delta">—</div>
+        </div>
+      </div>
+      <div class="pdf-urgency-note" id="rptUrgencyNote">Para llegar al mismo escenario a los 65 años, esperar significa aportar más cada mes.</div>
+    </div>
+
+    <!-- COMPARATIVO -->
+    <div class="pdf-section-title">Comparativo ilustrativo al finalizar aportaciones</div>
+    <div class="pdf-compare">
+      <div class="pdf-comp">
+        <span class="comp-emoji">💸</span>
+        <span>Guardarlo en casa</span>
+        <strong id="rptCompMattress">—</strong>
+        <small id="rptCompMattressReal">Sin rendimiento</small>
+      </div>
+      <div class="pdf-comp">
+        <span class="comp-emoji">🏦</span>
+        <span>Cuenta bancaria</span>
+        <strong id="rptCompBank">—</strong>
+        <small id="rptCompBankReal">~2% anual</small>
+      </div>
+      <div class="pdf-comp">
+        <span class="comp-emoji">🏛</span>
+        <span>AFORE conservador</span>
+        <strong id="rptCompAfore">—</strong>
+        <small>~3.47% anual</small>
+      </div>
+      <div class="pdf-comp pdf-comp-winner">
+        <span class="comp-emoji">📈</span>
+        <span>Tu plan proyectado</span>
+        <strong id="rptCompPlan">—</strong>
+        <small id="rptCompPlanAge">—</small>
+      </div>
+    </div>
+    <div class="pdf-note" id="rptCompMessage" style="margin-bottom:3mm">—</div>
+
+    <!-- BENEFICIO FISCAL -->
+    <div class="pdf-fiscal-note" id="rptFiscalNote">
+      <div class="pdf-fiscal-note-title">⚖️ Beneficio fiscal reconocido por ley</div>
+      <div class="pdf-fiscal-note-text" id="rptFiscalText">—</div>
+    </div>
+
+    <!-- ASESOR + RESPALDO ALLIANZ -->
+    <div class="pdf-respaldo">
+      <div class="pdf-asesor-card">
+        <div class="pdf-asesor-row">
+          <img src="foto-christian.jpg" class="pdf-asesor-photo" alt="Christian GarBa" onerror="this.style.display='none'">
+          <div>
+            <div class="pdf-asesor-name">Christian Iván García Barragán</div>
+            <div class="pdf-asesor-title">
+              <strong>Asesor autorizado CNSF · Christian GarBa</strong>
+              Cédula: G384982 · Vigencia: 03/03/2025 al 03/03/2028<br>
+              Agente de seguros · Riesgos personales y familiares
             </div>
           </div>
-          <div class="qr-row">
-            <img src="qr-cedula-cnsf.png" alt="QR CNSF" onerror="this.style.display='none'">
-            <p><strong>Escanea el QR para validar la información.</strong><br>Tel. 662 417 6032 · Distribuidor Allianz · Christian GarBa.</p>
-          </div>
         </div>
-        <div class="allianz-card">
-          <h3 style="font-family:serif;font-size:16px;color:#133f7a;margin-bottom:5px">Respaldo Allianz</h3>
-          <p>Allianz es una institución financiera y aseguradora global. Esta simulación es únicamente ilustrativa y utiliza supuestos capturados para planeación financiera. Los resultados reales pueden variar.</p>
-          <div class="badge-grid">
-            <div class="badge">CNSF</div><div class="badge">LISR</div>
-            <div class="badge">Allianz</div><div class="badge">Planeación financiera</div>
+        <div class="pdf-qr-row">
+          <img src="qr-cedula-cnsf.png" class="pdf-qr-img" alt="QR CNSF" onerror="this.style.display='none'">
+          <div class="pdf-qr-text">
+            <strong>Escanea para validar mi cédula ante la CNSF</strong>
+            Tel. 662 417 6032 · Distribuidor Autorizado Allianz<br>
+            Christian GarBa · Seguros con estrategia
           </div>
         </div>
       </div>
 
-      <div class="pdf-note" style="margin-top:5mm">
-        <strong>Importante:</strong> esta herramienta muestra una simulación financiera con fines ilustrativos. Los resultados dependen de los datos capturados y de los supuestos utilizados. No constituye garantía de rendimiento, oferta contractual ni promesa de pago. El ingreso mensual es una referencia opcional — el titular puede disponer del fondo conforme a las condiciones del producto y la normativa vigente.
+      <div>
+        <div class="pdf-allianz-card" style="margin-bottom:2.5mm">
+          <div class="pdf-allianz-logo-row">
+            <img src="logo-allianz-distribuidor.jpg" class="pdf-allianz-logo" alt="Allianz" onerror="this.style.display='none'">
+            <div class="pdf-allianz-claim">
+              <strong>La aseguradora más grande del mundo</strong>
+              Presente en +70 países · +130 años de historia<br>
+              Tus ahorros respaldados por solidez global
+            </div>
+          </div>
+          <!-- Reguladores -->
+          <div class="pdf-reguladores">
+            <span class="pdf-reg-label">Supervisado por:</span>
+            <img src="logo-cnsf.png" class="pdf-reg-logo" alt="CNSF" onerror="this.parentElement.querySelector('.pdf-reg-cnsf-text').style.display='block';this.style.display='none'">
+            <span class="pdf-reg-cnsf-text" style="display:none;font-size:6pt;font-weight:900;color:#133f7a">CNSF</span>
+            <div class="pdf-reg-sep"></div>
+            <img src="logo-condusef.png" class="pdf-reg-logo" alt="CONDUSEF" onerror="this.parentElement.querySelector('.pdf-reg-condusef-text').style.display='block';this.style.display='none'">
+            <span class="pdf-reg-condusef-text" style="display:none;font-size:6pt;font-weight:900;color:#133f7a">CONDUSEF</span>
+            <div class="pdf-reg-sep"></div>
+            <div class="pdf-reg-text">Institución regulada y supervisada por las autoridades financieras mexicanas.</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="pdf-footer">
-      <span>Christian GarBa · Seguros con estrategia · 662 417 6032 · Distribuidor Allianz</span>
-      <span>Página 2 de 2</span>
+    <!-- CTA: cierra con acción, no con disclaimer -->
+    <div class="pdf-cta">
+      <div class="pdf-cta-text">
+        <strong>¿Listo para dar el siguiente paso?</strong>
+        <span>Escríbeme y revisamos este escenario juntos. Sin compromiso.</span>
+      </div>
+      <div class="pdf-cta-contact">
+        <div class="cta-wa">💬 WhatsApp</div>
+        <div class="cta-num">662 417 6032</div>
+      </div>
     </div>
+
+    <div class="pdf-disclaimer">
+      Simulación financiera con fines ilustrativos. Los resultados dependen de los datos capturados y supuestos utilizados. No constituye garantía de rendimiento, oferta contractual ni promesa de pago. El ingreso mensual es referencia opcional — el titular puede disponer del capital conforme a las condiciones del producto y normativa vigente.
+    </div>
+
   </div>
+  <div class="pdf-footer">
+    <span>Christian GarBa · Seguros con estrategia · 662 417 6032 · Distribuidor Allianz</span>
+    <span>Página 2 de 2</span>
+  </div>
+</div>
 
 </div>
 
@@ -1654,108 +1825,105 @@ function actualizarReporteBase(){
   const infl = reportState.infl ?? parseFloat($('inflation').value||0);
   const rAcc = reportState.rAcc ?? parseFloat($('rate').value||0);
   const base = parseFloat($('pmt').value||0);
-  const pmt1 = pmtParaFondo65(1), pmt3 = pmtParaFondo65(3), pmt5 = pmtParaFondo65(5);
-  const es93 = reportState.regimenFiscal === '93';
-  const es151 = reportState.regimenFiscal === '151';
-  const edadFin = Math.round(reportState.edadFinPlan || 0);
-  const fondo60 = reportState.fondo60 || 0;
-  const fondo65 = reportState.fondo65 || 0;
-  const fondoPlan = reportState.fondoPlan || 0;
-  const totalAportado = reportState.totalAportado || 0;
-  const rendimiento = fondoPlan - totalAportado;
-  const multiplicador = totalAportado > 0 ? (fondoPlan/totalAportado).toFixed(1)+'x' : '—';
+  const pmt1=pmtParaFondo65(1), pmt3=pmtParaFondo65(3), pmt5=pmtParaFondo65(5);
+  const es93=reportState.regimenFiscal==='93', es151=reportState.regimenFiscal==='151';
+  const edadFin=Math.round(reportState.edadFinPlan||0);
+  const fondo60=reportState.fondo60||0, fondo65=reportState.fondo65||0, fondoPlan=reportState.fondoPlan||0;
+  const totalAportado=reportState.totalAportado||0;
+  const rendimiento=fondoPlan-totalAportado;
+  const multiplicador=totalAportado>0?(fondoPlan/totalAportado).toFixed(1)+'x':'—';
+  const calcMensual=f=>{const i=.07/12,n=240;return i?f*(i/(1-Math.pow(1+i,-n))):f/n};
+  const ingreso65=calcMensual(fondo65), ingreso60=fondo60?calcMensual(fondo60):0;
+  const ingresoMostrar=es93&&ingreso60?ingreso60:ingreso65;
+  reportState.ingresoMensual=ingresoMostrar;
 
-  // Calcular ingresos mensuales
-  const calcMensual = fondo => { const i=.07/12,n=240; return i?fondo*(i/(1-Math.pow(1+i,-n))):fondo/n; };
-  const ingreso65 = calcMensual(fondo65);
-  const ingreso60 = fondo60 ? calcMensual(fondo60) : 0;
-  const ingresoMostrar = es93 && ingreso60 ? ingreso60 : ingreso65;
-  reportState.ingresoMensual = ingresoMostrar;
+  function set(id,val){const el=$(id);if(el)el.textContent=val;}
+  function deltaTxt(p){if(!base||p==null)return'—';const d=p-base;return d<=0?'Igual':`+${money(d)} (+${(d/base*100).toFixed(1)}%)`}
 
-  function set(id, val){ if($(id)) $(id).textContent = val; }
-  function deltaTxt(p){ if(!base||p==null) return '—'; const d=p-base; return d<=0?'Igual':`+${money(d)} (+${(d/base*100).toFixed(1)}%)`; }
+  // ── Fechas ────────────────────────────────────────
+  set('rptFecha', fechaTxt); set('rptFecha2', fechaTxt);
+  set('rptClientName2', reportState.nombre||'Cliente');
+  set('rptClientName3', reportState.nombre||'Cliente');
 
-  // Fechas y cliente
-  set('rptFecha', fechaTxt);
-  set('rptFecha2', fechaTxt);
-  set('rptClientName2', reportState.nombre || 'Cliente');
-  set('rptClientName3', reportState.nombre || 'Cliente');
-
-  // ── PÁGINA 1 ─────────────────────────────────────────────
-  // Hero band
-  set('rptFondoPlanExec', money(fondoPlan));
-  set('rptFondoPlanExecSub', `Escenario ilustrativo al cierre del periodo de aportación, edad estimada ${edadFin} años.`);
+  // ── PÁGINA 1 ──────────────────────────────────────
+  // Hero
+  set('rptHeroMeta', `${reportState.edad} años · ${reportState.planYears} años de aportación · ${money(base)}/mes inicial`);
+  const heroBadge = es93?'Art. 93 · Beneficio fiscal':es151?'Art. 151 · Deducible':'Sin beneficio fiscal';
+  set('rptHeroBadge', heroBadge);
   set('rptIngresoMensual', money(ingresoMostrar));
-  set('rptIngresoSub', es93 ? `Desde los 60 años · Art. 93 exento · 20 años` : es151 ? `Desde los 65 años · Art. 151 exento · 20 años` : `Desde los 65 años · 20 años`);
+  set('rptIngresoSub', es93&&ingreso60?'Desde los 60 años · Art. 93 exento · 20 años':'Desde los 65 años · 20 años');
 
   // Etapas
   set('rptFondoFinAport', money(fondoPlan));
-  set('rptEdadFinAport', `${edadFin} años`);
-  set('rptFondo60e', fondo60 ? money(fondo60) : money(fondoPlan));
+  set('rptEdadFinAport', `${edadFin} años · capital disponible para uso libre`);
+  set('rptFondo60e', fondo60?money(fondo60):money(fondoPlan));
   set('rptFondo65Moment', money(fondo65));
-  set('rptLabel65e', es151 ? 'A los 65 años · Art. 151 exento' : 'A los 65 años');
-  set('rptAge65e', es151 ? '65 años · Exento ISR' : '65 años');
-  // Mostrar etapa 60 siempre, ajustar texto según régimen
-  const et60 = $('rptEtapa60');
-  if(et60){ et60.style.opacity = es93 ? '1' : '.5'; }
-  set('rptLabel60e', es93 ? 'A los 60 años · Art. 93 · Exento ISR' : 'A los 60 años');
+  set('rptEtapa2Label', es93?'El fondo crece sin nuevas aportaciones':'El fondo continúa creciendo');
+  set('rptEtapa2Tag', es93?'Exento ISR · Art. 93':'');
+  set('rptEtapa3Label', es151?'Proyección máxima · exento ISR':'Proyección máxima del fondo');
+  set('rptEtapa3Tag', es151?'Exento ISR · Art. 151':es93?'Exento ISR · Art. 93':'');
 
   // Ingreso dual vs single
-  const dual = $('rptIngresoDual'), single = $('rptIngresoSingle');
+  const dual=$('rptIngresoDual'), single=$('rptIngresoSingle');
   if(es93){
-    if(dual) dual.style.display = 'grid';
-    if(single) single.style.display = 'none';
+    if(dual)dual.style.display='grid'; if(single)single.style.display='none';
     set('rptIngreso60', money(ingreso60));
-    set('rptCapBase60', money(fondo60 || fondoPlan));
+    set('rptCapBase60', money(fondo60||fondoPlan));
     set('rptIngreso65', money(ingreso65));
     set('rptCapBase65', money(fondo65));
     set('rptTag65', 'Desde los 65 años');
+    set('rptExento65', 'Exento de ISR');
   } else {
-    if(dual) dual.style.display = 'none';
-    if(single) single.style.display = 'block';
+    if(dual)dual.style.display='none'; if(single)single.style.display='block';
     set('rptIngreso65Single', money(ingreso65));
     set('rptCapBase65Single', money(fondo65));
-    set('rptSingleTag', es151 ? 'Desde los 65 años · Art. 151 · Exento ISR' : 'Desde los 65 años');
+    set('rptSingleTag', es151?'Desde los 65 años · Art. 151':'Desde los 65 años');
+    set('rptSingleExento', es151?'Exento de ISR a partir de 65':'Referencia ilustrativa');
   }
 
-  // Resumen 8 métricas
+  // Resumen 8
   set('rptAportMensual', money(base));
   set('rptTotalAportado', money(totalAportado));
   set('rptRendimiento', money(rendimiento));
   set('rptMultiplicador', multiplicador);
-  set('rptPlazo', reportState.planYears ? `${reportState.planYears} años` : '—');
+  set('rptPlazo', reportState.planYears?`${reportState.planYears} años`:'—');
   set('rptRegimen', regimenText(reportState.regimenFiscal));
   set('rptRendimientoUsado', `${rAcc.toFixed(1)}% anual`);
   set('rptInflacionUsada', `${infl.toFixed(1)}% anual`);
 
-  // Nota Art.93
-  const notaEl = $('rptNotaMomentos');
-  if(notaEl) notaEl.style.display = es93 ? '' : 'none';
-
-  // ── PÁGINA 2 ─────────────────────────────────────────────
-  // Comparativo (usa los valores del sim object si existen)
-  const cash = reportState.cash || totalAportado;
-  const cashReal = reportState.cashReal || cash;
-  const bank = reportState.bank || 0;
-  const bankReal = reportState.bankReal || 0;
-  const afore = reportState.afore || 0;
-  set('rptCompMattress', money(cash));
-  set('rptCompMattressReal', `Valor real estimado: ${money(cashReal)}`);
-  set('rptCompBank', money(bank));
-  set('rptCompBankReal', `Valor real estimado: ${money(bankReal)}`);
-  set('rptCompAfore', money(afore));
-  set('rptCompPlan', money(fondoPlan));
-  set('rptCompPlanAge', `A los ${edadFin} años`);
-  const ventaja = fondoPlan - cash;
-  set('rptCompMessage', `Comparativo al término de aportaciones. El plan proyectado genera ${money(ventaja)} más que guardar sin rendimiento — ${cash>0?((ventaja/cash)*100).toFixed(0):0}% adicional estimado.`);
-
-  // Costo de esperar
+  // ── PÁGINA 2 ──────────────────────────────────────
+  // Urgencia
   set('rptHoyMonto', money(base));
   set('rpt1Monto', pmt1!=null?money(pmt1):'—'); set('rpt1Delta', deltaTxt(pmt1));
   set('rpt3Monto', pmt3!=null?money(pmt3):'—'); set('rpt3Delta', deltaTxt(pmt3));
   set('rpt5Monto', pmt5!=null?money(pmt5):'—'); set('rpt5Delta', deltaTxt(pmt5));
-}
+  if(pmt3!=null&&base){
+    const extra=money(pmt3-base);
+    set('rptUrgencyNote', `Esperar 3 años significa aportar ${extra} más al mes para llegar al mismo escenario a los 65. El tiempo es el activo más valioso de este plan.`);
+  }
 
+  // Comparativo
+  const cash=reportState.cash||totalAportado;
+  const cashReal=reportState.cashReal||cash;
+  const bank=reportState.bank||0, bankReal=reportState.bankReal||0;
+  const afore=reportState.afore||0;
+  set('rptCompMattress', money(cash));
+  set('rptCompMattressReal', `Valor real: ${money(cashReal)}`);
+  set('rptCompBank', money(bank));
+  set('rptCompBankReal', `Valor real: ${money(bankReal)}`);
+  set('rptCompAfore', money(afore));
+  set('rptCompPlan', money(fondoPlan));
+  set('rptCompPlanAge', `A los ${edadFin} años`);
+  const ventaja=fondoPlan-cash;
+  set('rptCompMessage', `El plan proyectado genera ${money(ventaja)} más que guardar sin rendimiento — ${cash>0?((ventaja/cash)*100).toFixed(0):0}% adicional estimado. Comparativo al término de aportaciones, no a los 65.`);
+
+  // Beneficio fiscal
+  const fnEl=$('rptFiscalNote');
+  if(fnEl) fnEl.style.display=es93||es151?'':'none';
+  if(es93) set('rptFiscalText', 'El Art. 93 de la Ley del ISR establece que los beneficios provenientes de seguros de retiro están exentos de impuesto sobre la renta a partir de los 60 años. Esto significa que el capital que acumules y los retiros que realices bajo este régimen no generan carga fiscal — lo que retiras es tuyo, íntegramente.');
+  else if(es151) set('rptFiscalText', 'El Art. 151 de la Ley del ISR permite deducir las aportaciones a planes personales de retiro hasta el 10% de tu ingreso anual (tope $152,000). La devolución de ISR estimada se reinvierte al fondo, acelerando su crecimiento. A partir de los 65 años, los retiros quedan exentos de ISR.');
+  else if($('rptFiscalNote')) $('rptFiscalNote').style.display='none';
+}
 function exportCSV(){
   const rows = [['Año','Edad','Aportación estimada','Beneficio fiscal estimado','Saldo proyectado']];
   document.querySelectorAll('#tbody tr').forEach(tr=>{
@@ -1774,7 +1942,18 @@ function exportCSV(){
 
 function prepararPDF(){
   actualizarReporteBase();
-  setTimeout(()=>window.print(),250);
+  // Nombre del archivo: "Plan de [Nombre] - Art. XX"
+  const nombre = (reportState.nombre || 'cliente').trim();
+  const regimen = reportState.regimenFiscal === '93' ? 'Art. 93'
+    : reportState.regimenFiscal === '151' ? 'Art. 151'
+    : 'Sin régimen';
+  const tituloOriginal = document.title;
+  document.title = `Plan de ${nombre} - ${regimen} · Christian GarBa`;
+  setTimeout(()=>{
+    window.print();
+    // Restore after print dialog closes
+    setTimeout(()=>{ document.title = tituloOriginal; }, 2000);
+  }, 250);
 }
 
 $('pmt').addEventListener('input',()=>{
