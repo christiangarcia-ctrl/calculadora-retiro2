@@ -700,7 +700,10 @@ td{padding:9px;border-bottom:1px solid #edf2f7;color:#334155;font-weight:600}
                   <div class="fg">
                     <label class="fl">¿Cuánto te gustaría recibir al mes en tu retiro?</label>
                     <input class="fi" id="metaHoy" type="number" min="0" step="1000" value="32000">
-                    <div class="fhint">Captura el monto en pesos de hoy.</div>
+                    <div class="fhint">
+                      Captura el monto en pesos de hoy.
+                      <span id="metaFuturaHint" style="display:block;margin-top:4px;color:var(--asc);font-weight:800;font-size:11px"></span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1360,7 +1363,7 @@ function validateForm(){
   return true;
 }
 
-$('regimenFiscal').addEventListener('change', function(){
+if($('regimenFiscal')) $('regimenFiscal').addEventListener('change', function(){
   const is151 = this.value === '151';
   const isr = $('isrPct');
   const reinvBox = $('reinvBox');
@@ -1448,6 +1451,23 @@ function updateSuggestion(){
   const freq = FIXED_FREQ;
 
   if(!(edad > 0 && planY > 0 && metaHoy > 0)) return;
+
+  // Mostrar valor futuro de la meta: al fin del plan Y a los 65
+  const hintEl = $('metaFuturaHint');
+  if(hintEl && metaHoy > 0 && planY > 0 && edad > 0){
+    const inflDec = infl / 100;
+    const yrsFinPlan = planY;
+    const yrsTo65 = Math.max(0, 65 - edad);
+    const metaAlFinPlan = metaHoy * Math.pow(1 + inflDec, yrsFinPlan);
+    const metaA65 = metaHoy * Math.pow(1 + inflDec, yrsTo65);
+    if(yrsFinPlan >= yrsTo65){
+      hintEl.textContent = '\u2192 equivale a ~' + money(Math.round(metaAlFinPlan)) + ' a tus ' + Math.round(edad+yrsFinPlan) + ' a\xf1os (inflaci\xf3n ' + infl.toFixed(0) + '% anual)';
+    } else {
+      hintEl.textContent = '\u2192 ~' + money(Math.round(metaAlFinPlan)) + ' al terminar el plan (' + Math.round(edad+yrsFinPlan) + ' a\xf1os) \xb7 ~' + money(Math.round(metaA65)) + ' a los 65';
+    }
+  } else if(hintEl) {
+    hintEl.textContent = '';
+  }
 
   const pmt0 = calcularPMTRequerido(edad,planY,metaHoy,infl,rAcc,rRet,yrsRet,freq,lump);
 
@@ -1565,10 +1585,9 @@ function calcAccum(){
   $('pvRet').value = String(fondo65);
 
   // ── Bloque 1: Plan hero ──────────────────────────
+  // fondoPlan es siempre el capital al finalizar las aportaciones reales (max 65)
   $('keyFondoPlan').textContent = money(fondoPlan);
-  if($('etapaFondoPlan')) $('etapaFondoPlan').textContent = money(fondoPlan);
-  $('keyEdadPlan').textContent = `Al terminar aportaciones · ${Math.round(edadFinPlan)} años`;
-  if($('etapaEdadPlan')) $('etapaEdadPlan').textContent = `${Math.round(edadFinPlan)} años`;
+  $('keyEdadPlan').textContent = 'Al terminar aportaciones · ' + Math.round(edadFinPlan) + ' años';
   $('totalAportado').textContent = money(totalAportado);
   $('rendimiento').textContent = money(rendimiento);
   $('yearsPlan').textContent = `${yrsAport} años de proyección`;
@@ -1577,25 +1596,103 @@ function calcAccum(){
   const mult = totalAportado > 0 ? (fondoPlan/totalAportado).toFixed(1)+'x' : '—';
   if($('multiplicador')) $('multiplicador').textContent = mult;
 
-  // ── Bloque 2: Etapas (siempre las 3) ────────────
-  // Etapa 60
-  if($('etapaFondo60')) $('etapaFondo60').textContent = fondo60 ? money(fondo60) : money(fondoPlan);
-  // Etapa 65
-  $('fondo65').textContent = money(fondo65);
-  if($('edadFinPlan')) $('edadFinPlan').textContent = `El fondo creció sin nuevas aportaciones desde los ${Math.round(edadFinPlan)} años.`;
-
-  // Tags y descripciones según régimen
+  // ── Bloque 2: Etapas dinámicas según edad de fin ────────────
   const es93 = regimen === '93';
   const es151 = regimen === '151';
-  if($('etapa60Label')) $('etapa60Label').textContent = es93 ? 'A los 60 años · Art. 93' : 'A los 60 años';
-  if($('etapa60Desc')) $('etapa60Desc').textContent = es93
-    ? 'Con Art. 93, el retiro a partir de los 60 puede estar exento de ISR.'
-    : 'El fondo continúa creciendo sin nuevas aportaciones.';
-  if($('etapa60Tag')) $('etapa60Tag').textContent = es93 ? 'Exento ISR · Art. 93' : '';
-  if($('etapa65Desc')) $('etapa65Desc').textContent = es151
-    ? 'Con Art. 151, el retiro a partir de los 65 puede estar exento de ISR.'
-    : 'Base del cálculo de ingreso mensual ilustrativo.';
-  if($('etapa65Tag')) $('etapa65Tag').textContent = es151 ? 'Exento ISR · Art. 151' : (es93 ? 'Exento ISR · Art. 93' : '');
+
+  // Determinar qué va en cada etapa según cuándo termina el plan
+  // Caso A: termina antes de 60  → E1=finPlan, E2=60años, E3=65años
+  // Caso B: termina entre 60-65  → E1=60años,  E2=finPlan, E3=65años
+  // Caso C: termina en/después 65→ E1=60años,  E2=65años(=finPlan), E3=ingreso desde 65
+
+  const e1El = document.querySelector('.etapa-plan');
+  const e2El = document.querySelector('.etapa-60');
+  const e3El = document.querySelector('.etapa-65');
+
+  if(edadFinPlan < 60){
+    // CASO A: normal
+    // Etapa 1 = fin del plan
+    if(e1El){
+      e1El.querySelector('.etapa-step').textContent = 'Etapa 1 · Al finalizar aportaciones';
+      e1El.querySelector('.etapa-label').textContent = 'Capital acumulado al cerrar tu periodo';
+    }
+    if($('etapaFondoPlan')) $('etapaFondoPlan').textContent = money(fondoPlan);
+    if($('etapaEdadPlan')) $('etapaEdadPlan').textContent = Math.round(edadFinPlan) + ' años · capital disponible';
+    // Etapa 2 = 60 años
+    if(e2El){
+      e2El.querySelector('.etapa-step').textContent = 'Etapa 2 · A los 60 años';
+      e2El.querySelector('.etapa-label').textContent = es93 ? 'A los 60 años · Art. 93' : 'A los 60 años';
+    }
+    if($('etapaFondo60')) $('etapaFondo60').textContent = fondo60 ? money(fondo60) : '—';
+    if($('etapa60Tag')) $('etapa60Tag').textContent = es93 ? 'Exento ISR · Art. 93' : '';
+    if($('etapa60Desc')) $('etapa60Desc').textContent = es93
+      ? 'Con Art. 93, el retiro a partir de los 60 puede estar exento de ISR.'
+      : 'El fondo continúa creciendo sin nuevas aportaciones.';
+    // Etapa 3 = 65 años
+    if(e3El){
+      e3El.querySelector('.etapa-step').textContent = 'Etapa 3 · A los 65 años';
+      e3El.querySelector('.etapa-label').textContent = 'Proyección máxima del fondo';
+    }
+    $('fondo65').textContent = money(fondo65);
+    if($('etapa65Tag')) $('etapa65Tag').textContent = es151 ? 'Exento ISR · Art. 151' : es93 ? 'Exento ISR · Art. 93' : '';
+    if($('etapa65Desc')) $('etapa65Desc').textContent = es151
+      ? 'Con Art. 151, el retiro a partir de los 65 puede estar exento de ISR.'
+      : 'Base del cálculo de ingreso mensual ilustrativo.';
+
+  } else if(edadFinPlan < 65){
+    // CASO B: termina entre 60 y 65
+    // Etapa 1 = 60 años
+    if(e1El){
+      e1El.querySelector('.etapa-step').textContent = 'Etapa 1 · A los 60 años';
+      e1El.querySelector('.etapa-label').textContent = es93 ? 'A los 60 años · Art. 93' : 'A los 60 años';
+    }
+    if($('etapaFondoPlan')) $('etapaFondoPlan').textContent = fondo60 ? money(fondo60) : '—';
+    if($('etapaEdadPlan')) $('etapaEdadPlan').textContent = '60 años' + (es93 ? ' · Exento ISR' : '');
+    // Etapa 2 = fin del plan
+    if(e2El){
+      e2El.querySelector('.etapa-step').textContent = 'Etapa 2 · Al finalizar aportaciones';
+      e2El.querySelector('.etapa-label').textContent = 'Capital al cerrar tu periodo';
+    }
+    if($('etapaFondo60')) $('etapaFondo60').textContent = money(fondoPlan);
+    if($('etapa60Tag')) $('etapa60Tag').textContent = 'Fin de aportaciones · ' + Math.round(edadFinPlan) + ' años';
+    if($('etapa60Desc')) $('etapa60Desc').textContent = 'Capital acumulado al cerrar tu periodo. Puedes disponer de él libremente.';
+    // Etapa 3 = 65 años
+    if(e3El){
+      e3El.querySelector('.etapa-step').textContent = 'Etapa 3 · A los 65 años';
+      e3El.querySelector('.etapa-label').textContent = 'Proyección máxima del fondo';
+    }
+    $('fondo65').textContent = money(fondo65);
+    if($('etapa65Tag')) $('etapa65Tag').textContent = es151 ? 'Exento ISR · Art. 151' : es93 ? 'Exento ISR · Art. 93' : '';
+    if($('etapa65Desc')) $('etapa65Desc').textContent = es151
+      ? 'Con Art. 151, el retiro a partir de los 65 puede estar exento de ISR.'
+      : 'El fondo continúa creciendo hasta los 65.';
+
+  } else {
+    // CASO C: termina en/después de 65 — aportaciones se cortan a los 65
+    // Etapa 1 = 60 años
+    if(e1El){
+      e1El.querySelector('.etapa-step').textContent = 'Etapa 1 · A los 60 años';
+      e1El.querySelector('.etapa-label').textContent = es93 ? 'A los 60 años · Art. 93' : 'A los 60 años';
+    }
+    if($('etapaFondoPlan')) $('etapaFondoPlan').textContent = fondo60 ? money(fondo60) : '—';
+    if($('etapaEdadPlan')) $('etapaEdadPlan').textContent = '60 años' + (es93 ? ' · Exento ISR' : '');
+    // Etapa 2 = 65 años (= fin de aportaciones)
+    if(e2El){
+      e2El.querySelector('.etapa-step').textContent = 'Etapa 2 · A los 65 años';
+      e2El.querySelector('.etapa-label').textContent = 'Fin de aportaciones · capital máximo';
+    }
+    if($('etapaFondo60')) $('etapaFondo60').textContent = money(fondo65);
+    if($('etapa60Tag')) $('etapa60Tag').textContent = es151 ? 'Exento ISR · Art. 151' : es93 ? 'Exento ISR · Art. 93' : 'Fin de aportaciones';
+    if($('etapa60Desc')) $('etapa60Desc').textContent = 'Las aportaciones se detienen a los 65. Este es tu capital disponible.';
+    // Etapa 3 = Ingreso desde 65
+    if(e3El){
+      e3El.querySelector('.etapa-step').textContent = 'Etapa 3 · Ingreso desde los 65';
+      e3El.querySelector('.etapa-label').textContent = 'Retiro mensual estimado';
+    }
+    $('fondo65').textContent = money(fondo65);
+    if($('etapa65Tag')) $('etapa65Tag').textContent = es151 ? 'Exento ISR · Art. 151' : es93 ? 'Exento ISR · Art. 93' : '';
+    if($('etapa65Desc')) $('etapa65Desc').textContent = 'El ingreso mensual se calcula directamente sobre el capital acumulado a los 65.';
+  }
 
   // ── Bloque 3: Ingreso mensual ────────────────────
   // Art. 93 → mostrar dual (60 y 65); Art.151 o ninguno → solo 65
@@ -1822,8 +1919,8 @@ function actualizarReporteBase(){
   if(!reportState.fondoPlan) return;
   const hoy = new Date();
   const fechaTxt = hoy.toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
-  const infl = reportState.infl ?? parseFloat($('inflation').value||0);
-  const rAcc = reportState.rAcc ?? parseFloat($('rate').value||0);
+  const infl = (reportState.infl != null ? reportState.infl : parseFloat($('inflation').value||0));
+  const rAcc = (reportState.rAcc != null ? reportState.rAcc : parseFloat($('rate').value||0));
   const base = parseFloat($('pmt').value||0);
   const pmt1=pmtParaFondo65(1), pmt3=pmtParaFondo65(3), pmt5=pmtParaFondo65(5);
   const es93=reportState.regimenFiscal==='93', es151=reportState.regimenFiscal==='151';
@@ -2008,7 +2105,7 @@ $('toggleTableRet').addEventListener('click',function(){
 });
 
 window.addEventListener('load',()=>{
-  $('regimenFiscal').dispatchEvent(new Event('change'));
+  if($('regimenFiscal')) $('regimenFiscal').dispatchEvent(new Event('change'));
   updateSuggestion();
   linkWhatsApp();
 });
