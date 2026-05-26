@@ -1600,98 +1600,121 @@ function calcAccum(){
   const es93 = regimen === '93';
   const es151 = regimen === '151';
 
-  // Determinar qué va en cada etapa según cuándo termina el plan
-  // Caso A: termina antes de 60  → E1=finPlan, E2=60años, E3=65años
-  // Caso B: termina entre 60-65  → E1=60años,  E2=finPlan, E3=65años
-  // Caso C: termina en/después 65→ E1=60años,  E2=65años(=finPlan), E3=ingreso desde 65
+  // Las 3 tarjetas del DOM en orden visual
+  const etapaEls = document.querySelectorAll('.etapas .etapa');
+  const e1 = etapaEls[0], e2 = etapaEls[1], e3 = etapaEls[2];
 
-  const e1El = document.querySelector('.etapa-plan');
-  const e2El = document.querySelector('.etapa-60');
-  const e3El = document.querySelector('.etapa-65');
+  // Helper: reasigna clase de color a una tarjeta
+  function setEtapaClass(el, cls){
+    el.classList.remove('etapa-plan','etapa-60','etapa-65');
+    el.classList.add(cls);
+  }
+
+  // Helper: llena una tarjeta
+  function fillEtapa(el, step, label, val, age, desc, tag){
+    el.querySelector('.etapa-step').textContent = step;
+    el.querySelector('.etapa-label').textContent = label;
+    el.querySelector('.etapa-val').textContent = val;
+    el.querySelector('.etapa-age').textContent = age;
+    el.querySelector('.etapa-desc').textContent = desc;
+    el.querySelector('.etapa-tag').textContent = tag;
+  }
+
+  const tagFiscal60 = es93 ? 'Exento ISR · Art. 93' : '';
+  const tagFiscal65 = es151 ? 'Exento ISR · Art. 151' : es93 ? 'Exento ISR · Art. 93' : '';
+  const desc60noAport = 'El fondo sigue creciendo sin nuevas aportaciones.';
+  const desc65base = es151 ? 'Con Art. 151, el retiro a partir de los 65 puede estar exento de ISR.' : 'Base del cálculo de ingreso mensual ilustrativo.';
 
   if(edadFinPlan < 60){
-    // CASO A: normal
-    // Etapa 1 = fin del plan
-    if(e1El){
-      e1El.querySelector('.etapa-step').textContent = 'Etapa 1 · Al finalizar aportaciones';
-      e1El.querySelector('.etapa-label').textContent = 'Capital acumulado al cerrar tu periodo';
-    }
-    if($('etapaFondoPlan')) $('etapaFondoPlan').textContent = money(fondoPlan);
-    if($('etapaEdadPlan')) $('etapaEdadPlan').textContent = Math.round(edadFinPlan) + ' años · capital disponible';
-    // Etapa 2 = 60 años
-    if(e2El){
-      e2El.querySelector('.etapa-step').textContent = 'Etapa 2 · A los 60 años';
-      e2El.querySelector('.etapa-label').textContent = es93 ? 'A los 60 años · Art. 93' : 'A los 60 años';
-    }
-    if($('etapaFondo60')) $('etapaFondo60').textContent = fondo60 ? money(fondo60) : '—';
-    if($('etapa60Tag')) $('etapa60Tag').textContent = es93 ? 'Exento ISR · Art. 93' : '';
-    if($('etapa60Desc')) $('etapa60Desc').textContent = es93
-      ? 'Con Art. 93, el retiro a partir de los 60 puede estar exento de ISR.'
-      : 'El fondo continúa creciendo sin nuevas aportaciones.';
-    // Etapa 3 = 65 años
-    if(e3El){
-      e3El.querySelector('.etapa-step').textContent = 'Etapa 3 · A los 65 años';
-      e3El.querySelector('.etapa-label').textContent = 'Proyección máxima del fondo';
-    }
-    $('fondo65').textContent = money(fondo65);
-    if($('etapa65Tag')) $('etapa65Tag').textContent = es151 ? 'Exento ISR · Art. 151' : es93 ? 'Exento ISR · Art. 93' : '';
-    if($('etapa65Desc')) $('etapa65Desc').textContent = es151
-      ? 'Con Art. 151, el retiro a partir de los 65 puede estar exento de ISR.'
-      : 'Base del cálculo de ingreso mensual ilustrativo.';
+    // CASO A: E1=finPlan, E2=60años, E3=65años
+    setEtapaClass(e1,'etapa-plan');
+    fillEtapa(e1,
+      'Etapa 1 · Al finalizar aportaciones',
+      'Capital acumulado al cerrar tu periodo',
+      money(fondoPlan),
+      Math.round(edadFinPlan) + ' años · capital disponible',
+      'Puedes disponer de él libremente a partir de este momento.',
+      ''
+    );
+    setEtapaClass(e2,'etapa-60');
+    fillEtapa(e2,
+      'Etapa 2 · A los 60 años',
+      es93 ? 'A los 60 años · Art. 93' : 'A los 60 años',
+      fondo60 ? money(fondo60) : '—',
+      '60 años',
+      es93 ? 'Con Art. 93, el retiro a partir de los 60 puede estar exento de ISR.' : desc60noAport,
+      tagFiscal60
+    );
+    setEtapaClass(e3,'etapa-65');
+    fillEtapa(e3,
+      'Etapa 3 · A los 65 años',
+      'Proyección máxima del fondo',
+      money(fondo65),
+      '65 años',
+      desc65base,
+      tagFiscal65
+    );
 
   } else if(edadFinPlan < 65){
-    // CASO B: termina entre 60 y 65
-    // Etapa 1 = 60 años
-    if(e1El){
-      e1El.querySelector('.etapa-step').textContent = 'Etapa 1 · A los 60 años';
-      e1El.querySelector('.etapa-label').textContent = es93 ? 'A los 60 años · Art. 93' : 'A los 60 años';
-    }
-    if($('etapaFondoPlan')) $('etapaFondoPlan').textContent = fondo60 ? money(fondo60) : '—';
-    if($('etapaEdadPlan')) $('etapaEdadPlan').textContent = '60 años' + (es93 ? ' · Exento ISR' : '');
-    // Etapa 2 = fin del plan
-    if(e2El){
-      e2El.querySelector('.etapa-step').textContent = 'Etapa 2 · Al finalizar aportaciones';
-      e2El.querySelector('.etapa-label').textContent = 'Capital al cerrar tu periodo';
-    }
-    if($('etapaFondo60')) $('etapaFondo60').textContent = money(fondoPlan);
-    if($('etapa60Tag')) $('etapa60Tag').textContent = 'Fin de aportaciones · ' + Math.round(edadFinPlan) + ' años';
-    if($('etapa60Desc')) $('etapa60Desc').textContent = 'Capital acumulado al cerrar tu periodo. Puedes disponer de él libremente.';
-    // Etapa 3 = 65 años
-    if(e3El){
-      e3El.querySelector('.etapa-step').textContent = 'Etapa 3 · A los 65 años';
-      e3El.querySelector('.etapa-label').textContent = 'Proyección máxima del fondo';
-    }
-    $('fondo65').textContent = money(fondo65);
-    if($('etapa65Tag')) $('etapa65Tag').textContent = es151 ? 'Exento ISR · Art. 151' : es93 ? 'Exento ISR · Art. 93' : '';
-    if($('etapa65Desc')) $('etapa65Desc').textContent = es151
-      ? 'Con Art. 151, el retiro a partir de los 65 puede estar exento de ISR.'
-      : 'El fondo continúa creciendo hasta los 65.';
+    // CASO B: E1=60años, E2=finPlan, E3=65años
+    setEtapaClass(e1,'etapa-60');
+    fillEtapa(e1,
+      'Etapa 1 · A los 60 años',
+      es93 ? 'A los 60 años · Art. 93' : 'A los 60 años',
+      fondo60 ? money(fondo60) : '—',
+      '60 años',
+      es93 ? 'Con Art. 93, el retiro a partir de los 60 puede estar exento de ISR.' : desc60noAport,
+      tagFiscal60
+    );
+    setEtapaClass(e2,'etapa-plan');
+    fillEtapa(e2,
+      'Etapa 2 · Al finalizar aportaciones',
+      'Capital acumulado al cerrar tu periodo',
+      money(fondoPlan),
+      Math.round(edadFinPlan) + ' años',
+      'Capital disponible. El fondo puede seguir creciendo hasta los 65.',
+      'Fin de aportaciones'
+    );
+    setEtapaClass(e3,'etapa-65');
+    fillEtapa(e3,
+      'Etapa 3 · A los 65 años',
+      'Proyección máxima del fondo',
+      money(fondo65),
+      '65 años',
+      desc65base,
+      tagFiscal65
+    );
 
   } else {
-    // CASO C: termina en/después de 65 — aportaciones se cortan a los 65
-    // Etapa 1 = 60 años
-    if(e1El){
-      e1El.querySelector('.etapa-step').textContent = 'Etapa 1 · A los 60 años';
-      e1El.querySelector('.etapa-label').textContent = es93 ? 'A los 60 años · Art. 93' : 'A los 60 años';
-    }
-    if($('etapaFondoPlan')) $('etapaFondoPlan').textContent = fondo60 ? money(fondo60) : '—';
-    if($('etapaEdadPlan')) $('etapaEdadPlan').textContent = '60 años' + (es93 ? ' · Exento ISR' : '');
-    // Etapa 2 = 65 años (= fin de aportaciones)
-    if(e2El){
-      e2El.querySelector('.etapa-step').textContent = 'Etapa 2 · A los 65 años';
-      e2El.querySelector('.etapa-label').textContent = 'Fin de aportaciones · capital máximo';
-    }
-    if($('etapaFondo60')) $('etapaFondo60').textContent = money(fondo65);
-    if($('etapa60Tag')) $('etapa60Tag').textContent = es151 ? 'Exento ISR · Art. 151' : es93 ? 'Exento ISR · Art. 93' : 'Fin de aportaciones';
-    if($('etapa60Desc')) $('etapa60Desc').textContent = 'Las aportaciones se detienen a los 65. Este es tu capital disponible.';
-    // Etapa 3 = Ingreso desde 65
-    if(e3El){
-      e3El.querySelector('.etapa-step').textContent = 'Etapa 3 · Ingreso desde los 65';
-      e3El.querySelector('.etapa-label').textContent = 'Retiro mensual estimado';
-    }
-    $('fondo65').textContent = money(fondo65);
-    if($('etapa65Tag')) $('etapa65Tag').textContent = es151 ? 'Exento ISR · Art. 151' : es93 ? 'Exento ISR · Art. 93' : '';
-    if($('etapa65Desc')) $('etapa65Desc').textContent = 'El ingreso mensual se calcula directamente sobre el capital acumulado a los 65.';
+    // CASO C: termina >= 65, aportaciones se cortan a los 65
+    // E1=60años, E2=65años(=fin), E3=ingreso desde 65
+    setEtapaClass(e1,'etapa-60');
+    fillEtapa(e1,
+      'Etapa 1 · A los 60 años',
+      es93 ? 'A los 60 años · Art. 93' : 'A los 60 años',
+      fondo60 ? money(fondo60) : '—',
+      '60 años',
+      es93 ? 'Con Art. 93, el retiro a partir de los 60 puede estar exento de ISR.' : desc60noAport,
+      tagFiscal60
+    );
+    setEtapaClass(e2,'etapa-plan');
+    fillEtapa(e2,
+      'Etapa 2 · Fin de aportaciones (65 años)',
+      'Capital máximo acumulado',
+      money(fondo65),
+      '65 años · fin de aportaciones',
+      'Las aportaciones se detienen a los 65. Este es tu capital disponible.',
+      tagFiscal65
+    );
+    setEtapaClass(e3,'etapa-65');
+    fillEtapa(e3,
+      'Etapa 3 · Ingreso desde los 65',
+      'Retiro mensual estimado',
+      money(fondo65),
+      '65 años en adelante',
+      'El ingreso se calcula sobre el capital acumulado a los 65.',
+      tagFiscal65
+    );
   }
 
   // ── Bloque 3: Ingreso mensual ────────────────────
