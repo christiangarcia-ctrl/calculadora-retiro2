@@ -6,6 +6,8 @@
 <title>Simulador de Retiro — Christian GarBa</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <style>
 :root{
   --navy:#0D1B2A;
@@ -268,6 +270,34 @@ td{padding:8px;border-bottom:1px solid #edf2f7;color:#334155;font-weight:600;}
 ══════════════════════════════════════════ */
 .report-view{display:none}
 
+/* Modo exportación: renderiza el reporte fuera de pantalla para capturarlo con html2canvas */
+.report-view.pdf-export-active{
+  display:block!important;
+  position:fixed!important;
+  left:-99999px!important;
+  top:0!important;
+  width:794px!important;
+  background:#fff!important;
+  z-index:-1;
+}
+.report-view.pdf-export-active .pdf-page{
+  width:794px!important;
+  height:1123px!important;
+  min-height:1123px!important;
+  max-height:1123px!important;
+  overflow:hidden!important;
+  background:#fff!important;
+  display:flex!important;
+  flex-direction:column!important;
+  position:relative!important;
+  box-sizing:border-box!important;
+}
+.report-view.pdf-export-active .pdf-header{height:57px!important;min-height:57px!important;max-height:57px!important;padding:0 45px!important;}
+.report-view.pdf-export-active .pdf-footer{height:30px!important;min-height:30px!important;max-height:30px!important;padding:0 45px!important;}
+.report-view.pdf-export-active .pdf-body{padding:11px 45px 8px!important;}
+.report-view.pdf-export-active .rpt-logo-allianz{height:26px!important;}
+.report-view.pdf-export-active .pdf-divider{height:26px!important;}
+
 @media print{
   @page{size:A4 portrait;margin:0}
   html,body{background:#fff!important;width:210mm!important;margin:0!important;padding:0!important;overflow:visible!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
@@ -428,77 +458,6 @@ td{padding:8px;border-bottom:1px solid #edf2f7;color:#334155;font-weight:600;}
   /* DISCLAIMER */
   .pdf-disclaimer{font-size:5.5pt;color:#94a3b8;line-height:1.4;margin-top:1.5mm;padding-top:1.5mm;border-top:0.5px solid var(--border);}
 }
-
-
-/* ══════════════════════════════════════════
-   AJUSTE FINAL: PDF FORZADO A 2 PÁGINAS A4
-   Evita una tercera página en blanco por overflow/márgenes de impresión.
-══════════════════════════════════════════ */
-@media print{
-  @page{size:A4 portrait;margin:0!important;}
-
-  html,
-  body{
-    width:210mm!important;
-    height:auto!important;
-    min-height:0!important;
-    max-height:none!important;
-    margin:0!important;
-    padding:0!important;
-    overflow:hidden!important;
-    background:#fff!important;
-  }
-
-  .app,
-  .topbar,
-  .page,
-  .view{
-    display:none!important;
-  }
-
-  .report-view{
-    display:block!important;
-    width:210mm!important;
-    height:592mm!important;
-    min-height:0!important;
-    max-height:592mm!important;
-    margin:0!important;
-    padding:0!important;
-    overflow:hidden!important;
-    background:#fff!important;
-  }
-
-  .pdf-page{
-    width:210mm!important;
-    height:296mm!important;
-    min-height:296mm!important;
-    max-height:296mm!important;
-    margin:0!important;
-    padding:0!important;
-    overflow:hidden!important;
-    page-break-inside:avoid!important;
-    break-inside:avoid!important;
-    page-break-after:always!important;
-    break-after:page!important;
-    flex:0 0 296mm!important;
-  }
-
-  .pdf-page + .pdf-page{
-    page-break-before:always!important;
-    break-before:page!important;
-  }
-
-  .pdf-page:last-of-type{
-    page-break-after:avoid!important;
-    break-after:avoid!important;
-  }
-
-  .pdf-body{
-    flex:1 1 auto!important;
-    overflow:hidden!important;
-  }
-}
-
 </style>
 </head>
 <body>
@@ -1432,13 +1391,52 @@ function exportCSV(){
   a.click();URL.revokeObjectURL(a.href);
 }
 
-function prepararPDF(){
+async function prepararPDF(){
   actualizarReporteBase();
-  const nombre=(reportState.nombre||'cliente').trim();
-  const regimen=reportState.regimenFiscal==='93'?'Art. 93':reportState.regimenFiscal==='151'?'Art. 151':'Sin régimen';
-  const tituloOriginal=document.title;
-  document.title=`Plan de ${nombre} - ${regimen} · Christian GarBa`;
-  setTimeout(()=>{window.print();setTimeout(()=>{document.title=tituloOriginal;},2000);},250);
+  const btn=$('printBtn');
+  const textoOriginal=btn.textContent;
+  btn.disabled=true;
+  btn.textContent='⏳ Generando PDF...';
+
+  try{
+    const reportView=document.querySelector('.report-view');
+    reportView.classList.add('pdf-export-active');
+
+    // Esperar a que el navegador aplique estilos/layout
+    await new Promise(r=>setTimeout(r,150));
+
+    const pages=reportView.querySelectorAll('.pdf-page');
+    const pdf=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
+    const pageWmm=210, pageHmm=297;
+
+    for(let i=0;i<pages.length;i++){
+      const canvas=await html2canvas(pages[i],{
+        scale:2,
+        useCORS:true,
+        backgroundColor:'#ffffff',
+        width:794,
+        height:1123,
+        windowWidth:794,
+        windowHeight:1123
+      });
+      const imgData=canvas.toDataURL('image/jpeg',0.95);
+      if(i>0) pdf.addPage();
+      pdf.addImage(imgData,'JPEG',0,0,pageWmm,pageHmm);
+    }
+
+    reportView.classList.remove('pdf-export-active');
+
+    const nombre=(reportState.nombre||'cliente').trim().replace(/\s+/g,'_');
+    const regimenSlug=reportState.regimenFiscal==='93'?'Art93':reportState.regimenFiscal==='151'?'Art151':'SinRegimen';
+    pdf.save(`Plan_${nombre}_${regimenSlug}.pdf`);
+  }catch(error){
+    console.error(error);
+    alert('Hubo un problema al generar el PDF.');
+    document.querySelector('.report-view').classList.remove('pdf-export-active');
+  }finally{
+    btn.disabled=false;
+    btn.textContent=textoOriginal;
+  }
 }
 
 $('pmt').addEventListener('input',()=>{userEditedPMT=true;linkWhatsApp();});
