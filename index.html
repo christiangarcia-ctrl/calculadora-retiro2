@@ -8,6 +8,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <style>
 :root{
   --navy:#0D1B2A;
@@ -270,15 +272,15 @@ td{padding:8px;border-bottom:1px solid #edf2f7;color:#334155;font-weight:600;}
 ══════════════════════════════════════════ */
 .report-view{display:none}
 
-/* Modo exportación: renderiza el reporte fuera de pantalla para capturarlo con html2canvas */
+/* Modo exportación: muestra el reporte en pantalla (overlay) para capturarlo con html2canvas */
 .report-view.pdf-export-active{
   display:block!important;
   position:fixed!important;
-  left:-99999px!important;
+  left:0!important;
   top:0!important;
   width:794px!important;
   background:#fff!important;
-  z-index:-1;
+  z-index:999999!important;
 }
 .report-view.pdf-export-active .pdf-page{
   width:794px!important;
@@ -292,19 +294,14 @@ td{padding:8px;border-bottom:1px solid #edf2f7;color:#334155;font-weight:600;}
   position:relative!important;
   box-sizing:border-box!important;
 }
-.report-view.pdf-export-active .pdf-header{height:57px!important;min-height:57px!important;max-height:57px!important;padding:0 45px!important;}
-.report-view.pdf-export-active .pdf-footer{height:30px!important;min-height:30px!important;max-height:30px!important;padding:0 45px!important;}
-.report-view.pdf-export-active .pdf-body{padding:11px 45px 8px!important;}
-.report-view.pdf-export-active .rpt-logo-allianz{height:26px!important;}
-.report-view.pdf-export-active .pdf-divider{height:26px!important;}
 
 @media print{
   @page{size:A4 portrait;margin:0}
   html,body{background:#fff!important;width:210mm!important;margin:0!important;padding:0!important;overflow:visible!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
   .app{display:none!important}
-  .report-view{display:block!important;width:210mm!important;}
+  .report-view{display:block!important;width:210mm!important;height:auto!important;}
 
-  .pdf-page{width:210mm;min-height:297mm;max-height:297mm;overflow:hidden;background:#fff;display:flex;flex-direction:column;page-break-inside:avoid;break-inside:avoid;position:relative;}
+  .pdf-page{width:210mm;height:296mm;min-height:296mm;max-height:296mm;overflow:hidden;background:#fff;display:flex;flex-direction:column;page-break-inside:avoid;break-inside:avoid;position:relative;box-sizing:border-box;}
   .pdf-page+.pdf-page{page-break-before:always;break-before:page;}
   .pdf-page:last-of-type{page-break-after:auto!important;}
 
@@ -323,7 +320,7 @@ td{padding:8px;border-bottom:1px solid #edf2f7;color:#334155;font-weight:600;}
   .pdf-footer-gold{color:var(--gold);font-weight:700;}
 
   /* BODY PDF */
-  .pdf-body{padding:3mm 12mm 2mm;overflow:hidden;flex:1;}
+  .pdf-body{height:273mm;min-height:0;max-height:273mm;padding:3mm 12mm 2mm;overflow:hidden;flex:1 1 auto;box-sizing:border-box;}
 
   /* HERO PROSPECTO P1 */
   .pdf-prospect-hero{background:linear-gradient(135deg,var(--navy) 0%,#1A3355 55%,var(--blue3) 100%);border-radius:3mm;padding:3.5mm 6mm;color:#fff;margin-bottom:3mm;display:grid;grid-template-columns:1fr auto;gap:4mm;align-items:center;position:relative;overflow:hidden;}
@@ -1397,13 +1394,14 @@ async function prepararPDF(){
   const textoOriginal=btn.textContent;
   btn.disabled=true;
   btn.textContent='⏳ Generando PDF...';
+  document.body.style.overflow='hidden';
 
   try{
     const reportView=document.querySelector('.report-view');
     reportView.classList.add('pdf-export-active');
 
-    // Esperar a que el navegador aplique estilos/layout
-    await new Promise(r=>setTimeout(r,150));
+    // Esperar a que el navegador aplique estilos/layout/imagenes
+    await new Promise(r=>setTimeout(r,300));
 
     const pages=reportView.querySelectorAll('.pdf-page');
     const pdf=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
@@ -1434,6 +1432,7 @@ async function prepararPDF(){
     alert('Hubo un problema al generar el PDF.');
     document.querySelector('.report-view').classList.remove('pdf-export-active');
   }finally{
+    document.body.style.overflow='';
     btn.disabled=false;
     btn.textContent=textoOriginal;
   }
